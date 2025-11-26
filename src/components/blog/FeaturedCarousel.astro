@@ -183,9 +183,7 @@ const t = i18n[lang];
       
       [prevBtn, nextBtn].forEach((btn, i) => {
         if (!btn) return;
-        const newBtn = btn.cloneNode(true) as HTMLElement;
-        btn.parentNode?.replaceChild(newBtn, btn);
-        newBtn.addEventListener('click', (e) => {
+        btn.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
           stopAutoPlay();
@@ -195,10 +193,9 @@ const t = i18n[lang];
       });
       
       indicators.forEach((ind, index) => {
-        const newInd = ind.cloneNode(true) as HTMLElement;
-        ind.parentNode?.replaceChild(newInd, ind);
-        newInd.addEventListener('click', (e) => {
+        ind.addEventListener('click', (e) => {
           e.preventDefault();
+          e.stopPropagation();
           stopAutoPlay();
           showSlide(index);
           startAutoPlay();
