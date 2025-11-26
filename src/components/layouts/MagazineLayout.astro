@@ -4,7 +4,7 @@
  * 杂志风格首页布局 - 包含精选轮播图
  */
 import type { CollectionEntry } from 'astro:content';
-import { siteConfig, getPostUrl, formatDate, getCategoryUrl } from '../../config';
+import { getPostUrl, formatDate, getCategoryUrl, getSiteConfig } from '../../utils/config';
 import FeaturedCarousel from '../blog/FeaturedCarousel.astro';
 import PostCard from '../blog/PostCard.astro';
 
@@ -19,16 +19,19 @@ interface Props {
 
 const { posts, featuredPosts, config, lang = 'zh', currentPage, totalPages } = Astro.props;
 
+// 获取配置
+const siteConfig = await getSiteConfig();
+
 const i18n = {
-  zh: { 
-    latestPosts: '最新文章', 
+  zh: {
+    latestPosts: '最新文章',
     featuredPosts: '精选推荐',
     readMore: '阅读更多',
     minRead: '分钟阅读',
     viewAll: '查看全部',
   },
-  en: { 
-    latestPosts: 'Latest Posts', 
+  en: {
+    latestPosts: 'Latest Posts',
     featuredPosts: 'Featured',
     readMore: 'Read more',
     minRead: 'min read',
@@ -48,75 +51,75 @@ function getYear(post: CollectionEntry<'blog'>) {
 }
 
 // 按分类分组（可选功能）
-const postsByCategory = config.categorySections 
+const postsByCategory = config.categorySections
   ? Object.entries(
-      posts.reduce((acc, post) => {
-        const cat = post.data.category;
-        if (!acc[cat]) acc[cat] = [];
-        acc[cat].push(post);
-        return acc;
-      }, {} as Record<string, CollectionEntry<'blog'>[]>)
+      posts.reduce(
+        (acc, post) => {
+          const cat = post.data.category;
+          if (!acc[cat]) acc[cat] = [];
+          acc[cat].push(post);
+          return acc;
+        },
+        {} as Record<string, CollectionEntry<'blog'>[]>
+      )
     ).slice(0, 3) // 最多显示3个分类
   : [];
 ---
 
-<div class="space-y-12">
+<div class='space-y-12'>
   <!-- 精选轮播图区域 -->
-  {featuredPosts.length > 0 && currentPage === 1 && (
-    <FeaturedCarousel posts={featuredPosts} lang={lang} />
-  )}
-  
+  {
+    featuredPosts.length > 0 && currentPage === 1 && (
+      <FeaturedCarousel posts={featuredPosts} lang={lang} />
+    )
+  }
+
   <!-- 分类入口卡片（如果启用） -->
-  {config.categorySections && postsByCategory.length > 0 && currentPage === 1 && (
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {postsByCategory.map(([category, catPosts]) => {
-        const catConfig = siteConfig.categories[category as keyof typeof siteConfig.categories];
-        if (!catConfig) return null;
-        
-        return (
-          <a
-            href={getCategoryUrl(category as any, lang)}
-            class="group block p-6 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-lg transition-all"
-          >
-            <div class="flex items-center gap-3 mb-3">
-              <span class="text-3xl">{catConfig.icon}</span>
-              <div>
-                <h3 class="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  {lang === 'zh' ? catConfig.name.zh : catConfig.name.en}
-                </h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400">
-                  {catPosts.length} {lang === 'zh' ? '篇文章' : 'posts'}
-                </p>
+  {
+    config.categorySections && postsByCategory.length > 0 && currentPage === 1 && (
+      <section class='grid grid-cols-1 md:grid-cols-3 gap-6'>
+        {postsByCategory.map(([category, catPosts]) => {
+          const catConfig = siteConfig.categories[category as keyof typeof siteConfig.categories];
+          if (!catConfig) return null;
+
+          return (
+            <a
+              href={getCategoryUrl(category as any, lang)}
+              class='group block p-6 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-lg transition-all'
+            >
+              <div class='flex items-center gap-3 mb-3'>
+                <span class='text-3xl'>{catConfig.icon}</span>
+                <div>
+                  <h3 class='font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors'>
+                    {lang === 'zh' ? catConfig.name.zh : catConfig.name.en}
+                  </h3>
+                  <p class='text-sm text-gray-500 dark:text-gray-400'>
+                    {catPosts.length} {lang === 'zh' ? '篇文章' : 'posts'}
+                  </p>
+                </div>
               </div>
-            </div>
-            <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-              {lang === 'zh' ? catConfig.description.zh : catConfig.description.en}
-            </p>
-          </a>
-        );
-      })}
-    </section>
-  )}
-  
+              <p class='text-sm text-gray-600 dark:text-gray-400 line-clamp-2'>
+                {lang === 'zh' ? catConfig.description.zh : catConfig.description.en}
+              </p>
+            </a>
+          );
+        })}
+      </section>
+    )
+  }
+
   <!-- 最新文章列表 - 灵活的自适应布局，按时间排序 -->
   <section>
-    <div class="flex items-center justify-between mb-8">
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-        <span class="w-1 h-8 bg-blue-500 rounded-full" />
+    <div class='flex items-center justify-between mb-8'>
+      <h2 class='text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3'>
+        <span class='w-1 h-8 bg-blue-500 rounded-full'></span>
         {t.latestPosts}
       </h2>
     </div>
-    
+
     <!-- 自适应网格布局：所有文章按时间排序，有图/无图自适应 -->
-    <div class="post-grid">
-      {posts.map((post) => (
-        <PostCard
-          post={post}
-          lang={lang}
-          variant="default"
-          showExcerpt={true}
-        />
-      ))}
+    <div class='post-grid'>
+      {posts.map(post => <PostCard post={post} lang={lang} variant='default' showExcerpt={true} />)}
     </div>
   </section>
 </div>
@@ -128,23 +131,23 @@ const postsByCategory = config.categorySections
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   @media (min-width: 640px) {
     .post-grid {
       grid-template-columns: repeat(2, 1fr);
     }
-    
+
     /* 无图卡片占满整行 */
     .post-grid > :global(article:not(:has(img))) {
       grid-column: 1 / -1;
     }
   }
-  
+
   @media (min-width: 1024px) {
     .post-grid {
       grid-template-columns: repeat(3, 1fr);
     }
-    
+
     /* 大屏幕无图卡片占两列 */
     .post-grid > :global(article:not(:has(img))) {
       grid-column: span 2;

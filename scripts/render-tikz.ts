@@ -1,11 +1,11 @@
 /**
  * TikZ 渲染脚本
- * 
+ *
  * 使用 node-tikzjax 将 TikZ 代码渲染为 SVG
- * 
+ *
  * 用法：
  * bun run scripts/render-tikz.ts <input.tex> <output.svg>
- * 
+ *
  * 或处理整个目录：
  * bun run scripts/render-tikz.ts --dir src/content/tikz
  */
@@ -35,37 +35,35 @@ async function renderTikZ(code: string): Promise<string> {
 
 async function renderFile(inputPath: string, outputPath: string): Promise<void> {
   console.log(`渲染: ${inputPath} -> ${outputPath}`);
-  
+
   const code = readFileSync(inputPath, 'utf-8');
   const svg = await renderTikZ(code);
-  
+
   // 确保输出目录存在
   const outputDir = dirname(outputPath);
   if (!existsSync(outputDir)) {
     mkdirSync(outputDir, { recursive: true });
   }
-  
+
   writeFileSync(outputPath, svg);
   console.log(`✓ 完成: ${outputPath}`);
 }
 
 async function renderDirectory(dirPath: string): Promise<void> {
   const outputDir = join(dirname(dirPath), 'tikz-output');
-  
+
   if (!existsSync(outputDir)) {
     mkdirSync(outputDir, { recursive: true });
   }
-  
-  const files = readdirSync(dirPath).filter(f => 
-    extname(f) === '.tex' || extname(f) === '.tikz'
-  );
-  
+
+  const files = readdirSync(dirPath).filter(f => extname(f) === '.tex' || extname(f) === '.tikz');
+
   console.log(`找到 ${files.length} 个 TikZ 文件`);
-  
+
   for (const file of files) {
     const inputPath = join(dirPath, file);
     const outputPath = join(outputDir, basename(file, extname(file)) + '.svg');
-    
+
     try {
       await renderFile(inputPath, outputPath);
     } catch (error) {

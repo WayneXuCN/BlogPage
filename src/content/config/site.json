@@ -1,0 +1,169 @@
+{
+    "url": "https://blog.wenjiexu.site",
+    "title": {
+        "zh": "徐文杰的博客",
+        "en": "Wenjie Xu's Blog"
+    },
+    "description": {
+        "zh": "分享学术研究、技术教程与生活感悟",
+        "en": "Sharing academic research, tutorials, and life reflections"
+    },
+    "author": {
+        "zh": "徐文杰",
+        "en": "Wenjie Xu"
+    },
+    "authorInfo": {
+        "name": "徐文杰",
+        "email": "wenjie.xu.cn@outlook.com",
+        "avatar": "/assets/img/prof_pic.png",
+        "bio": {
+            "zh": "中国科学院博士研究生，研究方向为复杂系统风险管理与韧性评估",
+            "en": "PhD candidate at Chinese Academy of Sciences, focusing on complex system risk management and resilience assessment"
+        }
+    },
+    "home": {
+        "layout": "classic",
+        "postsPerPage": 10,
+        "showFeatured": true,
+        "featuredCount": 5,
+        "carouselAutoPlay": true,
+        "carouselInterval": 5000
+    },
+    "layouts": {
+        "classic": {
+            "showExcerpt": true,
+            "excerptLength": 200
+        },
+        "grid": {
+            "columns": 3,
+            "showTags": true
+        },
+        "magazine": {
+            "heroPost": true,
+            "sidebarPosts": 4,
+            "categorySections": false,
+            "postsPerCategory": 4
+        }
+    },
+    "features": {
+        "comments": true,
+        "search": true,
+        "rss": true,
+        "toc": true,
+        "relatedPosts": true,
+        "readingTime": true,
+        "seriesNav": true,
+        "darkMode": true,
+        "readingProgress": true,
+        "socialShare": true
+    },
+    "giscus": {
+        "repo": "WayneXuCN/blog-comments",
+        "repoId": "R_kgDOxxxxxx",
+        "category": "Announcements",
+        "categoryId": "DIC_kwDOxxxxxx",
+        "mapping": "pathname",
+        "lang": "zh-CN"
+    },
+    "nav": [
+        {
+            "key": "home",
+            "href": "/blog/",
+            "icon": "home"
+        },
+        {
+            "key": "categories",
+            "href": "/blog/categories/",
+            "icon": "folder"
+        },
+        {
+            "key": "archive",
+            "href": "/blog/archive/",
+            "icon": "archive"
+        },
+        {
+            "key": "about",
+            "href": "/about/",
+            "icon": "user"
+        }
+    ],
+    "social": [
+        {
+            "platform": "GitHub",
+            "url": "https://github.com/WayneXuCN",
+            "icon": "fab fa-github"
+        },
+        {
+            "platform": "Google Scholar",
+            "url": "https://scholar.google.com/citations?user=eWTidmsAAAAJ",
+            "icon": "fas fa-graduation-cap"
+        },
+        {
+            "platform": "Email",
+            "url": "mailto:wenjie.xu.cn@outlook.com",
+            "icon": "fas fa-envelope"
+        }
+    ],
+    "categories": {
+        "research": {
+            "name": {
+                "zh": "学术研究",
+                "en": "Research"
+            },
+            "description": {
+                "zh": "学术论文、研究进展与科研心得",
+                "en": "Academic papers, research progress and insights"
+            },
+            "icon": "🔬",
+            "color": "blue"
+        },
+        "tutorial": {
+            "name": {
+                "zh": "技术教程",
+                "en": "Tutorial"
+            },
+            "description": {
+                "zh": "编程技巧、工具使用与实践指南",
+                "en": "Programming tips, tools and practical guides"
+            },
+            "icon": "📚",
+            "color": "green"
+        },
+        "thoughts": {
+            "name": {
+                "zh": "随想杂谈",
+                "en": "Thoughts"
+            },
+            "description": {
+                "zh": "思考感悟与观点分享",
+                "en": "Reflections and perspectives"
+            },
+            "icon": "💭",
+            "color": "purple"
+        },
+        "tools": {
+            "name": {
+                "zh": "工具推荐",
+                "en": "Tools"
+            },
+            "description": {
+                "zh": "好用的软件、服务与资源推荐",
+                "en": "Useful software, services and resources"
+            },
+            "icon": "🛠️",
+            "color": "orange"
+        },
+        "life": {
+            "name": {
+                "zh": "生活记录",
+                "en": "Life"
+            },
+            "description": {
+                "zh": "日常生活、旅行与随笔",
+                "en": "Daily life, travel and essays"
+            },
+            "icon": "🌱",
+            "color": "pink"
+        }
+    }
+}

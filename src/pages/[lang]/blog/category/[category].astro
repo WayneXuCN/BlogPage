@@ -7,11 +7,12 @@ import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import PostCard from '../../../../components/blog/PostCard.astro';
 import Pagination from '../../../../components/blog/Pagination.astro';
 import { getCollection } from 'astro:content';
-import { siteConfig, getCategoryConfig, type CategoryKey } from '../../../../config';
+import { getSiteConfig, getCategoryConfig } from '../../../../utils/config';
 
 export async function getStaticPaths() {
   const paths = [];
-  const categories = Object.keys(siteConfig.categories) as CategoryKey[];
+  const siteConfig = await getSiteConfig();
+  const categories = Object.keys(siteConfig.categories);
   
   for (const lang of ['zh', 'en'] as const) {
     for (const category of categories) {
@@ -26,10 +27,13 @@ export async function getStaticPaths() {
 
 const { lang, category } = Astro.params;
 const currentLang = lang as 'zh' | 'en';
-const currentCategory = category as CategoryKey;
+const currentCategory = category as string;
+
+// 获取配置
+const siteConfig = await getSiteConfig();
 
 // 获取分类配置
-const categoryConfig = getCategoryConfig(currentCategory);
+const categoryConfig = await getCategoryConfig(currentCategory);
 const categoryName = currentLang === 'zh' 
   ? categoryConfig.name.zh 
   : categoryConfig.name.en;

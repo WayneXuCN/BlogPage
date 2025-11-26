@@ -1,63 +1,73 @@
 ---
 /**
- * /en/about - English About Page
+ * /en/about - English about page
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { siteConfig } from '../../config';
+import { getSiteConfig } from '../../utils/config';
 
 const lang = 'en' as const;
+
+// 获取配置
+const siteConfig = await getSiteConfig();
 ---
 
 <BaseLayout
   title={`About | ${siteConfig.title.en}`}
-  description="About Wenjie Xu - Academic researcher"
+  description='About Wenjie Xu - Academic researcher'
   lang={lang}
 >
-  <div class="max-w-3xl mx-auto">
+  <div class='max-w-3xl mx-auto'>
     <!-- Profile Section -->
-    <section class="text-center mb-16">
+    <section class='text-center mb-16'>
       <img
         src={siteConfig.authorInfo.avatar}
         alt={siteConfig.author.en}
-        class="w-32 h-32 rounded-full mx-auto mb-6 shadow-lg ring-4 ring-white dark:ring-gray-800"
+        class='w-32 h-32 rounded-full mx-auto mb-6 shadow-lg ring-4 ring-white dark:ring-gray-800'
       />
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+      <h1 class='text-3xl font-bold text-gray-900 dark:text-white mb-2'>
         {siteConfig.author.en}
       </h1>
-      <p class="text-gray-600 dark:text-gray-400 text-lg">
-        Ph.D. Candidate · Researcher
-      </p>
-      
+      <p class='text-gray-600 dark:text-gray-400 text-lg'>Ph.D. Candidate · Researcher</p>
+
       <!-- Social Links -->
-      <div class="flex justify-center gap-4 mt-6">
-        {siteConfig.social.map((link) => (
-          <a
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all"
-            title={link.platform}
-          >
-            <i class={`${link.icon} text-lg`}></i>
-          </a>
-        ))}
+      <div class='flex justify-center gap-4 mt-6'>
+        {
+          siteConfig.social.map(link => (
+            <a
+              href={link.url}
+              target='_blank'
+              rel='noopener noreferrer'
+              class='w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all'
+              title={link.platform}
+            >
+              <i class={`${link.icon} text-lg`} />
+            </a>
+          ))
+        }
       </div>
     </section>
 
     <!-- Bio -->
-    <section class="prose prose-lg dark:prose-invert max-w-none">
+    <section class='prose prose-lg dark:prose-invert max-w-none'>
       <h2>About Me</h2>
       <p>
-        Hello! I'm Wenjie Xu, a Ph.D. candidate at the Institutes of Science and Development, 
-        Chinese Academy of Sciences. My research focuses on critical infrastructure risk management, 
+        Hello! I'm Wenjie Xu, a Ph.D. candidate at the Institutes of Science and Development,
+        Chinese Academy of Sciences. My research focuses on critical infrastructure risk management,
         system resilience assessment, and emergency decision optimization.
       </p>
 
       <h2>Research Interests</h2>
       <ul>
-        <li><strong>Critical Infrastructure Risk</strong> — Studying risk propagation mechanisms in energy and transportation networks</li>
-        <li><strong>System Resilience</strong> — Developing data-driven resilience assessment methodologies</li>
-        <li><strong>Emergency Decision</strong> — Optimizing recovery strategies under resource constraints</li>
+        <li>
+          <strong>Critical Infrastructure Risk</strong> — Studying risk propagation mechanisms in energy
+          and transportation networks
+        </li>
+        <li>
+          <strong>System Resilience</strong> — Developing data-driven resilience assessment methodologies
+        </li>
+        <li>
+          <strong>Emergency Decision</strong> — Optimizing recovery strategies under resource constraints
+        </li>
       </ul>
 
       <h2>Get in Touch</h2>

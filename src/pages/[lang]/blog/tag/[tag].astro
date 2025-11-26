@@ -7,25 +7,25 @@ import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import PostCard from '../../../../components/blog/PostCard.astro';
 import Pagination from '../../../../components/blog/Pagination.astro';
 import { getCollection } from 'astro:content';
-import { siteConfig } from '../../../../config';
+import { getSiteConfig } from '../../../../utils/config';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  
+
   // 收集所有标签
   const tagsByLang = {
     zh: new Set<string>(),
     en: new Set<string>(),
   };
-  
+
   posts.forEach(post => {
     post.data.tags?.forEach(tag => {
       tagsByLang[post.data.lang as 'zh' | 'en'].add(tag);
     });
   });
-  
+
   const paths = [];
-  
+
   for (const lang of ['zh', 'en'] as const) {
     for (const tag of tagsByLang[lang]) {
       paths.push({
@@ -33,12 +33,15 @@ export async function getStaticPaths() {
       });
     }
   }
-  
+
   return paths;
 }
 
 const { lang, tag } = Astro.params;
 const currentLang = lang as 'zh' | 'en';
+
+// 获取配置
+const siteConfig = await getSiteConfig();
 
 // 获取该标签的所有文章
 const allPosts = await getCollection('blog', ({ data }) => {
@@ -46,8 +49,8 @@ const allPosts = await getCollection('blog', ({ data }) => {
 });
 
 // 按发布日期排序
-const sortedPosts = allPosts.sort((a, b) => 
-  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+const sortedPosts = allPosts.sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
 );
 
 // 分页
@@ -58,57 +61,50 @@ const paginatedPosts = sortedPosts.slice(0, postsPerPage);
 
 // 页面信息
 const siteTitle = currentLang === 'zh' ? siteConfig.title.zh : siteConfig.title.en;
-const description = currentLang === 'zh'
-  ? `标签 "${tag}" 下的所有文章`
-  : `All posts tagged with "${tag}"`;
+const description =
+  currentLang === 'zh' ? `标签 "${tag}" 下的所有文章` : `All posts tagged with "${tag}"`;
 ---
 
-<BaseLayout 
-  title={`#${tag} - ${siteTitle}`}
-  description={description}
-  lang={currentLang}
->
-  <main class="max-w-6xl mx-auto px-4 py-8">
-    <header class="mb-12">
-      <div class="flex items-center gap-2 mb-2">
-        <span class="text-gray-400">#</span>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+<BaseLayout title={`#${tag} - ${siteTitle}`} description={description} lang={currentLang}>
+  <main class='max-w-6xl mx-auto px-4 py-8'>
+    <header class='mb-12'>
+      <div class='flex items-center gap-2 mb-2'>
+        <span class='text-gray-400'>#</span>
+        <h1 class='text-3xl font-bold text-gray-900 dark:text-gray-100'>
           {tag}
         </h1>
       </div>
-      <p class="text-gray-600 dark:text-gray-400">
-        {currentLang === 'zh' 
-          ? `共 ${allPosts.length} 篇文章` 
-          : `${allPosts.length} posts`}
+      <p class='text-gray-600 dark:text-gray-400'>
+        {currentLang === 'zh' ? `共 ${allPosts.length} 篇文章` : `${allPosts.length} posts`}
       </p>
     </header>
-    
-    {sortedPosts.length > 0 ? (
-      <>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {paginatedPosts.map((post) => (
-            <PostCard post={post} lang={currentLang} />
-          ))}
+
+    {
+      sortedPosts.length > 0 ? (
+        <>
+          <div class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
+            {paginatedPosts.map(post => (
+              <PostCard post={post} lang={currentLang} />
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              baseUrl={`/${lang}/blog/tag/${tag}/page/`}
+              lang={currentLang}
+            />
+          )}
+        </>
+      ) : (
+        <div class='text-center py-16'>
+          <div class='text-6xl mb-4'>🏷️</div>
+          <p class='text-gray-500 dark:text-gray-400'>
+            {currentLang === 'zh' ? '该标签下暂无文章' : 'No posts with this tag yet'}
+          </p>
         </div>
-        
-        {totalPages > 1 && (
-          <Pagination 
-            currentPage={currentPage}
-            totalPages={totalPages}
-            baseUrl={`/${lang}/blog/tag/${tag}/page/`}
-            lang={currentLang}
-          />
-        )}
-      </>
-    ) : (
-      <div class="text-center py-16">
-        <div class="text-6xl mb-4">🏷️</div>
-        <p class="text-gray-500 dark:text-gray-400">
-          {currentLang === 'zh' 
-            ? '该标签下暂无文章' 
-            : 'No posts with this tag yet'}
-        </p>
-      </div>
-    )}
+      )
+    }
   </main>
 </BaseLayout>

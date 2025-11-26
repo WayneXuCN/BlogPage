@@ -4,10 +4,15 @@
  * 卡片网格式布局
  */
 import type { CollectionEntry } from 'astro:content';
-import type { GridLayoutConfig } from '../../config';
 import PostCard from '../blog/PostCard.astro';
 import Pagination from '../blog/Pagination.astro';
 import FeaturedSection from './FeaturedSection.astro';
+
+interface GridLayoutConfig {
+  columns: number;
+  showTags: boolean;
+  showThumbnail?: boolean;
+}
 
 interface Props {
   posts: CollectionEntry<'blog'>[];
@@ -35,30 +40,34 @@ const gridCols = {
 };
 ---
 
-<div class="grid-layout">
+<div class='grid-layout'>
   <!-- 精选文章 -->
-  {featuredPosts.length > 0 && currentPage === 1 && (
-    <FeaturedSection posts={featuredPosts} lang={lang} variant="grid" />
-  )}
-  
+  {
+    featuredPosts.length > 0 && currentPage === 1 && (
+      <FeaturedSection posts={featuredPosts} lang={lang} variant='grid' />
+    )
+  }
+
   <!-- 文章网格 -->
-  <section class="mt-12">
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">
+  <section class='mt-12'>
+    <h2 class='text-2xl font-bold text-gray-900 dark:text-white mb-8'>
       {currentPage === 1 ? t.latestPosts : t.allPosts}
     </h2>
-    
+
     <div class={`grid ${gridCols[config.columns]} gap-6`}>
-      {posts.map((post) => (
-        <PostCard
-          post={post}
-          lang={lang}
-          variant="default"
-          showImage={config.showThumbnail}
-          showExcerpt={true}
-        />
-      ))}
+      {
+        posts.map(post => (
+          <PostCard
+            post={post}
+            lang={lang}
+            variant='default'
+            showImage={config.showThumbnail}
+            showExcerpt={true}
+          />
+        ))
+      }
     </div>
-    
+
     <!-- 分页 -->
     <Pagination
       currentPage={currentPage}

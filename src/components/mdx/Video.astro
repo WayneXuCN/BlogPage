@@ -2,9 +2,9 @@
 /**
  * Video.astro
  * 视频嵌入组件
- * 
+ *
  * 支持本地视频、YouTube、Bilibili 等
- * 
+ *
  * 用法：
  * <Video src="/videos/demo.mp4" caption="演示视频" />
  * <Video youtube="dQw4w9WgXcQ" caption="YouTube 视频" />
@@ -35,10 +35,10 @@ interface Props {
   class?: string;
 }
 
-const { 
-  src, 
-  youtube, 
-  bilibili, 
+const {
+  src,
+  youtube,
+  bilibili,
   caption,
   poster,
   aspectRatio = '16/9',
@@ -46,7 +46,7 @@ const {
   loop = false,
   muted = false,
   controls = true,
-  class: className = '' 
+  class: className = '',
 } = Astro.props;
 
 // 构建嵌入 URL
@@ -74,67 +74,75 @@ if (src) {
 ---
 
 <figure class:list={['video-container my-8', className]}>
-  <div 
-    class="video-wrapper relative w-full bg-black rounded-lg overflow-hidden shadow-lg"
+  <div
+    class='video-wrapper relative w-full bg-black rounded-lg overflow-hidden shadow-lg'
     style={`aspect-ratio: ${aspectRatio};`}
   >
-    {embedType === 'local' && src && (
-      <video
-        src={src}
-        poster={poster}
-        autoplay={autoplay}
-        loop={loop}
-        muted={muted}
-        controls={controls}
-        playsinline
-        class="w-full h-full object-contain"
-      >
-        <track kind="captions" src="" label="字幕" />
-        您的浏览器不支持视频播放
-      </video>
-    )}
-    
-    {embedType === 'youtube' && (
-      <iframe
-        src={embedUrl}
-        title={caption || 'YouTube video'}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        loading="lazy"
-        class="absolute inset-0 w-full h-full border-0"
-      ></iframe>
-    )}
-    
-    {embedType === 'bilibili' && (
-      <iframe
-        src={embedUrl}
-        title={caption || 'Bilibili video'}
-        allowfullscreen
-        loading="lazy"
-        scrolling="no"
-        class="absolute inset-0 w-full h-full border-0"
-      ></iframe>
-    )}
-    
-    {!embedType && (
-      <div class="flex items-center justify-center h-full text-gray-400">
-        请提供视频源
-      </div>
-    )}
+    {
+      embedType === 'local' && src && (
+        <video
+          src={src}
+          poster={poster}
+          autoplay={autoplay}
+          loop={loop}
+          muted={muted}
+          controls={controls}
+          playsinline
+          class='w-full h-full object-contain'
+        >
+          <track kind='captions' src='' label='字幕' />
+          您的浏览器不支持视频播放
+        </video>
+      )
+    }
+
+    {
+      embedType === 'youtube' && (
+        <iframe
+          src={embedUrl}
+          title={caption || 'YouTube video'}
+          allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+          allowfullscreen
+          loading='lazy'
+          class='absolute inset-0 w-full h-full border-0'
+        />
+      )
+    }
+
+    {
+      embedType === 'bilibili' && (
+        <iframe
+          src={embedUrl}
+          title={caption || 'Bilibili video'}
+          allowfullscreen
+          loading='lazy'
+          scrolling='no'
+          class='absolute inset-0 w-full h-full border-0'
+        />
+      )
+    }
+
+    {
+      !embedType && (
+        <div class='flex items-center justify-center h-full text-gray-400'>请提供视频源</div>
+      )
+    }
   </div>
-  
-  {caption && (
-    <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
-      {caption}
-    </figcaption>
-  )}
+
+  {
+    caption && (
+      <figcaption class='mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic'>
+        {caption}
+      </figcaption>
+    )
+  }
 </figure>
 
 <style>
   .video-wrapper {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   }
-  
+
   /* 视频播放器样式优化 */
   video::-webkit-media-controls-panel {
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));

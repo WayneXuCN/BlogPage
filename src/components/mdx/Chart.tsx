@@ -1,9 +1,9 @@
 /**
  * Chart.tsx
  * Chart.js 图表组件
- * 
+ *
  * 用法：
- * <Chart 
+ * <Chart
  *   type="line"
  *   data={{
  *     labels: ['1月', '2月', '3月'],
@@ -55,13 +55,13 @@ interface ChartProps {
   className?: string;
 }
 
-export default function Chart({ 
-  type, 
-  data, 
-  options, 
+export default function Chart({
+  type,
+  data,
+  options,
   height = 300,
   caption,
-  className = '' 
+  className = '',
 }: ChartProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const chartRef = useRef<ChartJS | null>(null);
@@ -72,15 +72,15 @@ export default function Chart({
     const checkDark = () => {
       setIsDark(document.documentElement.classList.contains('dark'));
     };
-    
+
     checkDark();
-    
+
     const observer = new MutationObserver(checkDark);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
     });
-    
+
     return () => observer.disconnect();
   }, []);
 
@@ -121,16 +121,18 @@ export default function Chart({
           borderWidth: 1,
         },
       },
-      scales: ['line', 'bar'].includes(type) ? {
-        x: {
-          ticks: { color: textColor },
-          grid: { color: gridColor },
-        },
-        y: {
-          ticks: { color: textColor },
-          grid: { color: gridColor },
-        },
-      } : undefined,
+      scales: ['line', 'bar'].includes(type)
+        ? {
+            x: {
+              ticks: { color: textColor },
+              grid: { color: gridColor },
+            },
+            y: {
+              ticks: { color: textColor },
+              grid: { color: gridColor },
+            },
+          }
+        : undefined,
     };
 
     chartRef.current = new ChartJS(ctx, {
@@ -152,7 +154,7 @@ export default function Chart({
         <canvas ref={canvasRef} />
       </div>
       {caption && (
-        <figcaption className="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+        <figcaption className='mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic'>
           {caption}
         </figcaption>
       )}

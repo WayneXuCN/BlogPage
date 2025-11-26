@@ -1,8 +1,8 @@
 {
-  "id": "machine-learning-basics",
-  "title": "机器学习入门",
-  "titleEn": "Machine Learning Basics",
-  "description": "从零开始学习机器学习的系列教程",
-  "descriptionEn": "A tutorial series to learn machine learning from scratch",
-  "status": "ongoing"
+    "id": "machine-learning-basics",
+    "title": "机器学习入门",
+    "titleEn": "Machine Learning Basics",
+    "description": "从零开始学习机器学习的系列教程",
+    "descriptionEn": "A tutorial series to learn machine learning from scratch",
+    "status": "ongoing"
 }

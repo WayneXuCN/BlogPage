@@ -5,7 +5,7 @@
  * 无封面图时采用紧凑型横向布局
  */
 import type { CollectionEntry } from 'astro:content';
-import { getPostUrl, formatDate, calculateReadingTime, siteConfig, getTagUrl, getCategoryUrl } from '../../config';
+import { getPostUrl, formatDate, calculateReadingTime, getTagUrl, getCategoryUrl, getSiteConfig } from '../../utils/config';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -25,6 +25,9 @@ const {
   showExcerpt = true,
   forceImage = null,
 } = Astro.props;
+
+// 获取配置
+const siteConfig = await getSiteConfig();
 
 const { title, description, pubDate, updatedDate, category, tags, image, featured } = post.data;
 // 从 post.id 提取 slug (格式: "zh/welcome-to-my-blog" -> "welcome-to-my-blog")

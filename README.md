@@ -1,28 +1,25 @@
 <p align="center">
-  <img src="public/assets/img/website.png" alt="Starter Theme Preview" width="800" />
+  <img src="public/assets/img/website.png" alt="Blog Preview" width="800" />
 </p>
 
-<h1 align="center">Starter Theme</h1>
+<h1 align="center">Academic Blog</h1>
 
 <p align="center">
-  <strong>A modern, minimalist personal landing page theme built with Astro 5</strong>
+  <strong>A modern, responsive academic blog built with Astro 5</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/WayneXuCN/starter-theme/blob/main/LICENSE">
+  <a href="https://github.com/WayneXuCN/BlogPage/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
   </a>
   <a href="https://astro.build/">
     <img src="https://img.shields.io/badge/Astro-5.x-ff5d01.svg?logo=astro" alt="Astro" />
   </a>
-  <a href="https://react.dev/">
-    <img src="https://img.shields.io/badge/React-19.x-61dafb.svg?logo=react" alt="React" />
-  </a>
   <a href="https://tailwindcss.com/">
     <img src="https://img.shields.io/badge/Tailwind-3.x-38bdf8.svg?logo=tailwindcss" alt="Tailwind CSS" />
   </a>
-  <a href="https://bun.sh/">
-    <img src="https://img.shields.io/badge/Bun-1.x-fbf0df.svg?logo=bun" alt="Bun" />
+  <a href="https://www.typescriptlang.org/">
+    <img src="https://img.shields.io/badge/TypeScript-5.x-3178c6.svg?logo=typescript" alt="TypeScript" />
   </a>
 </p>
 
@@ -30,7 +27,8 @@
   <a href="#features">Features</a> •
   <a href="#quick-start">Quick Start</a> •
   <a href="#configuration">Configuration</a> •
-  <a href="#customization">Customization</a>
+  <a href="#content-management">Content Management</a> •
+  <a href="#deployment">Deployment</a>
 </p>
 
 <p align="center">
@@ -43,39 +41,50 @@
 
 | Feature | Description |
 |---------|-------------|
-| **Internationalization** | Built-in internationalization with Astro's native i18n routing and Content Collections |
-| **Dark Mode** | Automatic theme switching with system preference detection and localStorage persistence |
+| **Multiple Layouts** | Three homepage layouts: Classic, Grid, and Magazine |
+| **Internationalization** | Built-in support for Chinese and English |
 | **Responsive Design** | Mobile-first design that looks great on all devices |
-| **RSS Aggregation** | Fetch and display posts from external RSS/Atom feeds |
-| **Contact Form** | Pre-configured EmailJS integration for functional contact forms |
-| **Analytics** | Optional Google Analytics 4 integration |
-| **Islands Architecture** | Interactive React components with minimal JavaScript |
+| **Dark Mode** | Automatic theme switching with system preference detection |
+| **Blog Features** | Categories, tags, archives, series, and featured posts |
+| **Comments** | Giscus integration for comments |
+| **RSS Feeds** | Auto-generated RSS feeds for each language |
+| **Search** | Built-in search functionality |
+| **Math Support** | KaTeX integration for mathematical formulas |
+| **Diagrams** | Mermaid diagram support |
+| **Reading Progress** | Reading progress bar for articles |
+| **Social Sharing** | Social media sharing buttons |
 
 ## Quick Start
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) 1.0+ (recommended) or [Node.js](https://nodejs.org/) 18+
+- [Node.js](https://nodejs.org/) 18+ or [Bun](https://bun.sh/) 1.0+
 
-### Create Your Site
+### Create Your Blog
 
 ```bash
-# Clone the template
-git clone https://github.com/WayneXuCN/starter-theme.git my-site
-cd my-site
+# Clone the repository
+git clone https://github.com/WayneXuCN/BlogPage.git my-blog
+cd my-blog
 
 # Install dependencies
+npm install
+# or
 bun install
 
 # Start development server
+npm run dev
+# or
 bun run dev
 ```
 
-Open [http://localhost:4321](http://localhost:4321) to see your site.
+Open [http://localhost:4321](http://localhost:4321) to see your blog.
 
 ### Build for Production
 
 ```bash
+npm run build
+# or
 bun run build
 ```
 
@@ -84,162 +93,115 @@ Output is generated in the `dist/` directory, ready for deployment to any static
 ## Project Structure
 
 ```text
-starter-theme/
+BlogPage/
 ├── src/
-│   ├── components/astro/     # React island components
-│   │   ├── HeaderBar.jsx     # Navigation header
-│   │   ├── Hero.jsx          # Hero section
-│   │   ├── Footer.jsx        # Site footer
-│   │   ├── ThemeToggle.jsx   # Dark mode toggle
-│   │   ├── LanguageSwitcher.jsx # Language switcher
-│   │   └── ...
-│   ├── content/
-│   │   └── i18n/             # Translations (Content Collections)
-│   │       ├── en.json
-│   │       └── zh.json
-│   ├── layouts/
-│   │   └── BaseLayout.astro  # Global HTML layout
-│   ├── lib/
-│   │   └── i18n.ts           # i18n utilities
-│   ├── pages/
-│   │   ├── index.astro       # Root redirect
-│   │   ├── 404.astro         # Error page
-│   │   ├── en/               # English routes
-│   │   └── zh/               # Chinese routes
-│   ├── middleware.ts         # Middleware routing redirects
-│   ├── env.d.ts              # TypeScript type declarations
-│   └── content.config.ts     # Content Collections schema
-├── public/                   # Static assets
-├── scripts/
-│   └── fetch-rss.bun.js      # RSS aggregation script
-├── astro.config.mjs          # Astro configuration
-├── tailwind.config.mjs       # Tailwind configuration
-└── package.json
+│   ├── components/          # Reusable components
+│   │   ├── blog/           # Blog-specific components
+│   │   └── layouts/        # Layout components
+│   ├── content/            # Content collections
+│   │   ├── blog/           # Blog posts
+│   │   ├── config/         # Site configuration
+│   │   ├── authors/        # Author information
+│   │   ├── series/         # Series metadata
+│   │   └── i18n/           # Translation files
+│   ├── layouts/            # Page layouts
+│   ├── pages/              # Page routes
+│   ├── utils/              # Utility functions
+│   └── content.config.ts   # Content collections configuration
+├── public/                 # Static assets
+├── astro.config.mjs        # Astro configuration
+├── tailwind.config.mjs     # Tailwind configuration
+└── package.json            # Project dependencies
 ```
 
 ## Configuration
 
-### Environment Variables
-
-Create a `.env` file in the project root:
-
-```env
-# EmailJS (required for contact form)
-PUBLIC_EMAILJS_SERVICE_ID=your_service_id
-PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
-PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
-
-# Google Analytics (optional)
-PUBLIC_GA_ID=G-XXXXXXXXXX
-```
-
 ### Site Configuration
 
-Edit `astro.config.mjs` to update your site URL:
+All configuration is managed through `src/content/config/site.json`. You can edit this file to customize your blog.
 
-```js
-export default defineConfig({
-  site: 'https://your-domain.com',
-  // ...
-});
-```
+#### Layout Switching
 
-### Content Management
-
-All site content is managed through JSON files in `src/content/i18n/`:
-
-| File | Description |
-|------|-------------|
-| `zh.json` | Chinese content |
-| `en.json` | English content |
-
-Each file contains:
+To change the homepage layout, modify the `home.layout` property:
 
 ```json
 {
-  "site": { "title": "...", "description": "...", "author": "..." },
-  "nav": [{ "label": "Home", "href": "index.html" }],
-  "header": { "name": "...", "avatar": "..." },
-  "hero": { "title": "...", "subtitle": "...", "description": "..." },
-  "websites": { "title": "...", "items": [...] },
-  "featuredPosts": { "title": "...", "rss": {...}, "items": [...] },
-  "footer": { "copyright": "...", "socialLinks": [...] },
-  "about": { ... },
-  "contact": { ... }
-}
-```
-
-### RSS Feeds
-
-Configure RSS aggregation in your locale JSON:
-
-```json
-{
-  "featuredPosts": {
-    "rss": {
-      "enabled": true,
-      "feeds": [
-        { "url": "https://blog.example.com/feed.xml", "parser": "default" }
-      ],
-      "limit": 6
-    }
+  "home": {
+    "layout": "magazine", // Options: 'classic', 'grid', 'magazine'
+    "postsPerPage": 10,
+    "showFeatured": true,
+    "featuredCount": 5,
+    "carouselAutoPlay": true,
+    "carouselInterval": 5000
   }
 }
 ```
 
-## Customization
+#### Available Layouts
 
-### Adding a New Language
+1. **Classic** - Traditional list layout with featured section
+2. **Grid** - Card-based grid layout
+3. **Magazine** - Magazine-style layout with carousel (default)
 
-1. **Update Astro config** (`astro.config.mjs`):
+#### Other Configuration Options
 
-   ```js
-   i18n: {
-     defaultLocale: 'zh',
-     locales: ['zh', 'en', 'ja'],
-     routing: { prefixDefaultLocale: true },
-   },
-   ```
+- `url`: Site URL
+- `title`: Site title (multilingual)
+- `description`: Site description (multilingual)
+- `author`: Author information
+- `features`: Enable/disable features like comments, search, RSS, etc.
+- `giscus`: Giscus comment configuration
+- `nav`: Navigation menu items
+- `social`: Social media links
+- `categories`: Blog categories
 
-2. **Update i18n utilities** (`src/lib/i18n.ts`):
+## Content Management
 
-   ```ts
-   export const locales = ['zh', 'en', 'ja'] as const;
-   
-   export const localeConfig = {
-     // ...existing
-     ja: { label: '日', name: '日本語', hrefLang: 'ja' },
-   };
-   ```
+### Blog Posts
 
-3. **Create translation file** (`src/content/i18n/ja.json`)
+Blog posts are stored in `src/content/blog/` with the following structure:
 
-4. **Create page routes** (`src/pages/ja/`)
+```text
+src/content/blog/
+├── zh/                    # Chinese posts
+│   ├── 2024/              # Year
+│   │   └── post-slug.md    # Blog post
+│   └── ...
+└── en/                    # English posts
+    ├── 2024/              # Year
+    │   └── post-slug.md    # Blog post
+    └── ...
+```
 
-### Styling
+Each post has frontmatter with metadata:
 
-- **Colors & Theme**: Edit `tailwind.config.mjs`
-- **Global Styles**: Edit `src/styles/global.css`
-- **Dark Mode**: Use Tailwind's `dark:` prefix
+```yaml
+title: "Post Title"
+description: "Post description"
+pubDate: 2024-01-01
+category: tutorial
+tags: [astro, blog]
+image: /assets/img/post-image.jpg
+featured: true
+lang: zh
+```
 
-### Components
+### Categories and Tags
 
-All interactive components are React islands in `src/components/astro/`:
+Categories are configured in `src/content/config/site.json`. Tags are automatically generated from blog posts.
 
-| Component | Purpose |
-|-----------|---------|
-| `HeaderBar.jsx` | Navigation with language switcher |
-| `Hero.jsx` | Hero section with title and CTA |
-| `Home.jsx` | Homepage layout with sections |
-| `About.jsx` | About page content |
-| `Contact.jsx` | Contact page with form |
-| `Footer.jsx` | Site footer |
-| `ThemeToggle.jsx` | Dark/light mode toggle |
-| `LanguageSwitcher.jsx` | Language selector |
+### Series
+
+To create a series of posts, add the `series` and `seriesOrder` fields to your post frontmatter:
+
+```yaml
+series: "astro-tutorial"
+seriesOrder: 1
+```
 
 ## Deployment
 
-The theme generates static HTML files that can be deployed anywhere:
+The blog generates static HTML files that can be deployed anywhere.
 
 ### Vercel
 
@@ -258,7 +220,7 @@ npx netlify deploy --prod --dir=dist
 Use the included GitHub Actions workflow or deploy manually:
 
 ```bash
-bun run build
+npm run build
 # Upload dist/ to gh-pages branch
 ```
 
@@ -266,30 +228,58 @@ bun run build
 
 Connect your repository and set:
 
-- **Build command**: `bun run build`
+- **Build command**: `npm run build`
 - **Output directory**: `dist`
+
+## Localization
+
+The blog supports Chinese and English. To add a new language:
+
+1. Update `src/content.config.ts` to add the new language
+2. Create translation files in `src/content/i18n/`
+3. Add language-specific pages in `src/pages/`
+4. Update the language switcher component
+
+## Customization
+
+### Styling
+
+- **Colors & Theme**: Edit `tailwind.config.mjs`
+- **Global Styles**: Edit `src/styles/global.css`
+- **Dark Mode**: Use Tailwind's `dark:` prefix
+
+### Components
+
+Customize components in `src/components/`:
+
+- `Header.astro`: Navigation header
+- `Footer.astro`: Site footer
+- `PostCard.astro`: Blog post card
+- `FeaturedCarousel.astro`: Featured posts carousel
+- `Comments.tsx`: Giscus comments
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
-| `bun run dev` | Start development server |
-| `bun run build` | Build for production |
-| `bun run preview` | Preview production build |
-| `bun run fetch:rss` | Fetch RSS feeds |
-| `bun run format` | Format code with Prettier |
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+| `npm run format` | Format code with Prettier |
 
 ## Tech Stack
 
 - **Framework**: [Astro](https://astro.build/) 5.x
-- **UI**: [React](https://react.dev/) 19.x
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) 3.x
-- **Runtime**: [Bun](https://bun.sh/) 1.x
-- **Email**: [EmailJS](https://www.emailjs.com/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Comments**: [Giscus](https://giscus.app/)
+- **Math Support**: [KaTeX](https://katex.org/)
+- **Diagrams**: [Mermaid](https://mermaid.js.org/)
+- **Search**: [Pagefind](https://pagefind.app/)
 
 ## Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) before submitting a PR.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -304,5 +294,5 @@ This project is licensed under the [MIT License](LICENSE).
 ---
 
 <p align="center">
-  Made with love by <a href="https://github.com/WayneXuCN">Wenjie Xu</a>
+  Made with ❤️ by <a href="https://github.com/WayneXuCN">Wenjie Xu</a>
 </p>

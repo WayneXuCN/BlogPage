@@ -2,7 +2,7 @@
 /**
  * PhotoGrid.astro
  * Bootstrap 风格响应式图片网格
- * 
+ *
  * 用法：
  * <PhotoGrid cols={3} gap={4}>
  *   <img src="/img1.jpg" alt="图片1" />
@@ -34,15 +34,17 @@ const gridCols = {
 const gapClass = `gap-${gap}`;
 ---
 
-<figure class="photo-grid my-8">
+<figure class='photo-grid my-8'>
   <div class={`grid ${gridCols[cols]} ${gapClass}`}>
     <slot />
   </div>
-  {caption && (
-    <figcaption class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400 italic">
-      {caption}
-    </figcaption>
-  )}
+  {
+    caption && (
+      <figcaption class='mt-4 text-center text-sm text-gray-600 dark:text-gray-400 italic'>
+        {caption}
+      </figcaption>
+    )
+  }
 </figure>
 
 <style>
@@ -51,9 +53,11 @@ const gapClass = `gap-${gap}`;
     height: auto;
     object-fit: cover;
     border-radius: 0.5rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
   }
-  
+
   .photo-grid :global(img:hover) {
     transform: scale(1.02);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);

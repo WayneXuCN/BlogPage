@@ -1,6 +1,6 @@
 ---
-title: "Python 数据处理技巧：Pandas 高级用法"
-description: "分享一些在日常数据分析中常用的 Pandas 高级技巧，包括数据清洗、聚合操作和性能优化。"
+title: 'Python 数据处理技巧：Pandas 高级用法'
+description: '分享一些在日常数据分析中常用的 Pandas 高级技巧，包括数据清洗、聚合操作和性能优化。'
 pubDate: 2023-03-10T09:00:00
 updatedDate: 2023-11-25T14:20:00
 category: tutorial
@@ -22,9 +22,7 @@ import Callout from '@components/mdx/Callout.astro';
 
 Pandas 是 Python 数据分析的核心库，本文分享一些实用的高级技巧。
 
-<Callout type="tip">
-  本文示例代码基于 Pandas 2.0+ 版本，部分新特性可能在旧版本中不可用。
-</Callout>
+<Callout type='tip'>本文示例代码基于 Pandas 2.0+ 版本，部分新特性可能在旧版本中不可用。</Callout>
 
 ## 1. 链式调用与 pipe()
 
@@ -76,18 +74,18 @@ df.groupby('category')['value'].agg(['mean', range_func])
 def optimize_int(df, col):
     c_min = df[col].min()
     c_max = df[col].max()
-    
+
     if c_min >= 0:
         if c_max < 255:
             return df[col].astype('uint8')
         elif c_max < 65535:
             return df[col].astype('uint16')
-    
+
     if c_min > -128 and c_max < 127:
         return df[col].astype('int8')
     elif c_min > -32768 and c_max < 32767:
         return df[col].astype('int16')
-    
+
     return df[col]
 ```
 

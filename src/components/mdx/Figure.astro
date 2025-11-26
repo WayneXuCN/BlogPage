@@ -2,7 +2,7 @@
 /**
  * Figure.astro
  * 带标题的图片组件（学术风格）
- * 
+ *
  * 用法：
  * <Figure src="/images/chart.png" alt="图表" caption="图 1: 实验结果" />
  */
@@ -22,13 +22,15 @@ const { src, alt, caption, width, class: className = '' } = Astro.props;
   <img
     src={src}
     alt={alt}
-    class="mx-auto rounded-lg shadow-lg"
+    class='mx-auto rounded-lg shadow-lg'
     style={width ? `max-width: ${width}` : undefined}
-    loading="lazy"
+    loading='lazy'
   />
-  {caption && (
-    <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
-      {caption}
-    </figcaption>
-  )}
+  {
+    caption && (
+      <figcaption class='mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic'>
+        {caption}
+      </figcaption>
+    )
+  }
 </figure>

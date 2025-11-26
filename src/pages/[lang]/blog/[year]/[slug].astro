@@ -8,19 +8,19 @@ import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  
-  return posts.map((post) => {
+
+  return posts.map(post => {
     const year = new Date(post.data.pubDate).getFullYear();
     // id 格式: lang/slug-name，需要提取纯 slug
     const idParts = post.id.split('/');
     const lang = idParts[0];
     const slug = idParts.slice(1).join('/') || idParts[0];
-    
+
     return {
-      params: { 
-        lang, 
-        year: String(year), 
-        slug 
+      params: {
+        lang,
+        year: String(year),
+        slug,
       },
       props: { post },
     };

@@ -3,7 +3,7 @@
  * HomeLayout.astro
  * 首页布局选择器 - 根据配置动态选择布局
  */
-import { siteConfig } from '../../config';
+import { getSiteConfig } from '../../utils/config';
 import ClassicLayout from './ClassicLayout.astro';
 import GridLayout from './GridLayout.astro';
 import MagazineLayout from './MagazineLayout.astro';
@@ -18,38 +18,45 @@ interface Props {
 }
 
 const { posts, featuredPosts, lang = 'zh', currentPage = 1, totalPages = 1 } = Astro.props;
+const siteConfig = await getSiteConfig();
 const { layout } = siteConfig.home;
 ---
 
-{layout === 'classic' && (
-  <ClassicLayout
-    posts={posts}
-    featuredPosts={featuredPosts}
-    config={siteConfig.layouts.classic}
-    lang={lang}
-    currentPage={currentPage}
-    totalPages={totalPages}
-  />
-)}
+{
+  layout === 'classic' && (
+    <ClassicLayout
+      posts={posts}
+      featuredPosts={featuredPosts}
+      config={siteConfig.layouts.classic}
+      lang={lang}
+      currentPage={currentPage}
+      totalPages={totalPages}
+    />
+  )
+}
 
-{layout === 'grid' && (
-  <GridLayout
-    posts={posts}
-    featuredPosts={featuredPosts}
-    config={siteConfig.layouts.grid}
-    lang={lang}
-    currentPage={currentPage}
-    totalPages={totalPages}
-  />
-)}
+{
+  layout === 'grid' && (
+    <GridLayout
+      posts={posts}
+      featuredPosts={featuredPosts}
+      config={siteConfig.layouts.grid}
+      lang={lang}
+      currentPage={currentPage}
+      totalPages={totalPages}
+    />
+  )
+}
 
-{layout === 'magazine' && (
-  <MagazineLayout
-    posts={posts}
-    featuredPosts={featuredPosts}
-    config={siteConfig.layouts.magazine}
-    lang={lang}
-    currentPage={currentPage}
-    totalPages={totalPages}
-  />
-)}
+{
+  layout === 'magazine' && (
+    <MagazineLayout
+      posts={posts}
+      featuredPosts={featuredPosts}
+      config={siteConfig.layouts.magazine}
+      lang={lang}
+      currentPage={currentPage}
+      totalPages={totalPages}
+    />
+  )
+}

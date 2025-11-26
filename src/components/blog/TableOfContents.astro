@@ -23,52 +23,68 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
 const title = lang === 'zh' ? '目录' : 'Contents';
 ---
 
-{filteredHeadings.length > 0 && (
-  <nav class="toc" aria-label="Table of contents">
-    <h2 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 uppercase tracking-wider">
-      {title}
-    </h2>
-    <ul class="space-y-2 text-sm">
-      {filteredHeadings.map((heading) => (
-        <li
-          class={heading.depth === 3 ? 'ml-4' : ''}
-        >
-          <a
-            href={`#${heading.slug}`}
-            class="toc-link block py-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-l-2 border-transparent hover:border-blue-500 pl-3 -ml-px"
-            data-heading={heading.slug}
-          >
-            {heading.text}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </nav>
-)}
+{
+  filteredHeadings.length > 0 && (
+    <nav class='toc' aria-label='Table of contents'>
+      <h2 class='text-sm font-semibold text-gray-900 dark:text-white mb-4 uppercase tracking-wider'>
+        {title}
+      </h2>
+      <ul class='space-y-2 text-sm'>
+        {filteredHeadings.map(heading => (
+          <li class={heading.depth === 3 ? 'ml-4' : ''}>
+            <a
+              href={`#${heading.slug}`}
+              class='toc-link block py-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-l-2 border-transparent hover:border-blue-500 pl-3 -ml-px'
+              data-heading={heading.slug}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
 
 <script>
   // 目录高亮当前章节
   function initTocHighlight() {
     const tocLinks = document.querySelectorAll('.toc-link');
     const headings = document.querySelectorAll('article h2[id], article h3[id]');
-    
+
     if (tocLinks.length === 0 || headings.length === 0) return;
-    
+
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             // 移除所有高亮
             tocLinks.forEach(link => {
-              link.classList.remove('text-blue-600', 'dark:text-blue-400', 'border-blue-500', 'font-medium');
+              link.classList.remove(
+                'text-blue-600',
+                'dark:text-blue-400',
+                'border-blue-500',
+                'font-medium'
+              );
               link.classList.add('text-gray-600', 'dark:text-gray-400', 'border-transparent');
             });
-            
+
             // 高亮当前
-            const activeLink = document.querySelector(`.toc-link[data-heading="${entry.target.id}"]`);
+            const activeLink = document.querySelector(
+              `.toc-link[data-heading="${entry.target.id}"]`
+            );
             if (activeLink) {
-              activeLink.classList.add('text-blue-600', 'dark:text-blue-400', 'border-blue-500', 'font-medium');
-              activeLink.classList.remove('text-gray-600', 'dark:text-gray-400', 'border-transparent');
+              activeLink.classList.add(
+                'text-blue-600',
+                'dark:text-blue-400',
+                'border-blue-500',
+                'font-medium'
+              );
+              activeLink.classList.remove(
+                'text-gray-600',
+                'dark:text-gray-400',
+                'border-transparent'
+              );
             }
           }
         });
@@ -78,16 +94,16 @@ const title = lang === 'zh' ? '目录' : 'Contents';
         threshold: 0,
       }
     );
-    
-    headings.forEach((heading) => observer.observe(heading));
-    
+
+    headings.forEach(heading => observer.observe(heading));
+
     // View Transitions 后重新初始化
     document.addEventListener('astro:after-swap', () => {
       observer.disconnect();
       initTocHighlight();
     });
   }
-  
+
   initTocHighlight();
 </script>
 
@@ -95,7 +111,7 @@ const title = lang === 'zh' ? '目录' : 'Contents';
   .toc {
     font-size: 0.875rem;
   }
-  
+
   .toc-link {
     display: block;
     line-height: 1.5;

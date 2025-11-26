@@ -1,9 +1,9 @@
 ---
-title: "Building a Personal Blog with Astro: A Complete Guide"
-description: "Learn how to create a modern, fast, and SEO-friendly personal blog using Astro, featuring MDX support, dark mode, and internationalization."
+title: 'Building a Personal Blog with Astro: A Complete Guide'
+description: 'Learn how to create a modern, fast, and SEO-friendly personal blog using Astro, featuring MDX support, dark mode, and internationalization.'
 pubDate: 2024-03-15T10:00:00
 updatedDate: 2024-11-18T14:30:00
-image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
+image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6'
 category: tutorial
 tags:
   - Astro
@@ -23,9 +23,7 @@ import Callout from '@components/mdx/Callout.astro';
 
 Astro is a modern static site generator that offers the best of both worlds: the developer experience of component-based frameworks and the performance of static HTML.
 
-<Callout type="tip">
-  Astro ships zero JavaScript by default, making your site blazing fast!
-</Callout>
+<Callout type='tip'>Astro ships zero JavaScript by default, making your site blazing fast!</Callout>
 
 ### Key Features
 
@@ -143,12 +141,8 @@ function ThemeToggle() {
   const toggleTheme = () => {
     document.documentElement.classList.toggle('dark');
   };
-  
-  return (
-    <button onClick={toggleTheme}>
-      Toggle Theme
-    </button>
-  );
+
+  return <button onClick={toggleTheme}>Toggle Theme</button>;
 }
 ```
 
@@ -173,9 +167,7 @@ export default defineConfig({
 
 ## Performance Optimization
 
-<Callout type="warning">
-  Always test your site's performance before and after optimization!
-</Callout>
+<Callout type='warning'>Always test your site's performance before and after optimization!</Callout>
 
 ### Image Optimization
 
@@ -185,7 +177,7 @@ import { Image } from 'astro:assets';
 import myImage from '../assets/hero.jpg';
 ---
 
-<Image src={myImage} alt="Hero image" />
+<Image src={myImage} alt='Hero image' />
 ```
 
 ### Code Splitting
@@ -202,18 +194,19 @@ Astro sites can be deployed anywhere that supports static hosting.
 
 ### Popular Options
 
-| Platform | Pros | Cons |
-|----------|------|------|
-| Vercel | Easy setup, Edge functions | Vendor lock-in |
-| Netlify | Great DX, Forms | Build time limits |
-| Cloudflare Pages | Fast, Free | Limited build options |
-| GitHub Pages | Free, Simple | Manual setup |
+| Platform         | Pros                       | Cons                  |
+| ---------------- | -------------------------- | --------------------- |
+| Vercel           | Easy setup, Edge functions | Vendor lock-in        |
+| Netlify          | Great DX, Forms            | Build time limits     |
+| Cloudflare Pages | Fast, Free                 | Limited build options |
+| GitHub Pages     | Free, Simple               | Manual setup          |
 
 ## Conclusion
 
 Astro is an excellent choice for building personal blogs. Its focus on performance, combined with flexibility in choosing your preferred UI framework, makes it a powerful tool for developers.
 
 **Next steps:**
+
 1. Explore Astro's official documentation
 2. Join the Astro Discord community
 3. Start building your own blog!

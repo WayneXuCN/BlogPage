@@ -1,9 +1,9 @@
 ---
-title: "使用 Mermaid 绘制技术图表"
-description: "本文介绍如何在博客中使用 Mermaid 语法绘制流程图、时序图、甘特图等各种技术图表。"
+title: '使用 Mermaid 绘制技术图表'
+description: '本文介绍如何在博客中使用 Mermaid 语法绘制流程图、时序图、甘特图等各种技术图表。'
 pubDate: 2024-02-20T14:00:00
 updatedDate: 2024-11-15T09:30:00
-image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop"
+image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop'
 category: tutorial
 tags:
   - Mermaid
@@ -24,15 +24,14 @@ import Mermaid from '@components/mdx/Mermaid.astro';
 
 Mermaid 是一个基于 JavaScript 的图表绘制工具，允许你使用类似 Markdown 的文本语法来定义图表。
 
-<Callout type="tip">
-  本博客已集成 Mermaid 支持，你可以直接在 MDX 文件中使用 Mermaid 组件。
-</Callout>
+<Callout type='tip'>本博客已集成 Mermaid 支持，你可以直接在 MDX 文件中使用 Mermaid 组件。</Callout>
 
 ## 流程图 (Flowchart)
 
 流程图是最常用的图表类型，适合展示业务流程或算法逻辑。
 
-<Mermaid chart={`
+<Mermaid
+  chart={`
 flowchart TD
     A[开始] --> B{是否有数据?}
     B -->|是| C[处理数据]
@@ -40,13 +39,15 @@ flowchart TD
     D --> B
     C --> E[输出结果]
     E --> F[结束]
-`} />
+`}
+/>
 
 ## 时序图 (Sequence Diagram)
 
 时序图用于展示对象之间的交互顺序。
 
-<Mermaid chart={`
+<Mermaid
+  chart={`
 sequenceDiagram
     participant U as 用户
     participant C as 客户端
@@ -59,13 +60,15 @@ sequenceDiagram
     D-->>S: 返回用户数据
     S-->>C: 返回登录结果
     C-->>U: 显示登录状态
-`} />
+`}
+/>
 
 ## 甘特图 (Gantt Chart)
 
 甘特图适合展示项目计划和进度。
 
-<Mermaid chart={`
+<Mermaid
+  chart={`
 gantt
     title 项目开发计划
     dateFormat  YYYY-MM-DD
@@ -81,13 +84,15 @@ gantt
     section 测试
     单元测试     :d1, after c1, 5d
     集成测试     :d2, after c2, 5d
-`} />
+`}
+/>
 
 ## 类图 (Class Diagram)
 
 类图展示面向对象设计中的类结构。
 
-<Mermaid chart={`
+<Mermaid
+  chart={`
 classDiagram
     class Animal {
         +String name
@@ -104,18 +109,21 @@ classDiagram
     }
     Animal <|-- Dog
     Animal <|-- Cat
-`} />
+`}
+/>
 
 ## 饼图 (Pie Chart)
 
-<Mermaid chart={`
+<Mermaid
+  chart={`
 pie title 编程语言使用占比
     "Python" : 35
     "JavaScript" : 25
     "Go" : 20
     "Rust" : 15
     "Other" : 5
-`} />
+`}
+/>
 
 ## 总结
 

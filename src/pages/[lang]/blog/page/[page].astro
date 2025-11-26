@@ -7,15 +7,18 @@ import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import HomeLayout from '../../../../components/layouts/HomeLayout.astro';
 import Pagination from '../../../../components/blog/Pagination.astro';
 import { getCollection } from 'astro:content';
-import { siteConfig } from '../../../../config';
+import { getSiteConfig } from '../../../../utils/config';
 
 export async function getStaticPaths() {
   const paths = [];
-  
+
+  // 获取配置
+  const siteConfig = await getSiteConfig();
+
   for (const lang of ['zh', 'en'] as const) {
     const allPosts = await getCollection('blog', ({ data }) => data.lang === lang);
     const totalPages = Math.ceil(allPosts.length / siteConfig.home.postsPerPage);
-    
+
     for (let page = 2; page <= totalPages; page++) {
       paths.push({
         params: { lang, page: String(page) },
@@ -23,7 +26,7 @@ export async function getStaticPaths() {
       });
     }
   }
-  
+
   return paths;
 }
 
@@ -36,14 +39,17 @@ const { totalPages } = Astro.props;
 const currentLang = lang as 'zh' | 'en';
 const currentPage = parseInt(page!);
 
+// 获取配置
+const siteConfig = await getSiteConfig();
+
 // 获取当前语言的所有文章
 const allPosts = await getCollection('blog', ({ data }) => {
   return data.lang === currentLang;
 });
 
 // 按发布日期排序
-const sortedPosts = allPosts.sort((a, b) => 
-  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+const sortedPosts = allPosts.sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
 );
 
 // 分页
@@ -52,24 +58,17 @@ const startIndex = (currentPage - 1) * postsPerPage;
 const paginatedPosts = sortedPosts.slice(startIndex, startIndex + postsPerPage);
 
 // 页面信息
-const pageTitle = currentLang === 'zh' ? `博客 - 第 ${currentPage} 页` : `Blog - Page ${currentPage}`;
+const pageTitle =
+  currentLang === 'zh' ? `博客 - 第 ${currentPage} 页` : `Blog - Page ${currentPage}`;
 const siteTitle = currentLang === 'zh' ? siteConfig.title.zh : siteConfig.title.en;
 const description = currentLang === 'zh' ? siteConfig.description.zh : siteConfig.description.en;
 ---
 
-<BaseLayout 
-  title={`${pageTitle} - ${siteTitle}`}
-  description={description}
-  lang={currentLang}
->
-  <main class="max-w-6xl mx-auto px-4 py-8">
-    <HomeLayout 
-      posts={paginatedPosts}
-      featuredPosts={[]}
-      lang={currentLang}
-    />
-    
-    <Pagination 
+<BaseLayout title={`${pageTitle} - ${siteTitle}`} description={description} lang={currentLang}>
+  <main class='max-w-6xl mx-auto px-4 py-8'>
+    <HomeLayout posts={paginatedPosts} featuredPosts={[]} lang={currentLang} />
+
+    <Pagination
       currentPage={currentPage}
       totalPages={totalPages}
       baseUrl={`/${lang}/blog/page/`}

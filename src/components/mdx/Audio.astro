@@ -2,7 +2,7 @@
 /**
  * Audio.astro
  * 音频嵌入组件
- * 
+ *
  * 用法：
  * <Audio src="/audio/podcast.mp3" title="播客第一期" caption="关于深度学习的讨论" />
  */
@@ -25,68 +25,83 @@ interface Props {
   class?: string;
 }
 
-const { 
-  src, 
+const {
+  src,
   title,
   caption,
   cover,
   autoplay = false,
   loop = false,
   preload = 'metadata',
-  class: className = '' 
+  class: className = '',
 } = Astro.props;
 
 // 获取文件名作为默认标题
-const defaultTitle = src.split('/').pop()?.replace(/\.[^/.]+$/, '') || '音频';
+const defaultTitle =
+  src
+    .split('/')
+    .pop()
+    ?.replace(/\.[^/.]+$/, '') || '音频';
 const displayTitle = title || defaultTitle;
 ---
 
 <figure class:list={['audio-container my-8', className]}>
-  <div class="audio-player bg-gray-50 dark:bg-gray-800 rounded-xl p-4 shadow-md border border-gray-200 dark:border-gray-700">
-    <div class="flex items-start gap-4">
+  <div
+    class='audio-player bg-gray-50 dark:bg-gray-800 rounded-xl p-4 shadow-md border border-gray-200 dark:border-gray-700'
+  >
+    <div class='flex items-start gap-4'>
       {/* 封面图片 */}
-      {cover ? (
-        <div class="flex-shrink-0">
-          <img 
-            src={cover} 
-            alt={displayTitle}
-            class="w-20 h-20 rounded-lg object-cover shadow-sm"
-            loading="lazy"
-          />
-        </div>
-      ) : (
-        <div class="flex-shrink-0 w-20 h-20 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-sm">
-          <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-          </svg>
-        </div>
-      )}
-      
+      {
+        cover ? (
+          <div class='flex-shrink-0'>
+            <img
+              src={cover}
+              alt={displayTitle}
+              class='w-20 h-20 rounded-lg object-cover shadow-sm'
+              loading='lazy'
+            />
+          </div>
+        ) : (
+          <div class='flex-shrink-0 w-20 h-20 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-sm'>
+            <svg class='w-10 h-10 text-white' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+              <path
+                stroke-linecap='round'
+                stroke-linejoin='round'
+                stroke-width='2'
+                d='M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3'
+              />
+            </svg>
+          </div>
+        )
+      }
+
       {/* 播放器内容 */}
-      <div class="flex-1 min-w-0">
-        <h4 class="font-medium text-gray-900 dark:text-gray-100 truncate mb-2">
+      <div class='flex-1 min-w-0'>
+        <h4 class='font-medium text-gray-900 dark:text-gray-100 truncate mb-2'>
           {displayTitle}
         </h4>
-        
+
         <audio
           src={src}
           autoplay={autoplay}
           loop={loop}
           preload={preload}
           controls
-          class="w-full h-10"
+          class='w-full h-10'
         >
           您的浏览器不支持音频播放
         </audio>
       </div>
     </div>
   </div>
-  
-  {caption && (
-    <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
-      {caption}
-    </figcaption>
-  )}
+
+  {
+    caption && (
+      <figcaption class='mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic'>
+        {caption}
+      </figcaption>
+    )
+  }
 </figure>
 
 <style>
@@ -94,27 +109,27 @@ const displayTitle = title || defaultTitle;
   audio {
     outline: none;
   }
-  
+
   audio::-webkit-media-controls-panel {
     background: transparent;
   }
-  
+
   audio::-webkit-media-controls-play-button,
   audio::-webkit-media-controls-mute-button {
     border-radius: 50%;
   }
-  
+
   audio::-webkit-media-controls-current-time-display,
   audio::-webkit-media-controls-time-remaining-display {
     font-family: 'Noto Sans SC', sans-serif;
     font-size: 12px;
   }
-  
+
   /* 深色模式样式调整 */
   .dark audio::-webkit-media-controls-panel {
     background: transparent;
   }
-  
+
   .dark audio::-webkit-media-controls-current-time-display,
   .dark audio::-webkit-media-controls-time-remaining-display {
     color: #e5e7eb;

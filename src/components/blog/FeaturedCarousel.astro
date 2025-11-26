@@ -4,7 +4,7 @@
  * 精选文章轮播图组件
  */
 import type { CollectionEntry } from 'astro:content';
-import { siteConfig, getPostUrl, formatDate } from '../../config';
+import { getPostUrl, formatDate, getSiteConfig } from '../../utils/config';
 
 interface Props {
   posts: CollectionEntry<'blog'>[];
@@ -16,9 +16,14 @@ interface Props {
 const { 
   posts, 
   lang = 'zh',
-  autoPlay = siteConfig.home.carouselAutoPlay,
-  interval = siteConfig.home.carouselInterval,
 } = Astro.props;
+
+// 获取配置
+const siteConfig = await getSiteConfig();
+
+// 使用配置或默认值
+const autoPlay = Astro.props.autoPlay ?? siteConfig.home.carouselAutoPlay;
+const interval = Astro.props.interval ?? siteConfig.home.carouselInterval;
 
 function getSlug(post: CollectionEntry<'blog'>) {
   return post.id.includes('/') ? post.id.split('/').pop()! : post.id;

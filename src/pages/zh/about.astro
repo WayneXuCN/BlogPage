@@ -3,49 +3,52 @@
  * /zh/about - 中文关于页面
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { siteConfig } from '../../config';
+import { getSiteConfig } from '../../utils/config';
 
 const lang = 'zh' as const;
+
+// 获取配置
+const siteConfig = await getSiteConfig();
 ---
 
 <BaseLayout
   title={`关于 | ${siteConfig.title.zh}`}
-  description="关于徐文杰 - 学术研究者"
+  description='关于徐文杰 - 学术研究者'
   lang={lang}
 >
-  <div class="max-w-3xl mx-auto">
+  <div class='max-w-3xl mx-auto'>
     <!-- 个人信息 -->
-    <section class="text-center mb-16">
+    <section class='text-center mb-16'>
       <img
         src={siteConfig.authorInfo.avatar}
         alt={siteConfig.author.zh}
-        class="w-32 h-32 rounded-full mx-auto mb-6 shadow-lg ring-4 ring-white dark:ring-gray-800"
+        class='w-32 h-32 rounded-full mx-auto mb-6 shadow-lg ring-4 ring-white dark:ring-gray-800'
       />
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+      <h1 class='text-3xl font-bold text-gray-900 dark:text-white mb-2'>
         {siteConfig.author.zh}
       </h1>
-      <p class="text-gray-600 dark:text-gray-400 text-lg">
-        博士研究生 · 研究员
-      </p>
-      
+      <p class='text-gray-600 dark:text-gray-400 text-lg'>博士研究生 · 研究员</p>
+
       <!-- 社交链接 -->
-      <div class="flex justify-center gap-4 mt-6">
-        {siteConfig.social.map((link) => (
-          <a
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all"
-            title={link.platform}
-          >
-            <i class={`${link.icon} text-lg`}></i>
-          </a>
-        ))}
+      <div class='flex justify-center gap-4 mt-6'>
+        {
+          siteConfig.social.map(link => (
+            <a
+              href={link.url}
+              target='_blank'
+              rel='noopener noreferrer'
+              class='w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all'
+              title={link.platform}
+            >
+              <i class={`${link.icon} text-lg`} />
+            </a>
+          ))
+        }
       </div>
     </section>
 
     <!-- 简介 -->
-    <section class="prose prose-lg dark:prose-invert max-w-none">
+    <section class='prose prose-lg dark:prose-invert max-w-none'>
       <h2>关于我</h2>
       <p>
         你好！我是徐文杰，中国科学院科技战略咨询研究院的博士研究生。

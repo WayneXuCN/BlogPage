@@ -1,9 +1,9 @@
 ---
-title: "欢迎来到我的学术博客"
-description: "这是我的第一篇博客文章，介绍这个博客的目的和我的研究方向。"
+title: '欢迎来到我的学术博客'
+description: '这是我的第一篇博客文章，介绍这个博客的目的和我的研究方向。'
 pubDate: 2024-01-15T10:30:00
 updatedDate: 2024-11-20T15:45:30
-image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&h=630&fit=crop"
+image: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&h=630&fit=crop'
 category: thoughts
 tags:
   - 博客
@@ -24,9 +24,7 @@ import Figure from '@components/mdx/Figure.astro';
 
 欢迎来到我的学术博客！我是徐文杰，目前是中国科学院科技战略咨询研究院的博士研究生。
 
-<Callout type="info">
-  这是我使用 Astro 搭建的新博客，支持 MDX、数学公式、代码高亮等功能。
-</Callout>
+<Callout type='info'>这是我使用 Astro 搭建的新博客，支持 MDX、数学公式、代码高亮等功能。</Callout>
 
 ## 关于我的研究
 
@@ -62,10 +60,10 @@ def calculate_resilience(G: nx.Graph, failure_nodes: list) -> float:
     """计算网络在节点失效后的韧性指标"""
     G_copy = G.copy()
     G_copy.remove_nodes_from(failure_nodes)
-    
+
     if len(G_copy) == 0:
         return 0.0
-    
+
     largest_cc = max(nx.connected_components(G_copy), key=len)
     return len(largest_cc) / len(G)
 ```

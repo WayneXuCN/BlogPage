@@ -3,7 +3,7 @@
  * Header.astro
  * 博客顶部导航栏
  */
-import { siteConfig, getNavItems } from '../../config';
+import { getSiteConfig, getNavItems } from '../../utils/config';
 import ThemeToggle from './ThemeToggle.astro';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import Search from './Search.astro';
@@ -15,47 +15,107 @@ interface Props {
 
 const { lang = 'zh', currentPath = '' } = Astro.props;
 
+// 获取配置
+const siteConfig = await getSiteConfig();
+
 // 获取导航项
-const navItems = getNavItems(lang);
+const navItems = await getNavItems(lang);
 
 // 检查当前路径是否匹配导航项 - 精确匹配逻辑
 function isActive(href: string): boolean {
   // 移除尾部斜杠进行比较
   const cleanHref = href.replace(/\/$/, '');
   const cleanPath = currentPath.replace(/\/$/, '');
-  
+
   // 首页特殊处理：必须精确匹配
   if (cleanHref === `/${lang}` || cleanHref === `/${lang}/blog`) {
     return cleanPath === cleanHref;
   }
-  
+
   // 其他页面：当前路径必须以 href 开头，且不能是其他更具体路径的前缀
   // 例如 /zh/blog/categories 应该匹配分类，而不是匹配博客首页
   if (cleanPath === cleanHref) return true;
   if (cleanPath.startsWith(cleanHref + '/')) return true;
-  
+
   return false;
 }
 ---
 
-<header class="sticky top-0 z-40 w-full backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-    <div class="flex items-center justify-between h-16">
+<header
+  class='sticky top-0 z-40 w-full backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800'
+>
+  <div class='container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl'>
+    <div class='flex items-center justify-between h-16'>
       <!-- Logo / 站点名称 -->
-      <a 
-        href={`/${lang}/`} 
-        class="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+      <a
+        href={`/${lang}/`}
+        class='flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors'
       >
-        <span class="hidden sm:inline">{lang === 'zh' ? siteConfig.title.zh : siteConfig.title.en}</span>
-        <span class="sm:hidden">{lang === 'zh' ? '博客' : 'Blog'}</span>
+        <span class='hidden sm:inline'
+          >{lang === 'zh' ? siteConfig.title.zh : siteConfig.title.en}</span
+        >
+        <span class='sm:hidden'>{lang === 'zh' ? '博客' : 'Blog'}</span>
       </a>
-      
+
       <!-- 桌面端导航 -->
-      <nav class="hidden md:flex items-center space-x-1">
-        {navItems.map((item) => (
+      <nav class='hidden md:flex items-center space-x-1'>
+        {
+          navItems.map(item => (
+            <a
+              href={item.href}
+              class={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                isActive(item.href)
+                  ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+              }`}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <!-- 右侧工具栏 -->
+      <div class='flex items-center space-x-2'>
+        <!-- 搜索 -->
+        {siteConfig.features.search && <Search lang={lang} />}
+
+        <!-- 语言切换 -->
+        <LanguageSwitcher lang={lang} currentPath={currentPath} />
+
+        <!-- 主题切换 -->
+        {siteConfig.features.darkMode && <ThemeToggle />}
+
+        <!-- 移动端菜单按钮 -->
+        <button
+          id='mobile-menu-btn'
+          class='md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
+          aria-label='打开菜单'
+          aria-expanded='false'
+        >
+          <svg class='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+            <path
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              stroke-width='2'
+              d='M4 6h16M4 12h16M4 18h16'></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 移动端导航菜单 -->
+  <div
+    id='mobile-menu'
+    class='md:hidden hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900'
+  >
+    <nav class='container mx-auto px-4 py-4 space-y-1'>
+      {
+        navItems.map(item => (
           <a
             href={item.href}
-            class={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+            class={`block px-4 py-3 rounded-lg text-base font-medium transition-colors ${
               isActive(item.href)
                 ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
@@ -63,53 +123,8 @@ function isActive(href: string): boolean {
           >
             {item.label}
           </a>
-        ))}
-      </nav>
-      
-      <!-- 右侧工具栏 -->
-      <div class="flex items-center space-x-2">
-        <!-- 搜索 -->
-        {siteConfig.features.search && <Search lang={lang} />}
-        
-        <!-- 语言切换 -->
-        <LanguageSwitcher lang={lang} currentPath={currentPath} />
-        
-        <!-- 主题切换 -->
-        {siteConfig.features.darkMode && <ThemeToggle />}
-        
-        <!-- 移动端菜单按钮 -->
-        <button
-          id="mobile-menu-btn"
-          class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          aria-label="打开菜单"
-          aria-expanded="false"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- 移动端导航菜单 -->
-  <div
-    id="mobile-menu"
-    class="md:hidden hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"
-  >
-    <nav class="container mx-auto px-4 py-4 space-y-1">
-      {navItems.map((item) => (
-        <a
-          href={item.href}
-          class={`block px-4 py-3 rounded-lg text-base font-medium transition-colors ${
-            isActive(item.href)
-              ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
-          }`}
-        >
-          {item.label}
-        </a>
-      ))}
+        ))
+      }
     </nav>
   </div>
 </header>
@@ -119,21 +134,21 @@ function isActive(href: string): boolean {
   function initMobileMenu() {
     const menuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
-    
+
     if (!menuBtn || !mobileMenu) return;
-    
+
     // 移除旧的事件监听器（如果存在）
     const newMenuBtn = menuBtn.cloneNode(true) as HTMLElement;
     menuBtn.parentNode?.replaceChild(newMenuBtn, menuBtn);
-    
-    newMenuBtn.addEventListener('click', (e) => {
+
+    newMenuBtn.addEventListener('click', e => {
       e.preventDefault();
       e.stopPropagation();
       const isExpanded = newMenuBtn.getAttribute('aria-expanded') === 'true';
       newMenuBtn.setAttribute('aria-expanded', String(!isExpanded));
       mobileMenu.classList.toggle('hidden');
     });
-    
+
     // 点击链接后关闭菜单
     mobileMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
@@ -141,16 +156,16 @@ function isActive(href: string): boolean {
         newMenuBtn.setAttribute('aria-expanded', 'false');
       });
     });
-    
+
     // 点击外部关闭菜单
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', e => {
       if (!mobileMenu.contains(e.target as Node) && !newMenuBtn.contains(e.target as Node)) {
         mobileMenu.classList.add('hidden');
         newMenuBtn.setAttribute('aria-expanded', 'false');
       }
     });
   }
-  
+
   // 初始化和页面切换后重新初始化
   initMobileMenu();
   document.addEventListener('astro:page-load', initMobileMenu);

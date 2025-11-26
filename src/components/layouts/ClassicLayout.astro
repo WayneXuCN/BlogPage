@@ -4,10 +4,16 @@
  * 经典列表式布局
  */
 import type { CollectionEntry } from 'astro:content';
-import type { ClassicLayoutConfig } from '../../config';
 import PostCard from '../blog/PostCard.astro';
 import Pagination from '../blog/Pagination.astro';
 import FeaturedSection from './FeaturedSection.astro';
+
+interface ClassicLayoutConfig {
+  showExcerpt: boolean;
+  excerptLength: number;
+  showReadingTime?: boolean;
+  showTags?: boolean;
+}
 
 interface Props {
   posts: CollectionEntry<'blog'>[];
@@ -41,25 +47,17 @@ const t = i18n[lang];
     </h2>
     
     <div class="space-y-8">
-      {posts.map((post) => (
-        <article class="group">
-          <a 
-            href={`/${lang}/blog/${post.data.pubDate.getFullYear()}/${post.id}/`}
-            class="block p-6 -mx-6 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-          >
+      {posts.map((post) => {
+        // 从 post.id 提取 slug (格式: "zh/welcome-to-my-blog" -> "welcome-to-my-blog")
+        const slug = post.id.includes('/') ? post.id.split('/').pop()! : post.id;
+        return (
+          <article class="group">
+            <a 
+              href={`/${lang}/blog/${post.data.pubDate.getFullYear()}/${slug}/`}
+              class="block p-6 -mx-6 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+            >
             <div class="flex flex-col sm:flex-row gap-6">
-              <!-- 封面图 -->
-              {post.data.image && (
-                <div class="sm:w-48 flex-shrink-0">
-                  <img
-                    src={post.data.image}
-                    alt={post.data.title}
-                    class="w-full h-32 sm:h-full object-cover rounded-xl"
-                    loading="lazy"
-                  />
-                </div>
-              )}
-              
+              <!-- 内容 -->
               <div class="flex-1 min-w-0">
                 <!-- 分类和日期 -->
                 <div class="flex items-center gap-3 text-sm mb-2">
@@ -108,10 +106,22 @@ const t = i18n[lang];
                   </div>
                 )}
               </div>
+              
+              <!-- 封面图 -->
+              {post.data.image && (
+                <div class="sm:w-48 flex-shrink-0">
+                  <img
+                    src={post.data.image}
+                    alt={post.data.title}
+                    class="w-full h-32 sm:h-full object-cover rounded-xl"
+                    loading="lazy"
+                  />
+                </div>
+              )}
             </div>
           </a>
         </article>
-      ))}
+      );})}
     </div>
     
     <!-- 分页 -->

@@ -1,36 +1,34 @@
 <p align="center">
-  <img src="public/assets/img/website.png" alt="Starter Theme 预览" width="800" />
+  <img src="public/assets/img/website.png" alt="博客预览" width="800" />
 </p>
 
-<h1 align="center">Starter Theme</h1>
+<h1 align="center">博客</h1>
 
 <p align="center">
-  <strong>基于 Astro 5 构建的现代极简个人主页主题</strong>g
+  <strong>使用 Astro 5 构建的现代化响应式博客</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/WayneXuCN/starter-theme/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
+  <a href="https://github.com/WayneXuCN/BlogPage/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="许可证" />
   </a>
   <a href="https://astro.build/">
     <img src="https://img.shields.io/badge/Astro-5.x-ff5d01.svg?logo=astro" alt="Astro" />
   </a>
-  <a href="https://react.dev/">
-    <img src="https://img.shields.io/badge/React-19.x-61dafb.svg?logo=react" alt="React" />
-  </a>
   <a href="https://tailwindcss.com/">
     <img src="https://img.shields.io/badge/Tailwind-3.x-38bdf8.svg?logo=tailwindcss" alt="Tailwind CSS" />
   </a>
-  <a href="https://bun.sh/">
-    <img src="https://img.shields.io/badge/Bun-1.x-fbf0df.svg?logo=bun" alt="Bun" />
+  <a href="https://www.typescriptlang.org/">
+    <img src="https://img.shields.io/badge/TypeScript-5.x-3178c6.svg?logo=typescript" alt="TypeScript" />
   </a>
 </p>
 
 <p align="center">
-  <a href="#特性">特性</a> •
+  <a href="#功能特性">功能特性</a> •
   <a href="#快速开始">快速开始</a> •
-  <a href="#配置">配置</a> •
-  <a href="#自定义">自定义</a>
+  <a href="#配置说明">配置说明</a> •
+  <a href="#内容管理">内容管理</a> •
+  <a href="#部署方式">部署方式</a>
 </p>
 
 <p align="center">
@@ -39,239 +37,262 @@
 
 ---
 
-## 特性
+## 功能特性
 
-| 特性 | 说明 |
+| 功能 | 描述 |
 |------|------|
-| **国际化支持** | 基于 Astro 原生 i18n 路由和内容集合的多语言支持 |
-| **深色模式** | 自动检测系统偏好，支持 localStorage 持久化 |
-| **响应式设计** | 、适配各种设备 |
-| **RSS 聚合** | 从外部 RSS/Atom 源获取并展示文章 |
-| **联系表单** | 预配置 EmailJS 集成，开箱即用 |
-| **数据分析** | 可选的 Google Analytics 4 集成 |
-| **群岛架构** | React 组件按需加载，最小化 JS 体积 |
+| **多种布局** | 三种首页布局：经典列表、网格卡片和杂志风格 |
+| **国际化支持** | 内置中英文支持 |
+| **响应式设计** | 移动端优先设计，适配所有设备 |
+| **深色模式** | 自动跟随系统偏好切换主题 |
+| **博客功能** | 分类、标签、归档、系列文章和精选文章 |
+| **评论系统** | 集成 Giscus 评论系统 |
+| **RSS 订阅** | 自动生成多语言 RSS 订阅源 |
+| **搜索功能** | 内置搜索功能 |
+| **数学公式支持** | 集成 KaTeX 数学公式渲染 |
+| **图表支持** | 集成 Mermaid 图表渲染 |
+| **阅读进度条** | 文章阅读进度指示 |
+| **社交分享** | 社交媒体分享按钮 |
 
 ## 快速开始
 
-### 环境要求
+### 前置要求
 
-- [Bun](https://bun.sh/) 1.0+（推荐）或 [Node.js](https://nodejs.org/) 18+
+- [Node.js](https://nodejs.org/) 18+ 或 [Bun](https://bun.sh/) 1.0+
 
-### 创建站点
+### 创建博客
 
 ```bash
-# 克隆模板
-git clone https://github.com/WayneXuCN/starter-theme.git my-site
-cd my-site
+# 克隆仓库
+git clone https://github.com/WayneXuCN/BlogPage.git my-blog
+cd my-blog
 
 # 安装依赖
+npm install
+# 或
 bun install
 
 # 启动开发服务器
+npm run dev
+# 或
 bun run dev
 ```
 
-在浏览器中打开 [http://localhost:4321](http://localhost:4321) 查看效果。
+打开 [http://localhost:4321](http://localhost:4321) 查看你的博客。
 
 ### 构建生产版本
 
 ```bash
+npm run build
+# 或
 bun run build
 ```
 
-输出文件生成在 `dist/` 目录，可部署到任意静态托管平台。
+构建输出将生成在 `dist/` 目录中，可以部署到任何静态托管平台。
 
 ## 项目结构
 
 ```text
-starter-theme/
+BlogPage/
 ├── src/
-│   ├── components/astro/     # React 群岛组件
-│   │   ├── HeaderBar.jsx     # 导航头部
-│   │   ├── Hero.jsx          # Hero 区块
-│   │   ├── Footer.jsx        # 页脚
-│   │   ├── ThemeToggle.jsx   # 主题切换
-│   │   ├── LanguageSwitcher.jsx # 语言切换
-│   │   └── ...
-│   ├── content/
-│   │   └── i18n/             # 翻译文件（内容集合）
-│   │       ├── en.json
-│   │       └── zh.json
-│   ├── layouts/
-│   │   └── BaseLayout.astro  # 全局 HTML 布局
-│   ├── lib/
-│   │   └── i18n.ts           # i18n 工具函数
-│   ├── pages/
-│   │   ├── index.astro       # 根路径重定向
-│   │   ├── 404.astro         # 错误页面
-│   │   ├── en/               # 英文路由
-│   │   └── zh/               # 中文路由
-│   ├── middleware.ts         # Middleware 路由重定向 
-│   ├── env.d.ts              # TypeScript 类型声明
-│   └── content.config.ts     # 内容集合 Schema
-├── public/                   # 静态资源
-├── scripts/
-│   └── fetch-rss.bun.js      # RSS 聚合脚本
-├── astro.config.mjs          # Astro 配置
-├── tailwind.config.mjs       # Tailwind 配置
-└── package.json
+│   ├── components/          # 可复用组件
+│   │   ├── blog/           # 博客专用组件
+│   │   └── layouts/        # 布局组件
+│   ├── content/            # 内容集合
+│   │   ├── blog/           # 博客文章
+│   │   ├── config/         # 站点配置
+│   │   ├── authors/        # 作者信息
+│   │   ├── series/         # 系列文章元数据
+│   │   └── i18n/           # 翻译文件
+│   ├── layouts/            # 页面布局
+│   ├── pages/              # 页面路由
+│   ├── utils/              # 工具函数
+│   └── content.config.ts   # 内容集合配置
+├── public/                 # 静态资源
+├── astro.config.mjs        # Astro 配置
+├── tailwind.config.mjs     # Tailwind 配置
+└── package.json            # 项目依赖
 ```
 
-## 配置
-
-### 环境变量
-
-在项目根目录创建 `.env` 文件：
-
-```env
-# EmailJS（联系表单必需）
-PUBLIC_EMAILJS_SERVICE_ID=your_service_id
-PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
-PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
-
-# Google Analytics（可选）
-PUBLIC_GA_ID=G-XXXXXXXXXX
-```
+## 配置说明
 
 ### 站点配置
 
-编辑 `astro.config.mjs` 更新站点 URL：
+所有配置都通过 `src/content/config/site.json` 文件管理。你可以编辑这个文件来自定义你的博客。
 
-```js
-export default defineConfig({
-  site: 'https://your-domain.com',
-  // ...
-});
-```
+#### 布局切换
 
-### 内容管理
-
-所有站点内容通过 `src/content/i18n/` 中的 JSON 文件管理：
-
-| 文件 | 说明 |
-|------|------|
-| `zh.json` | 中文内容 |
-| `en.json` | 英文内容 |
-
-文件结构：
+要更改首页布局，修改 `home.layout` 属性：
 
 ```json
 {
-  "site": { "title": "...", "description": "...", "author": "..." },
-  "nav": [{ "label": "首页", "href": "index.html" }],
-  "header": { "name": "...", "avatar": "..." },
-  "hero": { "title": "...", "subtitle": "...", "description": "..." },
-  "websites": { "title": "...", "items": [...] },
-  "featuredPosts": { "title": "...", "rss": {...}, "items": [...] },
-  "footer": { "copyright": "...", "socialLinks": [...] },
-  "about": { ... },
-  "contact": { ... }
-}
-```
-
-### RSS 订阅
-
-在语言 JSON 文件中配置 RSS 聚合：
-
-```json
-{
-  "featuredPosts": {
-    "rss": {
-      "enabled": true,
-      "feeds": [
-        { "url": "https://blog.example.com/feed.xml", "parser": "default" }
-      ],
-      "limit": 6
-    }
+  "home": {
+    "layout": "magazine", // 可选值: 'classic', 'grid', 'magazine'
+    "postsPerPage": 10,
+    "showFeatured": true,
+    "featuredCount": 5,
+    "carouselAutoPlay": true,
+    "carouselInterval": 5000
   }
 }
 ```
 
+#### 可用布局
+
+1. **Classic** - 传统列表布局，带有精选区域
+2. **Grid** - 卡片式网格布局
+3. **Magazine** - 杂志风格布局，带有轮播图（默认）
+
+#### 其他配置选项
+
+- `url`: 站点 URL
+- `title`: 站点标题（多语言）
+- `description`: 站点描述（多语言）
+- `author`: 作者信息
+- `features`: 启用/禁用评论、搜索、RSS 等功能
+- `giscus`: Giscus 评论配置
+- `nav`: 导航菜单项
+- `social`: 社交媒体链接
+- `categories`: 博客分类
+
+## 内容管理
+
+### 博客文章
+
+博客文章存储在 `src/content/blog/` 目录中，结构如下：
+
+```text
+src/content/blog/
+├── zh/                    # 中文文章
+│   ├── 2024/              # 年份
+│   │   └── post-slug.md    # 博客文章
+│   └── ...
+└── en/                    # 英文文章
+    ├── 2024/              # 年份
+    │   └── post-slug.md    # 博客文章
+    └── ...
+```
+
+每篇文章都有包含元数据的前置内容：
+
+```yaml
+title: "文章标题"
+description: "文章描述"
+pubDate: 2024-01-01
+category: tutorial
+tags: [astro, blog]
+image: /assets/img/post-image.jpg
+featured: true
+lang: zh
+```
+
+### 分类和标签
+
+分类在 `src/content/config/site.json` 中配置。标签会从博客文章中自动生成。
+
+### 系列文章
+
+要创建系列文章，在文章前置内容中添加 `series` 和 `seriesOrder` 字段：
+
+```yaml
+series: "astro-tutorial"
+seriesOrder: 1
+```
+
+## 部署方式
+
+博客生成静态 HTML 文件，可以部署到任何地方。
+
+### Vercel
+
+```bash
+npx vercel
+```
+
+### Netlify
+
+```bash
+npx netlify deploy --prod --dir=dist
+```
+
+### GitHub Pages
+
+使用包含的 GitHub Actions 工作流或手动部署：
+
+```bash
+npm run build
+# 将 dist/ 目录上传到 gh-pages 分支
+```
+
+### Cloudflare Pages
+
+连接你的仓库并设置：
+
+- **构建命令**: `npm run build`
+- **输出目录**: `dist`
+
+## 本地化
+
+博客支持中文和英文。要添加新语言：
+
+1. 更新 `src/content.config.ts` 添加新语言
+2. 在 `src/content/i18n/` 中创建翻译文件
+3. 在 `src/pages/` 中添加语言特定页面
+4. 更新语言切换器组件
+
 ## 自定义
 
-### 添加新语言
+### 样式
 
-1. **更新 Astro 配置**（`astro.config.mjs`）：
+- **颜色和主题**: 编辑 `tailwind.config.mjs`
+- **全局样式**: 编辑 `src/styles/global.css`
+- **深色模式**: 使用 Tailwind 的 `dark:` 前缀
 
-   ```js
-   i18n: {
-     defaultLocale: 'zh',
-     locales: ['zh', 'en', 'ja'],
-     routing: { prefixDefaultLocale: true },
-   },
-   ```
+### 组件
 
-2. **更新 i18n 工具**（`src/lib/i18n.ts`）：
+在 `src/components/` 中自定义组件：
 
-   ```ts
-   export const locales = ['zh', 'en', 'ja'] as const;
-   
-   export const localeConfig = {
-     // ...现有语言
-     ja: { label: '日', name: '日本語', hrefLang: 'ja' },
-   };
-   ```
-
-3. **创建翻译文件**（`src/content/i18n/ja.json`）
-
-4. **创建页面路由**（`src/pages/ja/`）
-
-### 样式定制
-
-- **颜色与主题**：编辑 `tailwind.config.mjs`
-- **全局样式**：编辑 `src/styles/global.css`
-- **深色模式**：使用 Tailwind 的 `dark:` 前缀
-
-### 组件说明
-
-所有交互组件位于 `src/components/astro/`：
-
-| 组件 | 用途 |
-|------|------|
-| `HeaderBar.jsx` | 导航头部，含语言切换 |
-| `Hero.jsx` | Hero 区块，标题与 CTA |
-| `Home.jsx` | 首页布局 |
-| `About.jsx` | 关于页面内容 |
-| `Contact.jsx` | 联系页面与表单 |
-| `Footer.jsx` | 页脚 |
-| `ThemeToggle.jsx` | 深色/浅色模式切换 |
-| `LanguageSwitcher.jsx` | 语言选择器 |
-| `PrimaryNav.jsx` | 主导航 |
+- `Header.astro`: 导航头部
+- `Footer.astro`: 站点页脚
+- `PostCard.astro`: 博客文章卡片
+- `FeaturedCarousel.astro`: 精选文章轮播
+- `Comments.tsx`: Giscus 评论
 
 ## 脚本命令
 
-| 命令 | 说明 |
+| 命令 | 描述 |
 |------|------|
-| `bun run dev` | 启动开发服务器 |
-| `bun run build` | 构建生产版本 |
-| `bun run preview` | 预览生产构建 |
-| `bun run fetch:rss` | 抓取 RSS 订阅 |
-| `bun run format` | 使用 Prettier 格式化代码 |
+| `npm run dev` | 启动开发服务器 |
+| `npm run build` | 构建生产版本 |
+| `npm run preview` | 预览生产版本 |
+| `npm run format` | 使用 Prettier 格式化代码 |
 
 ## 技术栈
 
-- **框架**：[Astro](https://astro.build/) 5.x
-- **UI**：[React](https://react.dev/) 19.x
-- **样式**：[Tailwind CSS](https://tailwindcss.com/) 3.x
-- **运行时**：[Bun](https://bun.sh/) 1.x
-- **邮件**：[EmailJS](https://www.emailjs.com/)
+- **框架**: [Astro](https://astro.build/) 5.x
+- **样式**: [Tailwind CSS](https://tailwindcss.com/) 3.x
+- **语言**: [TypeScript](https://www.typescriptlang.org/)
+- **评论**: [Giscus](https://giscus.app/)
+- **数学公式**: [KaTeX](https://katex.org/)
+- **图表**: [Mermaid](https://mermaid.js.org/)
+- **搜索**: [Pagefind](https://pagefind.app/)
 
-## 贡献指南
+## 贡献
 
-欢迎贡献！提交 PR 前请阅读 [贡献指南](CONTRIBUTING.md)。
+欢迎贡献！请随时提交 Pull Request。
 
-1. Fork 本仓库
-2. 创建功能分支（`git checkout -b feature/amazing-feature`）
-3. 提交更改（`git commit -m 'Add amazing feature'`）
-4. 推送到分支（`git push origin feature/amazing-feature`）
-5. 发起 Pull Request
+1. Fork 仓库
+2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'Add amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 打开 Pull Request
 
 ## 许可证
 
-本项目基于 [MIT 许可证](LICENSE) 开源。
+本项目采用 [MIT 许可证](LICENSE)。
 
 ---
 
 <p align="center">
-  Made with love by <a href="https://github.com/WayneXuCN">Wenjie Xu</a>
+  由 <a href="https://github.com/WayneXuCN">徐文杰</a> 制作 ❤️
 </p>

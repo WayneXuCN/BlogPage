@@ -7,17 +7,17 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import HomeLayout from '../../../components/layouts/HomeLayout.astro';
 import Pagination from '../../../components/blog/Pagination.astro';
 import { getCollection } from 'astro:content';
-import { siteConfig } from '../../../config';
+import { getSiteConfig } from '../../../utils/config';
 
 export function getStaticPaths() {
-  return [
-    { params: { lang: 'zh' } },
-    { params: { lang: 'en' } },
-  ];
+  return [{ params: { lang: 'zh' } }, { params: { lang: 'en' } }];
 }
 
 const { lang } = Astro.params;
 const currentLang = lang as 'zh' | 'en';
+
+// 获取配置
+const siteConfig = await getSiteConfig();
 
 // 获取当前语言的所有文章
 const allPosts = await getCollection('blog', ({ data }) => {
@@ -25,8 +25,8 @@ const allPosts = await getCollection('blog', ({ data }) => {
 });
 
 // 按发布日期排序
-const sortedPosts = allPosts.sort((a, b) => 
-  new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+const sortedPosts = allPosts.sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
 );
 
 // 分页
@@ -43,25 +43,19 @@ const siteTitle = currentLang === 'zh' ? siteConfig.title.zh : siteConfig.title.
 const description = currentLang === 'zh' ? siteConfig.description.zh : siteConfig.description.en;
 ---
 
-<BaseLayout 
-  title={siteTitle}
-  description={description}
-  lang={currentLang}
->
-  <main class="max-w-6xl mx-auto px-4 py-8">
-    <HomeLayout 
-      posts={paginatedPosts}
-      featuredPosts={featuredPosts}
-      lang={currentLang}
-    />
-    
-    {totalPages > 1 && (
-      <Pagination 
-        currentPage={currentPage}
-        totalPages={totalPages}
-        baseUrl={`/${lang}/blog/page/`}
-        lang={currentLang}
-      />
-    )}
+<BaseLayout title={siteTitle} description={description} lang={currentLang}>
+  <main class='max-w-6xl mx-auto px-4 py-8'>
+    <HomeLayout posts={paginatedPosts} featuredPosts={featuredPosts} lang={currentLang} />
+
+    {
+      totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          baseUrl={`/${lang}/blog/page/`}
+          lang={currentLang}
+        />
+      )
+    }
   </main>
 </BaseLayout>
