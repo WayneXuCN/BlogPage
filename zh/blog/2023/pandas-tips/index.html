@@ -1,0 +1,382 @@
+<!DOCTYPE html><html lang="zh-CN" class="scroll-smooth"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- SEO Meta --><title>Python 数据处理技巧：Pandas 高级用法 | 徐文杰的博客</title><meta name="description" content="分享一些在日常数据分析中常用的 Pandas 高级技巧，包括数据清洗、聚合操作和性能优化。"><meta name="author" content="徐文杰"><meta name="generator" content="Astro v5.16.0"><!-- Open Graph --><meta property="og:title" content="Python 数据处理技巧：Pandas 高级用法 | 徐文杰的博客"><meta property="og:description" content="分享一些在日常数据分析中常用的 Pandas 高级技巧，包括数据清洗、聚合操作和性能优化。"><meta property="og:image" content="/images/og-image.png"><meta property="og:type" content="article"><meta property="og:locale" content="zh_CN"><!-- Article Meta (for blog posts) --><meta property="article:published_time" content="2023-03-10T09:00:00.000Z"><meta property="article:modified_time" content="2023-11-25T14:20:00.000Z"><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Python 数据处理技巧：Pandas 高级用法 | 徐文杰的博客"><meta name="twitter:description" content="分享一些在日常数据分析中常用的 Pandas 高级技巧，包括数据清洗、聚合操作和性能优化。"><meta name="twitter:image" content="/images/og-image.png"><!-- Favicon --><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/images/apple-touch-icon.png"><!-- Web Manifest --><link rel="manifest" href="/site.webmanifest"><!-- RSS Feed --><link rel="alternate" type="application/rss+xml" title="RSS Feed (中文)" href="/zh/rss.xml"><!-- Google Fonts: Noto Sans SC + Noto Serif SC --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap"><!-- Font Awesome CDN --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous"><!-- KaTeX CSS (数学公式) --><!-- View Transitions --><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CA8p2IIX.js"></script><!-- 主题初始化脚本 --><script>
+      (function () {
+        function getTheme() {
+          if (typeof localStorage !== 'undefined') {
+            const stored = localStorage.getItem('theme');
+            if (stored === 'dark' || stored === 'light') return stored;
+          }
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyTheme() {
+          const theme = getTheme();
+          document.documentElement.classList.toggle('dark', theme === 'dark');
+        }
+
+        // 初始化主题
+        applyTheme();
+
+        // 监听系统主题变化
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+          if (!localStorage.getItem('theme')) {
+            document.documentElement.classList.toggle('dark', e.matches);
+          }
+        });
+
+        // View Transitions：页面切换后重新应用主题
+        document.addEventListener('astro:after-swap', applyTheme);
+      })();
+    </script><!-- Shiki 双主题 CSS --><!-- Google Analytics --><link rel="stylesheet" href="/_astro/_slug_.BYu-RMB_.css">
+<link rel="stylesheet" href="/_astro/_slug_.C8Hz8vPX.css">
+<style>.toc[data-astro-cid-ymbpksfa]{font-size:.875rem}.toc-link[data-astro-cid-ymbpksfa]{display:block;line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.reading-progress[data-astro-cid-gjtny2mx]{background:transparent}
+</style><script type="module" src="/_astro/page.H-sGAUOa.js"></script><style>[data-astro-transition-scope="astro-ka5hbhd5-1"] { view-transition-name: astro-ka5hbhd5-1; }@layer astro { ::view-transition-old(astro-ka5hbhd5-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(astro-ka5hbhd5-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(astro-ka5hbhd5-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(astro-ka5hbhd5-1) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-ka5hbhd5-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-ka5hbhd5-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-ka5hbhd5-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-ka5hbhd5-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-ka5hbhd5-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-ka5hbhd5-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-ka5hbhd5-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-ka5hbhd5-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300 flex flex-col"> <!-- 页头 --> <header class="sticky top-0 z-40 w-full backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800"> <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl"> <div class="flex items-center justify-between h-16"> <!-- Logo / 站点名称 --> <a href="/zh/" class="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"> <span class="hidden sm:inline">徐文杰的博客</span> <span class="sm:hidden">博客</span> </a> <!-- 桌面端导航 --> <nav class="hidden md:flex items-center space-x-1"> <a href="/zh/blog/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> 首页 </a><a href="/zh/blog/categories/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> 分类 </a><a href="/zh/blog/archive/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> 归档 </a><a href="/zh/about/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> 关于 </a> </nav> <!-- 右侧工具栏 --> <div class="flex items-center space-x-2"> <!-- 搜索 --> <!-- 搜索按钮 --><button id="search-btn" class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="搜索文章..." title="搜索文章... (⌘K)" data-astro-cid-p5mqvocy> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-p5mqvocy> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" data-astro-cid-p5mqvocy></path> </svg> </button> <!-- 搜索模态框 --> <div id="search-modal" class="search-modal fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-label="搜索文章..." data-astro-cid-p5mqvocy> <!-- 背景遮罩 --> <div class="search-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm" data-astro-cid-p5mqvocy></div> <!-- 对话框 - 固定在视口上方 --> <div class="relative z-10 w-full h-full flex justify-center items-start pt-[10vh] sm:pt-[15vh] px-4 pb-4 overflow-hidden" data-astro-cid-p5mqvocy> <div class="search-dialog w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex flex-col max-h-[75vh] animate-fade-in-up" data-astro-cid-p5mqvocy> <!-- 搜索头部 --> <div class="flex items-center border-b border-gray-200 dark:border-gray-700 px-4 flex-shrink-0" data-astro-cid-p5mqvocy> <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-p5mqvocy> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" data-astro-cid-p5mqvocy></path> </svg> <input id="search-input" type="text" placeholder="搜索文章..." class="flex-1 px-4 py-4 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none text-lg" autocomplete="off" data-astro-cid-p5mqvocy> <button id="search-close" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 flex-shrink-0" aria-label="关闭" data-astro-cid-p5mqvocy> <kbd class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded font-mono" data-astro-cid-p5mqvocy>ESC</kbd> </button> </div> <!-- 搜索结果容器 --> <div id="search-results" class="flex-1 overflow-y-auto p-4 min-h-[100px]" data-astro-cid-p5mqvocy> <p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8" data-astro-cid-p5mqvocy> 输入关键词开始搜索 </p> </div> <!-- 搜索底部 --> <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 flex-shrink-0" data-astro-cid-p5mqvocy> <div class="flex items-center gap-4" data-astro-cid-p5mqvocy> <span class="flex items-center gap-1" data-astro-cid-p5mqvocy> <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono" data-astro-cid-p5mqvocy>↵</kbd> 选择 </span> <span class="flex items-center gap-1" data-astro-cid-p5mqvocy> <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono" data-astro-cid-p5mqvocy>↑↓</kbd> 导航 </span> </div> <span class="flex items-center gap-1.5" data-astro-cid-p5mqvocy> <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" data-astro-cid-p5mqvocy> <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" data-astro-cid-p5mqvocy></path> </svg>
+Pagefind
+</span> </div> </div> </div> </div> <script>(function(){const t = "{\"placeholder\":\"搜索文章...\",\"tip\":\"输入关键词开始搜索\",\"noResults\":\"未找到相关结果\",\"loading\":\"搜索中...\",\"select\":\"选择\",\"navigate\":\"导航\",\"close\":\"关闭\"}";
+
+  const texts = JSON.parse(t);
+  
+  // Pagefind 搜索功能 - 使用全局变量避免重复加载
+  let pagefindInstance = null;
+  let isPagefindLoading = false;
+  
+  async function initPagefind() {
+    if (pagefindInstance) return pagefindInstance;
+    if (isPagefindLoading) {
+      // 等待加载完成
+      return new Promise((resolve) => {
+        const checkInterval = setInterval(() => {
+          if (pagefindInstance) {
+            clearInterval(checkInterval);
+            resolve(pagefindInstance);
+          }
+          if (!isPagefindLoading && !pagefindInstance) {
+            clearInterval(checkInterval);
+            resolve(null);
+          }
+        }, 50);
+      });
+    }
+    
+    isPagefindLoading = true;
+    
+    try {
+      // 动态加载 Pagefind - 使用相对于站点根目录的路径
+      const basePath = window.location.origin;
+      pagefindInstance = await import(`${basePath}/pagefind/pagefind.js`);
+      await pagefindInstance.init();
+      isPagefindLoading = false;
+      return pagefindInstance;
+    } catch (e) {
+      console.warn('Pagefind not available. Run `bun run build` first to enable search.', e);
+      isPagefindLoading = false;
+      return null;
+    }
+  }
+  
+  function initSearch() {
+    // DOM 元素
+    const searchBtn = document.getElementById('search-btn');
+    const searchModal = document.getElementById('search-modal');
+    const searchInput = document.getElementById('search-input');
+    const searchClose = document.getElementById('search-close');
+    const searchResults = document.getElementById('search-results');
+    const searchBackdrop = searchModal?.querySelector('.search-backdrop');
+    
+    if (!searchBtn || !searchModal) return;
+    
+    let currentIndex = 0;
+    let searchTimeout = null;
+    
+    // 打开搜索
+    function openSearch() {
+      searchModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => searchInput?.focus(), 100);
+      // 预加载 Pagefind
+      initPagefind();
+    }
+    
+    // 关闭搜索
+    function closeSearch() {
+      searchModal.classList.add('hidden');
+      document.body.style.overflow = '';
+      if (searchInput) searchInput.value = '';
+      if (searchResults) {
+        searchResults.innerHTML = `<p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8">${texts.tip}</p>`;
+      }
+    }
+    
+    // 克隆并替换按钮以移除旧事件
+    const newSearchBtn = searchBtn.cloneNode(true);
+    searchBtn.parentNode?.replaceChild(newSearchBtn, searchBtn);
+    
+    // 事件绑定
+    newSearchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openSearch();
+    });
+    
+    searchClose?.addEventListener('click', closeSearch);
+    searchBackdrop?.addEventListener('click', closeSearch);
+    
+    // ESC 关闭 和 Cmd/Ctrl + K 快捷键
+    function handleKeydown(e) {
+      if (e.key === 'Escape' && !searchModal.classList.contains('hidden')) {
+        closeSearch();
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (searchModal.classList.contains('hidden')) {
+          openSearch();
+        } else {
+          closeSearch();
+        }
+      }
+    }
+    
+    // 移除旧的键盘监听器
+    document.removeEventListener('keydown', handleKeydown);
+    document.addEventListener('keydown', handleKeydown);
+    
+    // 搜索输入
+    searchInput?.addEventListener('input', async (e) => {
+      const query = e.target.value.trim();
+      
+      if (searchTimeout) clearTimeout(searchTimeout);
+      
+      if (!query) {
+        if (searchResults) {
+          searchResults.innerHTML = `<p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8">${texts.tip}</p>`;
+        }
+        return;
+      }
+      
+      // 显示加载状态
+      if (searchResults) {
+        searchResults.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">${texts.loading}</p>`;
+      }
+      
+      searchTimeout = window.setTimeout(async () => {
+        const pf = await initPagefind();
+        
+        if (!pf || !searchResults) {
+          searchResults.innerHTML = `<p class="text-center text-amber-600 dark:text-amber-400 py-8">搜索功能需要先运行 build 命令生成索引</p>`;
+          return;
+        }
+        
+        try {
+          const search = await pf.search(query);
+          
+          if (search.results.length === 0) {
+            searchResults.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">${texts.noResults}</p>`;
+            return;
+          }
+          
+          // 获取结果详情
+          const results = await Promise.all(
+            search.results.slice(0, 10).map((r) => r.data())
+          );
+          
+          searchResults.innerHTML = results.map((result, index) => `
+            <a 
+              href="${result.url}" 
+              class="search-result-item block p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mb-2 ${index === 0 ? 'bg-gray-50 dark:bg-gray-700/50' : ''}"
+              data-index="${index}"
+            >
+              <h3 class="font-semibold text-gray-900 dark:text-white mb-1 line-clamp-1">${result.meta?.title || 'Untitled'}</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">${result.excerpt || ''}</p>
+            </a>
+          `).join('');
+          
+          currentIndex = 0;
+        } catch (err) {
+          console.error('Search error:', err);
+          searchResults.innerHTML = `<p class="text-center text-red-500 dark:text-red-400 py-8">搜索出错，请重试</p>`;
+        }
+      }, 200);
+    });
+    
+    // 键盘导航
+    searchModal.addEventListener('keydown', (e) => {
+      const items = searchResults?.querySelectorAll('.search-result-item');
+      if (!items || items.length === 0) return;
+      
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentIndex = (currentIndex + 1) % items.length;
+        items.forEach((item, i) => {
+          item.classList.toggle('bg-gray-50', i === currentIndex);
+          item.classList.toggle('dark:bg-gray-700/50', i === currentIndex);
+        });
+        items[currentIndex].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+        items.forEach((item, i) => {
+          item.classList.toggle('bg-gray-50', i === currentIndex);
+          item.classList.toggle('dark:bg-gray-700/50', i === currentIndex);
+        });
+        items[currentIndex].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        const activeItem = items[currentIndex];
+        if (activeItem) {
+          window.location.href = activeItem.getAttribute('href');
+        }
+      }
+    });
+  }
+  
+  // 初始化和页面切换后重新初始化
+  initSearch();
+  document.addEventListener('astro:page-load', initSearch);
+})();</script>  <!-- 语言切换 --> <a href="/en/blog/2023/pandas-tips/" class="px-3 py-1.5 text-sm font-medium border border-gray-300 dark:border-gray-600 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors" title="Switch to English" data-astro-prefetch> EN </a> <!-- 主题切换 --> <button id="theme-toggle" class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="切换主题" title="切换主题"> <!-- 太阳图标（深色模式下显示） --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- 月亮图标（浅色模式下显示） --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">const n=document.getElementById("theme-toggle");n&&n.addEventListener("click",()=>{const e=document.documentElement.classList.contains("dark"),t=e?"light":"dark";document.documentElement.classList.toggle("dark",!e),localStorage.setItem("theme",t),window.dispatchEvent(new CustomEvent("theme-change",{detail:{theme:t}}))});</script> <!-- 移动端菜单按钮 --> <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="打开菜单" aria-expanded="false"> <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg> </button> </div> </div> </div> <!-- 移动端导航菜单 --> <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"> <nav class="container mx-auto px-4 py-4 space-y-1"> <a href="/zh/blog/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> 首页 </a><a href="/zh/blog/categories/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> 分类 </a><a href="/zh/blog/archive/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> 归档 </a><a href="/zh/about/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> 关于 </a> </nav> </div> </header> <script type="module">function d(){const a=document.getElementById("mobile-menu-btn"),n=document.getElementById("mobile-menu");if(!a||!n)return;const e=a.cloneNode(!0);a.parentNode?.replaceChild(e,a),e.addEventListener("click",t=>{t.preventDefault(),t.stopPropagation();const i=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",String(!i)),n.classList.toggle("hidden")}),n.querySelectorAll("a").forEach(t=>{t.addEventListener("click",()=>{n.classList.add("hidden"),e.setAttribute("aria-expanded","false")})}),document.addEventListener("click",t=>{!n.contains(t.target)&&!e.contains(t.target)&&(n.classList.add("hidden"),e.setAttribute("aria-expanded","false"))})}d();document.addEventListener("astro:page-load",d);</script> <!-- 主内容区域 --> <main class="flex-1 container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 sm:py-12 max-w-6xl" data-astro-transition-scope="astro-ka5hbhd5-1">   <div class="reading-progress fixed top-0 left-0 right-0 h-1 z-50" data-astro-cid-gjtny2mx> <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-500 w-0 transition-all duration-150" data-astro-cid-gjtny2mx></div> </div><article class="max-w-none" data-astro-cid-gjtny2mx> <!-- 文章头部 --> <header class="mb-8 pb-8 border-b border-gray-200 dark:border-gray-800" data-astro-cid-gjtny2mx> <!-- 分类标签 --> <div class="flex items-center gap-3 mb-4" data-astro-cid-gjtny2mx> <a href="/zh/blog/category/tutorial/" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors" data-astro-cid-gjtny2mx> <span data-astro-cid-gjtny2mx>📚</span> 技术教程 </a> </div> <!-- 标题 --> <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-6" data-astro-cid-gjtny2mx> Python 数据处理技巧：Pandas 高级用法 </h1> <!-- 描述 --> <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed mb-6" data-astro-cid-gjtny2mx> 分享一些在日常数据分析中常用的 Pandas 高级技巧，包括数据清洗、聚合操作和性能优化。 </p> <!-- 元信息 --> <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600 dark:text-gray-400"> <!-- 作者 --> <span class="flex items-center gap-1.5"> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path> </svg> <span>徐文杰</span> </span> <!-- 发布日期 --> <span class="flex items-center gap-1.5"> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path> </svg> <time datetime="2023-03-10T09:00:00.000Z"> 2023年3月10日 </time> </span> <!-- 更新日期 --> <span class="flex items-center gap-1.5 text-green-600 dark:text-green-400"> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path> </svg> <span>更新于 2023年11月25日</span> </span> <!-- 阅读时间 --> <span class="flex items-center gap-1.5"> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg> <span>1 分钟</span> </span> </div> <!-- 标签 --> <div class="flex flex-wrap gap-2 mt-6" data-astro-cid-gjtny2mx> <a href="/zh/blog/tag/Python/" class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" data-astro-cid-gjtny2mx>
+#Python </a><a href="/zh/blog/tag/Pandas/" class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" data-astro-cid-gjtny2mx>
+#Pandas </a><a href="/zh/blog/tag/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/" class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" data-astro-cid-gjtny2mx>
+#数据分析 </a><a href="/zh/blog/tag/%E6%95%99%E7%A8%8B/" class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" data-astro-cid-gjtny2mx>
+#教程 </a> </div> </header> <!-- 封面图 -->  <!-- 系列文章导航 -->  <!-- 主体内容区 --> <div class="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12" data-astro-cid-gjtny2mx> <!-- 文章内容 --> <div class="prose prose-lg dark:prose-invert max-w-none
+        prose-headings:scroll-mt-24
+        prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
+        prose-code:before:content-none prose-code:after:content-none
+        prose-code:px-1.5 prose-code:py-0.5 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:rounded prose-code:text-red-600 dark:prose-code:text-red-400
+        prose-pre:bg-gray-50 dark:prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-700
+        prose-img:rounded-xl prose-img:shadow-lg
+        prose-blockquote:border-l-blue-500 prose-blockquote:bg-blue-50/50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic
+        prose-table:overflow-x-auto
+        prose-hr:border-gray-200 dark:prose-hr:border-gray-800
+      " data-astro-cid-gjtny2mx>  <h2 id="引言">引言</h2>
+<p>Pandas 是 Python 数据分析的核心库，本文分享一些实用的高级技巧。</p>
+<aside class="callout my-6 p-4 rounded-r-lg border-l-4 bg-purple-50 dark:bg-purple-900/20 border-purple-500 text-purple-800 dark:text-purple-200">  <div class="callout-content prose-sm dark:prose-invert max-w-none"> <p>本文示例代码基于 Pandas 2.0+ 版本，部分新特性可能在旧版本中不可用。</p> </div> </aside>
+<h2 id="1-链式调用与-pipe">1. 链式调用与 pipe()</h2>
+<p>使用 <code>pipe()</code> 方法可以让数据处理流程更加清晰：</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="python"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> pandas </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> pd</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> clean_data</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(df):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> df.dropna().reset_index(</span><span style="color:#E36209;--shiki-dark:#FFAB70">drop</span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF">True</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> add_features</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(df):</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;year&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">] </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> pd.to_datetime(df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;date&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">]).dt.year</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> df</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 链式调用</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">result </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    df</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    .pipe(clean_data)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    .pipe(add_features)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    .query(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;year &gt;= 2020&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre>
+<h2 id="2-高效的数据聚合">2. 高效的数据聚合</h2>
+<p>使用 <code>agg()</code> 方法进行多维度聚合：</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 多列多函数聚合</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">summary </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> df.groupby(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;category&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">).agg({</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#39;value&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;mean&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;std&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;count&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#39;score&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;min&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;max&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">})</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 自定义聚合函数</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> range_func</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(x):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> x.max() </span><span style="color:#D73A49;--shiki-dark:#F97583">-</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> x.min()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">df.groupby(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;category&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;value&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">].agg([</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;mean&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, range_func])</span></span></code></pre>
+<h2 id="3-内存优化">3. 内存优化</h2>
+<p>处理大数据集时，类型优化很重要：</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 优化整数类型</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> optimize_int</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(df, col):</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    c_min </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> df[col].min()</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    c_max </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> df[col].max()</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> c_min </span><span style="color:#D73A49;--shiki-dark:#F97583">&gt;=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> c_max </span><span style="color:#D73A49;--shiki-dark:#F97583">&lt;</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 255</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">            return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> df[col].astype(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;uint8&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        elif</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> c_max </span><span style="color:#D73A49;--shiki-dark:#F97583">&lt;</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 65535</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">            return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> df[col].astype(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;uint16&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> c_min </span><span style="color:#D73A49;--shiki-dark:#F97583">&gt;</span><span style="color:#D73A49;--shiki-dark:#F97583"> -</span><span style="color:#005CC5;--shiki-dark:#79B8FF">128</span><span style="color:#D73A49;--shiki-dark:#F97583"> and</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> c_max </span><span style="color:#D73A49;--shiki-dark:#F97583">&lt;</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 127</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> df[col].astype(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;int8&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    elif</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> c_min </span><span style="color:#D73A49;--shiki-dark:#F97583">&gt;</span><span style="color:#D73A49;--shiki-dark:#F97583"> -</span><span style="color:#005CC5;--shiki-dark:#79B8FF">32768</span><span style="color:#D73A49;--shiki-dark:#F97583"> and</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> c_max </span><span style="color:#D73A49;--shiki-dark:#F97583">&lt;</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 32767</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> df[col].astype(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;int16&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    </span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> df[col]</span></span></code></pre>
+<h2 id="4-向量化字符串操作">4. 向量化字符串操作</h2>
+<p>避免使用 <code>apply()</code>，优先使用向量化方法：</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># ❌ 慢</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;name&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">].apply(</span><span style="color:#D73A49;--shiki-dark:#F97583">lambda</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> x: x.lower().strip())</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># ✅ 快</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;name&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">].str.lower().str.strip()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 正则表达式提取</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;phone&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">].str.extract(</span><span style="color:#D73A49;--shiki-dark:#F97583">r</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;</span><span style="color:#005CC5;--shiki-dark:#79B8FF">(\d</span><span style="color:#D73A49;--shiki-dark:#F97583">{3}</span><span style="color:#005CC5;--shiki-dark:#79B8FF">)</span><span style="color:#032F62;--shiki-dark:#DBEDFF">-</span><span style="color:#005CC5;--shiki-dark:#79B8FF">(\d</span><span style="color:#D73A49;--shiki-dark:#F97583">{4}</span><span style="color:#005CC5;--shiki-dark:#79B8FF">)</span><span style="color:#032F62;--shiki-dark:#DBEDFF">-</span><span style="color:#005CC5;--shiki-dark:#79B8FF">(\d</span><span style="color:#D73A49;--shiki-dark:#F97583">{4}</span><span style="color:#005CC5;--shiki-dark:#79B8FF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre>
+<h2 id="5-条件赋值">5. 条件赋值</h2>
+<p>使用 <code>np.where()</code> 或 <code>np.select()</code> 进行条件赋值：</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8;overflow-x:auto;white-space:pre-wrap;word-wrap:break-word" tabindex="0" data-language="python"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> numpy </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> np</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 简单条件</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;status&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">] </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> np.where(df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;score&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">] </span><span style="color:#D73A49;--shiki-dark:#F97583">&gt;=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 60</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;pass&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;fail&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 多条件</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">conditions </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;score&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">] </span><span style="color:#D73A49;--shiki-dark:#F97583">&gt;=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 90</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;score&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">] </span><span style="color:#D73A49;--shiki-dark:#F97583">&gt;=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 80</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;score&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">] </span><span style="color:#D73A49;--shiki-dark:#F97583">&gt;=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 60</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">choices </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> [</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;A&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;B&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;C&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;grade&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">] </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> np.select(conditions, choices, </span><span style="color:#E36209;--shiki-dark:#FFAB70">default</span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF">&#39;D&#39;</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre>
+<h2 id="总结">总结</h2>
+<p>掌握这些技巧可以显著提升数据处理效率。记住：</p>
+<ol>
+<li>优先使用向量化操作</li>
+<li>合理使用数据类型</li>
+<li>善用链式调用保持代码清晰</li>
+</ol>
+<p>Happy coding! 🐍</p>  </div> <!-- 侧边栏（目录） --> <aside class="hidden lg:block" data-astro-cid-gjtny2mx> <div class="sticky top-24" data-astro-cid-gjtny2mx> <nav class="toc" aria-label="Table of contents" data-astro-cid-ymbpksfa><h2 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 uppercase tracking-wider" data-astro-cid-ymbpksfa>目录</h2><ul class="space-y-2 text-sm" data-astro-cid-ymbpksfa><li class data-astro-cid-ymbpksfa><a href="#引言" class="toc-link block py-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-l-2 border-transparent hover:border-blue-500 pl-3 -ml-px" data-heading="引言" data-astro-cid-ymbpksfa>引言</a></li><li class data-astro-cid-ymbpksfa><a href="#1-链式调用与-pipe" class="toc-link block py-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-l-2 border-transparent hover:border-blue-500 pl-3 -ml-px" data-heading="1-链式调用与-pipe" data-astro-cid-ymbpksfa>1. 链式调用与 pipe()</a></li><li class data-astro-cid-ymbpksfa><a href="#2-高效的数据聚合" class="toc-link block py-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-l-2 border-transparent hover:border-blue-500 pl-3 -ml-px" data-heading="2-高效的数据聚合" data-astro-cid-ymbpksfa>2. 高效的数据聚合</a></li><li class data-astro-cid-ymbpksfa><a href="#3-内存优化" class="toc-link block py-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-l-2 border-transparent hover:border-blue-500 pl-3 -ml-px" data-heading="3-内存优化" data-astro-cid-ymbpksfa>3. 内存优化</a></li><li class data-astro-cid-ymbpksfa><a href="#4-向量化字符串操作" class="toc-link block py-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-l-2 border-transparent hover:border-blue-500 pl-3 -ml-px" data-heading="4-向量化字符串操作" data-astro-cid-ymbpksfa>4. 向量化字符串操作</a></li><li class data-astro-cid-ymbpksfa><a href="#5-条件赋值" class="toc-link block py-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-l-2 border-transparent hover:border-blue-500 pl-3 -ml-px" data-heading="5-条件赋值" data-astro-cid-ymbpksfa>5. 条件赋值</a></li><li class data-astro-cid-ymbpksfa><a href="#总结" class="toc-link block py-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-l-2 border-transparent hover:border-blue-500 pl-3 -ml-px" data-heading="总结" data-astro-cid-ymbpksfa>总结</a></li></ul></nav><script type="module">function s(){const r=document.querySelectorAll(".toc-link"),o=document.querySelectorAll("article h2[id], article h3[id]");if(r.length===0||o.length===0)return;const a=new IntersectionObserver(e=>{e.forEach(n=>{if(n.isIntersecting){r.forEach(i=>{i.classList.remove("text-blue-600","dark:text-blue-400","border-blue-500","font-medium"),i.classList.add("text-gray-600","dark:text-gray-400","border-transparent")});const t=document.querySelector(`.toc-link[data-heading="${n.target.id}"]`);t&&(t.classList.add("text-blue-600","dark:text-blue-400","border-blue-500","font-medium"),t.classList.remove("text-gray-600","dark:text-gray-400","border-transparent"))}})},{rootMargin:"-80px 0px -80% 0px",threshold:0});o.forEach(e=>a.observe(e)),document.addEventListener("astro:after-swap",()=>{a.disconnect(),s()})}s();</script> </div> </aside> </div> <!-- 文章底部 --> <footer class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800" data-astro-cid-gjtny2mx> <!-- 分享按钮 --> <div class="flex items-center justify-between mb-8 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl" data-astro-cid-gjtny2mx> <span class="text-gray-600 dark:text-gray-400 font-medium" data-astro-cid-gjtny2mx>分享文章</span> <div class="flex items-center gap-2" data-astro-cid-gjtny2mx> <button id="copy-link-btn" class="p-2.5 rounded-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 shadow-sm hover:shadow transition-all" title="复制链接" data-astro-cid-gjtny2mx> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-gjtny2mx> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" data-astro-cid-gjtny2mx></path> </svg> </button> <a href="https://twitter.com/intent/tweet?text=Python%20%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E6%8A%80%E5%B7%A7%EF%BC%9APandas%20%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95&url=https%3A%2F%2Fblog.wenjiexu.site%2Fzh%2Fblog%2F2023%2Fpandas-tips%2F" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-400 shadow-sm hover:shadow transition-all" title="Twitter/X" data-astro-cid-gjtny2mx> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" data-astro-cid-gjtny2mx> <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" data-astro-cid-gjtny2mx></path> </svg> </a> <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fblog.wenjiexu.site%2Fzh%2Fblog%2F2023%2Fpandas-tips%2F&title=Python%20%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E6%8A%80%E5%B7%A7%EF%BC%9APandas%20%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-700 shadow-sm hover:shadow transition-all" title="LinkedIn" data-astro-cid-gjtny2mx> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" data-astro-cid-gjtny2mx> <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" data-astro-cid-gjtny2mx></path> </svg> </a> <a href="mailto:?subject=Python%20%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E6%8A%80%E5%B7%A7%EF%BC%9APandas%20%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95&#38;body=https%3A%2F%2Fblog.wenjiexu.site%2Fzh%2Fblog%2F2023%2Fpandas-tips%2F" class="p-2.5 rounded-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-green-600 shadow-sm hover:shadow transition-all" title="Email" data-astro-cid-gjtny2mx> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-gjtny2mx> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" data-astro-cid-gjtny2mx></path> </svg> </a> </div> </div> <!-- 相关文章 --> <section class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800"><h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">相关文章</h2><div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><a href="/zh/blog/2024/mermaid-diagrams/" class="group block p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all duration-300"><div class="flex items-start gap-4"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop" alt="使用 Mermaid 绘制技术图表" class="w-20 h-20 rounded-lg object-cover flex-shrink-0" loading="lazy"><div class="min-w-0 flex-1"><span class="text-xs text-blue-600 dark:text-blue-400 font-medium">技术教程</span><h3 class="text-base font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 mt-1">使用 Mermaid 绘制技术图表</h3><time class="text-xs text-gray-500 dark:text-gray-400 mt-2 block">2024年2月20日</time></div></div></a><a href="/zh/blog/2024/math-typesetting-guide/" class="group block p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all duration-300"><div class="flex items-start gap-4"><img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200&h=630&fit=crop" alt="数学公式排版指南" class="w-20 h-20 rounded-lg object-cover flex-shrink-0" loading="lazy"><div class="min-w-0 flex-1"><span class="text-xs text-blue-600 dark:text-blue-400 font-medium">技术教程</span><h3 class="text-base font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 mt-1">数学公式排版指南</h3><time class="text-xs text-gray-500 dark:text-gray-400 mt-2 block">2024年1月25日</time></div></div></a></div></section> <!-- 评论区 --> <section class="mt-12" data-astro-cid-gjtny2mx> <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2" data-astro-cid-gjtny2mx> <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-gjtny2mx> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" data-astro-cid-gjtny2mx></path> </svg> 评论 </h2> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value=="object"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event("astro:visible"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="1dgxdM" prefix="r1" component-url="/_astro/Comments.D4wVvG0I.js" component-export="default" renderer-url="/_astro/client.BLUn-lwI.js" props="{&quot;lang&quot;:[0,&quot;zh&quot;],&quot;data-astro-cid-gjtny2mx&quot;:[0,true]}" ssr client="visible" opts="{&quot;name&quot;:&quot;Comments&quot;,&quot;value&quot;:true}" await-children><div class="giscus-wrapper"></div><!--astro:end--></astro-island> </section> </footer> </article> <script type="module">const o=document.getElementById("progress-bar");if(o){let e=function(){const r=window.scrollY,n=document.documentElement.scrollHeight-window.innerHeight,i=n>0?r/n*100:0;o.style.width=`${Math.min(100,i)}%`};window.addEventListener("scroll",e,{passive:!0}),e()}const t=document.getElementById("copy-link-btn");t&&t.addEventListener("click",async()=>{try{await navigator.clipboard.writeText(window.location.href);const e=t.innerHTML;t.innerHTML='<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>',setTimeout(()=>{t.innerHTML=e},2e3)}catch(e){console.error("Failed to copy:",e)}});</script>  </main> <!-- 页脚 --> <footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50"> <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-12"> <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> <!-- 站点信息 --> <div class="space-y-4"> <h3 class="text-lg font-semibold text-gray-900 dark:text-white"> 徐文杰的博客 </h3> <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed"> 分享学术研究、技术教程与生活感悟 </p> </div> <!-- 快速链接 --> <div class="space-y-4"> <h3 class="text-lg font-semibold text-gray-900 dark:text-white"> 快速链接 </h3> <ul class="space-y-2"> <li> <a href="/zh/blog/categories/" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"> 分类标签 </a> </li> <li> <a href="/zh/blog/archive/" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"> 文章归档 </a> </li> <li> <a href="/zh/rss.xml" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors inline-flex items-center gap-1"> <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"> <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"></path> </svg> RSS 订阅 </a> </li> </ul> </div> <!-- 社交链接 --> <div class="space-y-4"> <h3 class="text-lg font-semibold text-gray-900 dark:text-white"> 联系方式 </h3> <div class="flex space-x-4"> <a href="https://github.com/WayneXuCN" target="_blank" rel="noopener noreferrer" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" aria-label="GitHub" title="GitHub"> <i class="fab fa-github text-xl"></i> </a><a href="https://scholar.google.com/citations?user=eWTidmsAAAAJ" target="_blank" rel="noopener noreferrer" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" aria-label="Google Scholar" title="Google Scholar"> <i class="fas fa-graduation-cap text-xl"></i> </a><a href="mailto:wenjie.xu.cn@outlook.com" target="_blank" rel="noopener noreferrer" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" aria-label="Email" title="Email"> <i class="fas fa-envelope text-xl"></i> </a> </div> </div> </div> <!-- 底部版权 --> <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4"> <p class="text-sm text-gray-600 dark:text-gray-400"> © 2025 徐文杰. 保留所有权利。 </p> <p class="text-sm text-gray-500 dark:text-gray-500"> 基于 Astro 构建 <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="hover:text-gray-900 dark:hover:text-white transition-colors">  Astro
+</a> </p> </div> </div> </footer> <!-- 返回顶部按钮 --> <button id="back-to-top" class="fixed bottom-8 right-8 p-3 bg-gray-800 dark:bg-gray-700 text-white rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-gray-700 dark:hover:bg-gray-600 z-50" aria-label="返回顶部"> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path> </svg> </button> <script type="module">function n(){document.querySelectorAll("pre.astro-code").forEach(t=>{if(t.parentElement?.classList.contains("code-block-wrapper"))return;const o=document.createElement("div");o.className="code-block-wrapper",t.parentNode?.insertBefore(o,t),o.appendChild(t);const e=document.createElement("button");e.className="copy-code-btn",e.innerHTML=`
+            <span class="copy-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            </span>
+            <span class="check-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </span>
+          `,e.setAttribute("aria-label","复制代码"),e.setAttribute("title","复制"),e.addEventListener("click",async()=>{const r=t.querySelector("code")?.textContent||t.textContent||"";try{await navigator.clipboard.writeText(r),e.classList.add("copied"),e.setAttribute("title","已复制"),setTimeout(()=>{e.classList.remove("copied"),e.setAttribute("title","复制")},2e3)}catch(i){console.error("复制失败:",i)}}),o.appendChild(e)})}n();document.addEventListener("astro:page-load",n);</script> <script type="module">const i=document.getElementById("back-to-top");i&&(window.addEventListener("scroll",()=>{window.scrollY>300?(i.classList.remove("opacity-0","invisible"),i.classList.add("opacity-100","visible")):(i.classList.add("opacity-0","invisible"),i.classList.remove("opacity-100","visible"))}),i.addEventListener("click",()=>{window.scrollTo({top:0,behavior:"smooth"})}));</script> </body> </html> 
