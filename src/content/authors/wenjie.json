@@ -1,0 +1,13 @@
+{
+  "id": "wenjie",
+  "name": "徐文杰",
+  "nameEn": "Wenjie Xu",
+  "email": "wenjie.xu.cn@outlook.com",
+  "avatar": "/assets/img/prof_pic.png",
+  "bio": "学术研究者，专注于人工智能与机器学习领域",
+  "bioEn": "Academic researcher, focusing on AI and machine learning",
+  "social": {
+    "github": "https://github.com/WayneXuCN",
+    "googleScholar": "https://scholar.google.com/citations?user=eWTidmsAAAAJ"
+  }
+}

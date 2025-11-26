@@ -1,0 +1,70 @@
+---
+/**
+ * GridLayout.astro
+ * 卡片网格式布局
+ */
+import type { CollectionEntry } from 'astro:content';
+import type { GridLayoutConfig } from '../../config';
+import PostCard from '../blog/PostCard.astro';
+import Pagination from '../blog/Pagination.astro';
+import FeaturedSection from './FeaturedSection.astro';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  featuredPosts: CollectionEntry<'blog'>[];
+  config: GridLayoutConfig;
+  lang?: 'zh' | 'en';
+  currentPage: number;
+  totalPages: number;
+}
+
+const { posts, featuredPosts, config, lang = 'zh', currentPage, totalPages } = Astro.props;
+
+const i18n = {
+  zh: { latestPosts: '最新文章', allPosts: '全部文章' },
+  en: { latestPosts: 'Latest Posts', allPosts: 'All Posts' },
+};
+
+const t = i18n[lang];
+
+// 根据列数生成网格类名
+const gridCols = {
+  2: 'grid-cols-1 sm:grid-cols-2',
+  3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+  4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+};
+---
+
+<div class="grid-layout">
+  <!-- 精选文章 -->
+  {featuredPosts.length > 0 && currentPage === 1 && (
+    <FeaturedSection posts={featuredPosts} lang={lang} variant="grid" />
+  )}
+  
+  <!-- 文章网格 -->
+  <section class="mt-12">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">
+      {currentPage === 1 ? t.latestPosts : t.allPosts}
+    </h2>
+    
+    <div class={`grid ${gridCols[config.columns]} gap-6`}>
+      {posts.map((post) => (
+        <PostCard
+          post={post}
+          lang={lang}
+          variant="default"
+          showImage={config.showThumbnail}
+          showExcerpt={true}
+        />
+      ))}
+    </div>
+    
+    <!-- 分页 -->
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      baseUrl={`/${lang}/blog/`}
+      lang={lang}
+    />
+  </section>
+</div>

@@ -1,0 +1,152 @@
+---
+/**
+ * SeriesNav.astro
+ * 系列文章导航组件
+ */
+import type { CollectionEntry } from 'astro:content';
+import { getPostUrl } from '../../config';
+
+interface Props {
+  series: string;
+  posts: CollectionEntry<'blog'>[];
+  currentPost: CollectionEntry<'blog'>;
+  lang?: 'zh' | 'en';
+}
+
+const { series, posts, currentPost, lang = 'zh' } = Astro.props;
+
+// 辅助函数
+function getSlug(post: CollectionEntry<'blog'>) {
+  return post.id.includes('/') ? post.id.split('/').pop()! : post.id;
+}
+
+function getYear(post: CollectionEntry<'blog'>) {
+  return new Date(post.data.pubDate).getFullYear();
+}
+
+// 当前文章在系列中的位置
+const currentIndex = posts.findIndex(p => p.id === currentPost.id);
+const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
+const nextPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
+
+const i18n = {
+  zh: {
+    seriesTitle: '系列文章',
+    partOf: '这是系列文章的一部分',
+    article: '第 {n} 篇',
+    of: '共 {total} 篇',
+    prev: '上一篇',
+    next: '下一篇',
+    viewAll: '查看全部',
+  },
+  en: {
+    seriesTitle: 'Article Series',
+    partOf: 'This article is part of a series',
+    article: 'Part {n}',
+    of: 'of {total}',
+    prev: 'Previous',
+    next: 'Next',
+    viewAll: 'View all',
+  },
+};
+
+const t = i18n[lang];
+---
+
+<div class="series-nav mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-blue-100 dark:border-blue-800/50">
+  <!-- 系列信息 -->
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <span class="text-sm text-blue-600 dark:text-blue-400 font-medium">
+        {t.seriesTitle}
+      </span>
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white mt-1">
+        {series}
+      </h3>
+    </div>
+    <div class="text-right">
+      <span class="text-sm text-gray-600 dark:text-gray-400">
+        {t.article.replace('{n}', String(currentIndex + 1))} {t.of.replace('{total}', String(posts.length))}
+      </span>
+    </div>
+  </div>
+  
+  <!-- 进度条 -->
+  <div class="h-1.5 bg-blue-100 dark:bg-blue-900/50 rounded-full mb-4 overflow-hidden">
+    <div 
+      class="h-full bg-blue-500 dark:bg-blue-400 rounded-full transition-all duration-300"
+      style={`width: ${((currentIndex + 1) / posts.length) * 100}%`}
+    />
+  </div>
+  
+  <!-- 文章列表（折叠） -->
+  <details class="mb-4">
+    <summary class="cursor-pointer text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors select-none">
+      {t.viewAll}
+    </summary>
+    <ol class="mt-3 space-y-2 pl-4">
+      {posts.map((post, index) => (
+        <li class="flex items-start gap-2">
+          <span class={`flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full text-xs font-medium ${
+            index === currentIndex 
+              ? 'bg-blue-500 text-white' 
+              : index < currentIndex 
+                ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+          }`}>
+            {index < currentIndex ? '✓' : index + 1}
+          </span>
+          {index === currentIndex ? (
+            <span class="text-sm font-medium text-gray-900 dark:text-white">
+              {post.data.title}
+            </span>
+          ) : (
+            <a 
+              href={getPostUrl(getSlug(post), lang, getYear(post))}
+              class="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              {post.data.title}
+            </a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </details>
+  
+  <!-- 上一篇/下一篇 -->
+  <div class="grid grid-cols-2 gap-4">
+    {prevPost ? (
+      <a 
+        href={getPostUrl(getSlug(prevPost), lang, getYear(prevPost))}
+        class="group flex items-center gap-2 p-3 rounded-lg bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
+      >
+        <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <div class="min-w-0">
+          <span class="text-xs text-gray-500 dark:text-gray-400">{t.prev}</span>
+          <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{prevPost.data.title}</p>
+        </div>
+      </a>
+    ) : (
+      <div />
+    )}
+    
+    {nextPost ? (
+      <a 
+        href={getPostUrl(getSlug(nextPost), lang, getYear(nextPost))}
+        class="group flex items-center justify-end gap-2 p-3 rounded-lg bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 transition-colors text-right"
+      >
+        <div class="min-w-0">
+          <span class="text-xs text-gray-500 dark:text-gray-400">{t.next}</span>
+          <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{nextPost.data.title}</p>
+        </div>
+        <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    ) : (
+      <div />
+    )}
+  </div>
+</div>

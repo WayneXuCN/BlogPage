@@ -1,0 +1,67 @@
+---
+/**
+ * RelatedPosts.astro
+ * 相关文章推荐
+ */
+import type { CollectionEntry } from 'astro:content';
+import { getPostUrl, formatDate, siteConfig } from '../../config';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  lang?: 'zh' | 'en';
+}
+
+const { posts, lang = 'zh' } = Astro.props;
+
+const title = lang === 'zh' ? '相关文章' : 'Related Posts';
+
+// 辅助函数
+function getSlug(post: CollectionEntry<'blog'>) {
+  return post.id.includes('/') ? post.id.split('/').pop()! : post.id;
+}
+
+function getYear(post: CollectionEntry<'blog'>) {
+  return new Date(post.data.pubDate).getFullYear();
+}
+
+function getCategoryLabel(category: string) {
+  const cat = siteConfig.categories[category as keyof typeof siteConfig.categories];
+  return lang === 'zh' ? cat?.name?.zh : cat?.name?.en;
+}
+---
+
+{posts.length > 0 && (
+  <section class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">{title}</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {posts.map((post) => (
+        <a
+          href={getPostUrl(getSlug(post), lang, getYear(post))}
+          class="group block p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all duration-300"
+        >
+          <div class="flex items-start gap-4">
+            {post.data.image && (
+              <img
+                src={post.data.image}
+                alt={post.data.title}
+                class="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                loading="lazy"
+              />
+            )}
+            <div class="min-w-0 flex-1">
+              <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                {getCategoryLabel(post.data.category) || post.data.category}
+              </span>
+              <h3 class="text-base font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 mt-1">
+                {post.data.title}
+              </h3>
+              <time class="text-xs text-gray-500 dark:text-gray-400 mt-2 block">
+                {formatDate(post.data.pubDate, lang)}
+              </time>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+)}

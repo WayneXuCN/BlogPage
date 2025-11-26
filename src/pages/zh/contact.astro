@@ -1,0 +1,68 @@
+---
+/**
+ * /zh/contact - 中文联系页面
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../config';
+
+const lang = 'zh' as const;
+---
+
+<BaseLayout
+  title={`联系 | ${siteConfig.title.zh}`}
+  description="与徐文杰取得联系"
+  lang={lang}
+>
+  <div class="max-w-2xl mx-auto">
+    <header class="text-center mb-12">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+        联系我
+      </h1>
+      <p class="text-gray-600 dark:text-gray-400 text-lg">
+        期待与您交流，欢迎随时联系！
+      </p>
+    </header>
+
+    <!-- 联系方式 -->
+    <div class="grid gap-6 mb-12">
+      <!-- 邮箱 -->
+      <a
+        href={`mailto:${siteConfig.authorInfo.email}`}
+        class="group flex items-center gap-4 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all"
+      >
+        <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+          <i class="fas fa-envelope text-xl"></i>
+        </div>
+        <div>
+          <h3 class="font-semibold text-gray-900 dark:text-white">电子邮件</h3>
+          <p class="text-gray-600 dark:text-gray-400">{siteConfig.authorInfo.email}</p>
+        </div>
+      </a>
+
+      <!-- 社交链接 -->
+      {siteConfig.social.map((link) => (
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group flex items-center gap-4 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all"
+        >
+          <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:scale-110 transition-transform">
+            <i class={`${link.icon} text-xl`}></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-900 dark:text-white">{link.platform}</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">{link.url}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- 提示信息 -->
+    <div class="text-center p-8 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-100 dark:border-blue-800/50">
+      <p class="text-gray-700 dark:text-gray-300">
+        如需学术合作或研究讨论，请在邮件中简要介绍您自己及您的研究方向。
+      </p>
+    </div>
+  </div>
+</BaseLayout>

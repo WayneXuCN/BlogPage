@@ -1,0 +1,347 @@
+---
+/**
+ * Search.astro
+ * Pagefind 搜索组件 - 修复版本，确保弹窗居中且功能正常
+ */
+
+interface Props {
+  lang?: 'zh' | 'en';
+}
+
+const { lang = 'zh' } = Astro.props;
+
+const i18n = {
+  zh: {
+    placeholder: '搜索文章...',
+    tip: '输入关键词开始搜索',
+    noResults: '未找到相关结果',
+    loading: '搜索中...',
+    select: '选择',
+    navigate: '导航',
+    close: '关闭',
+  },
+  en: {
+    placeholder: 'Search posts...',
+    tip: 'Type to search',
+    noResults: 'No results found',
+    loading: 'Searching...',
+    select: 'Select',
+    navigate: 'Navigate',
+    close: 'Close',
+  },
+};
+
+const t = i18n[lang];
+---
+
+<!-- 搜索按钮 -->
+<button
+  id="search-btn"
+  class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+  aria-label={t.placeholder}
+  title={`${t.placeholder} (⌘K)`}
+>
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+    />
+  </svg>
+</button>
+
+<!-- 搜索模态框 -->
+<div
+  id="search-modal"
+  class="search-modal fixed inset-0 z-50 hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label={t.placeholder}
+>
+  <!-- 背景遮罩 -->
+  <div class="search-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm" />
+  
+  <!-- 对话框 - 固定在视口上方 -->
+  <div class="relative z-10 w-full h-full flex justify-center items-start pt-[10vh] sm:pt-[15vh] px-4 pb-4 overflow-hidden">
+    <div class="search-dialog w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex flex-col max-h-[75vh] animate-fade-in-up">
+      <!-- 搜索头部 -->
+      <div class="flex items-center border-b border-gray-200 dark:border-gray-700 px-4 flex-shrink-0">
+        <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          id="search-input"
+          type="text"
+          placeholder={t.placeholder}
+          class="flex-1 px-4 py-4 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none text-lg"
+          autocomplete="off"
+        />
+        <button
+          id="search-close"
+          class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 flex-shrink-0"
+          aria-label={t.close}
+        >
+          <kbd class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded font-mono">ESC</kbd>
+        </button>
+      </div>
+      
+      <!-- 搜索结果容器 -->
+      <div id="search-results" class="flex-1 overflow-y-auto p-4 min-h-[100px]">
+        <p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8">
+          {t.tip}
+        </p>
+      </div>
+      
+      <!-- 搜索底部 -->
+      <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 flex-shrink-0">
+        <div class="flex items-center gap-4">
+          <span class="flex items-center gap-1">
+            <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono">↵</kbd>
+            {t.select}
+          </span>
+          <span class="flex items-center gap-1">
+            <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono">↑↓</kbd>
+            {t.navigate}
+          </span>
+        </div>
+        <span class="flex items-center gap-1.5">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          </svg>
+          Pagefind
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ t: JSON.stringify(i18n[lang]) }}>
+  const texts = JSON.parse(t);
+  
+  // Pagefind 搜索功能 - 使用全局变量避免重复加载
+  let pagefindInstance = null;
+  let isPagefindLoading = false;
+  
+  async function initPagefind() {
+    if (pagefindInstance) return pagefindInstance;
+    if (isPagefindLoading) {
+      // 等待加载完成
+      return new Promise((resolve) => {
+        const checkInterval = setInterval(() => {
+          if (pagefindInstance) {
+            clearInterval(checkInterval);
+            resolve(pagefindInstance);
+          }
+          if (!isPagefindLoading && !pagefindInstance) {
+            clearInterval(checkInterval);
+            resolve(null);
+          }
+        }, 50);
+      });
+    }
+    
+    isPagefindLoading = true;
+    
+    try {
+      // 动态加载 Pagefind - 使用相对于站点根目录的路径
+      const basePath = window.location.origin;
+      pagefindInstance = await import(`${basePath}/pagefind/pagefind.js`);
+      await pagefindInstance.init();
+      isPagefindLoading = false;
+      return pagefindInstance;
+    } catch (e) {
+      console.warn('Pagefind not available. Run `bun run build` first to enable search.', e);
+      isPagefindLoading = false;
+      return null;
+    }
+  }
+  
+  function initSearch() {
+    // DOM 元素
+    const searchBtn = document.getElementById('search-btn');
+    const searchModal = document.getElementById('search-modal');
+    const searchInput = document.getElementById('search-input');
+    const searchClose = document.getElementById('search-close');
+    const searchResults = document.getElementById('search-results');
+    const searchBackdrop = searchModal?.querySelector('.search-backdrop');
+    
+    if (!searchBtn || !searchModal) return;
+    
+    let currentIndex = 0;
+    let searchTimeout = null;
+    
+    // 打开搜索
+    function openSearch() {
+      searchModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => searchInput?.focus(), 100);
+      // 预加载 Pagefind
+      initPagefind();
+    }
+    
+    // 关闭搜索
+    function closeSearch() {
+      searchModal.classList.add('hidden');
+      document.body.style.overflow = '';
+      if (searchInput) searchInput.value = '';
+      if (searchResults) {
+        searchResults.innerHTML = `<p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8">${texts.tip}</p>`;
+      }
+    }
+    
+    // 克隆并替换按钮以移除旧事件
+    const newSearchBtn = searchBtn.cloneNode(true);
+    searchBtn.parentNode?.replaceChild(newSearchBtn, searchBtn);
+    
+    // 事件绑定
+    newSearchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openSearch();
+    });
+    
+    searchClose?.addEventListener('click', closeSearch);
+    searchBackdrop?.addEventListener('click', closeSearch);
+    
+    // ESC 关闭 和 Cmd/Ctrl + K 快捷键
+    function handleKeydown(e) {
+      if (e.key === 'Escape' && !searchModal.classList.contains('hidden')) {
+        closeSearch();
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (searchModal.classList.contains('hidden')) {
+          openSearch();
+        } else {
+          closeSearch();
+        }
+      }
+    }
+    
+    // 移除旧的键盘监听器
+    document.removeEventListener('keydown', handleKeydown);
+    document.addEventListener('keydown', handleKeydown);
+    
+    // 搜索输入
+    searchInput?.addEventListener('input', async (e) => {
+      const query = e.target.value.trim();
+      
+      if (searchTimeout) clearTimeout(searchTimeout);
+      
+      if (!query) {
+        if (searchResults) {
+          searchResults.innerHTML = `<p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8">${texts.tip}</p>`;
+        }
+        return;
+      }
+      
+      // 显示加载状态
+      if (searchResults) {
+        searchResults.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">${texts.loading}</p>`;
+      }
+      
+      searchTimeout = window.setTimeout(async () => {
+        const pf = await initPagefind();
+        
+        if (!pf || !searchResults) {
+          searchResults.innerHTML = `<p class="text-center text-amber-600 dark:text-amber-400 py-8">搜索功能需要先运行 build 命令生成索引</p>`;
+          return;
+        }
+        
+        try {
+          const search = await pf.search(query);
+          
+          if (search.results.length === 0) {
+            searchResults.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">${texts.noResults}</p>`;
+            return;
+          }
+          
+          // 获取结果详情
+          const results = await Promise.all(
+            search.results.slice(0, 10).map((r) => r.data())
+          );
+          
+          searchResults.innerHTML = results.map((result, index) => `
+            <a 
+              href="${result.url}" 
+              class="search-result-item block p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mb-2 ${index === 0 ? 'bg-gray-50 dark:bg-gray-700/50' : ''}"
+              data-index="${index}"
+            >
+              <h3 class="font-semibold text-gray-900 dark:text-white mb-1 line-clamp-1">${result.meta?.title || 'Untitled'}</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">${result.excerpt || ''}</p>
+            </a>
+          `).join('');
+          
+          currentIndex = 0;
+        } catch (err) {
+          console.error('Search error:', err);
+          searchResults.innerHTML = `<p class="text-center text-red-500 dark:text-red-400 py-8">搜索出错，请重试</p>`;
+        }
+      }, 200);
+    });
+    
+    // 键盘导航
+    searchModal.addEventListener('keydown', (e) => {
+      const items = searchResults?.querySelectorAll('.search-result-item');
+      if (!items || items.length === 0) return;
+      
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentIndex = (currentIndex + 1) % items.length;
+        items.forEach((item, i) => {
+          item.classList.toggle('bg-gray-50', i === currentIndex);
+          item.classList.toggle('dark:bg-gray-700/50', i === currentIndex);
+        });
+        items[currentIndex].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+        items.forEach((item, i) => {
+          item.classList.toggle('bg-gray-50', i === currentIndex);
+          item.classList.toggle('dark:bg-gray-700/50', i === currentIndex);
+        });
+        items[currentIndex].scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        const activeItem = items[currentIndex];
+        if (activeItem) {
+          window.location.href = activeItem.getAttribute('href');
+        }
+      }
+    });
+  }
+  
+  // 初始化和页面切换后重新初始化
+  initSearch();
+  document.addEventListener('astro:page-load', initSearch);
+</script>
+
+<style>
+  .search-modal {
+    z-index: 9999;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(-20px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.2s ease-out;
+  }
+  
+  /* 搜索结果高亮 */
+  .search-result-item mark {
+    background-color: rgba(59, 130, 246, 0.3);
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+</style>

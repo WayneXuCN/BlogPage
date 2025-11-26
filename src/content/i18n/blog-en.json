@@ -1,0 +1,113 @@
+{
+    "site": {
+        "title": "Wenjie Xu's Blog",
+        "author": "Wenjie Xu",
+        "description": "Wenjie Xu's Academic Blog. Ph.D. Candidate at Institutes of Science and Development, CAS. Focusing on Critical Infrastructure Risk Management and System Resilience.",
+        "keywords": "Wenjie Xu, Ph.D. Candidate, Risk Management, Critical Infrastructure, System Resilience, Decision Analysis, CAS, ISD"
+    },
+    "nav": {
+        "home": "Home",
+        "blog": "Blog",
+        "archive": "Archive",
+        "tags": "Tags",
+        "about": "About",
+        "search": "Search"
+    },
+    "blog": {
+        "title": "Blog",
+        "allPosts": "All Posts",
+        "featuredPosts": "Featured Posts",
+        "recentPosts": "Recent Posts",
+        "readMore": "Read More",
+        "readingTime": "{minutes} min read",
+        "publishedOn": "Published on",
+        "updatedOn": "Updated on",
+        "author": "Author",
+        "category": "Category",
+        "tags": "Tags",
+        "noPosts": "No posts yet",
+        "searchPlaceholder": "Search posts...",
+        "searchNoResults": "No posts found",
+        "backToBlog": "Back to Blog"
+    },
+    "archive": {
+        "title": "Archive",
+        "description": "Browse all posts by timeline",
+        "postsCount": "{count} posts in total"
+    },
+    "tags": {
+        "title": "Tags",
+        "description": "Browse all post tags",
+        "tagsCount": "{count} tags in total",
+        "noTags": "No tags yet"
+    },
+    "category": {
+        "title": "Category",
+        "research": "Research",
+        "tutorial": "Tutorial",
+        "thoughts": "Thoughts",
+        "tools": "Tools",
+        "life": "Life"
+    },
+    "series": {
+        "title": "Series",
+        "progress": "{current}/{total} completed",
+        "previous": "Previous",
+        "next": "Next",
+        "viewAll": "View Series"
+    },
+    "toc": {
+        "title": "Table of Contents",
+        "backToTop": "Back to Top"
+    },
+    "comments": {
+        "title": "Comments",
+        "loading": "Loading comments..."
+    },
+    "share": {
+        "title": "Share",
+        "twitter": "Share on Twitter",
+        "linkedin": "Share on LinkedIn",
+        "copyLink": "Copy Link",
+        "copied": "Link copied!"
+    },
+    "relatedPosts": {
+        "title": "Related Posts",
+        "noRelated": "No related posts"
+    },
+    "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "page": "Page {page}"
+    },
+    "footer": {
+        "copyright": "© {startYear}-{currentYear} Wenjie Xu. All Rights Reserved.",
+        "rss": "RSS Feed",
+        "sitemap": "Sitemap",
+        "icp": {
+            "text": "苏ICP备2025220926号-1",
+            "url": "https://beian.miit.gov.cn/"
+        },
+        "quickLinks": "Quick Links",
+        "social": "Social"
+    },
+    "theme": {
+        "light": "Light Mode",
+        "dark": "Dark Mode",
+        "system": "System"
+    },
+    "language": {
+        "zh": "中文",
+        "en": "English",
+        "switchTo": "Switch to {lang}"
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "Something went wrong",
+        "retry": "Retry",
+        "close": "Close",
+        "open": "Open",
+        "more": "More",
+        "less": "Less"
+    }
+}

@@ -1,0 +1,122 @@
+---
+title: "使用 Mermaid 绘制技术图表"
+description: "本文介绍如何在博客中使用 Mermaid 语法绘制流程图、时序图、甘特图等各种技术图表。"
+pubDate: 2024-02-20T14:00:00
+updatedDate: 2024-11-15T09:30:00
+image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop"
+category: tutorial
+tags:
+  - Mermaid
+  - 图表
+  - 可视化
+  - 教程
+featured: true
+lang: zh
+author: 徐文杰
+toc: true
+comments: true
+---
+
+import Callout from '@components/mdx/Callout.astro';
+import Mermaid from '@components/mdx/Mermaid.astro';
+
+## 什么是 Mermaid？
+
+Mermaid 是一个基于 JavaScript 的图表绘制工具，允许你使用类似 Markdown 的文本语法来定义图表。
+
+<Callout type="tip">
+  本博客已集成 Mermaid 支持，你可以直接在 MDX 文件中使用 Mermaid 组件。
+</Callout>
+
+## 流程图 (Flowchart)
+
+流程图是最常用的图表类型，适合展示业务流程或算法逻辑。
+
+<Mermaid chart={`
+flowchart TD
+    A[开始] --> B{是否有数据?}
+    B -->|是| C[处理数据]
+    B -->|否| D[等待数据]
+    D --> B
+    C --> E[输出结果]
+    E --> F[结束]
+`} />
+
+## 时序图 (Sequence Diagram)
+
+时序图用于展示对象之间的交互顺序。
+
+<Mermaid chart={`
+sequenceDiagram
+    participant U as 用户
+    participant C as 客户端
+    participant S as 服务器
+    participant D as 数据库
+    
+    U->>C: 点击登录
+    C->>S: 发送登录请求
+    S->>D: 查询用户信息
+    D-->>S: 返回用户数据
+    S-->>C: 返回登录结果
+    C-->>U: 显示登录状态
+`} />
+
+## 甘特图 (Gantt Chart)
+
+甘特图适合展示项目计划和进度。
+
+<Mermaid chart={`
+gantt
+    title 项目开发计划
+    dateFormat  YYYY-MM-DD
+    section 需求分析
+    需求调研     :a1, 2024-01-01, 10d
+    需求文档     :a2, after a1, 5d
+    section 设计
+    系统设计     :b1, after a2, 7d
+    UI设计       :b2, after a2, 10d
+    section 开发
+    后端开发     :c1, after b1, 20d
+    前端开发     :c2, after b2, 15d
+    section 测试
+    单元测试     :d1, after c1, 5d
+    集成测试     :d2, after c2, 5d
+`} />
+
+## 类图 (Class Diagram)
+
+类图展示面向对象设计中的类结构。
+
+<Mermaid chart={`
+classDiagram
+    class Animal {
+        +String name
+        +int age
+        +makeSound()
+    }
+    class Dog {
+        +String breed
+        +bark()
+    }
+    class Cat {
+        +String color
+        +meow()
+    }
+    Animal <|-- Dog
+    Animal <|-- Cat
+`} />
+
+## 饼图 (Pie Chart)
+
+<Mermaid chart={`
+pie title 编程语言使用占比
+    "Python" : 35
+    "JavaScript" : 25
+    "Go" : 20
+    "Rust" : 15
+    "Other" : 5
+`} />
+
+## 总结
+
+Mermaid 提供了丰富的图表类型，能够满足大多数技术文档的需求。

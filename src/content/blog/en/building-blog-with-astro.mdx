@@ -1,0 +1,221 @@
+---
+title: "Building a Personal Blog with Astro: A Complete Guide"
+description: "Learn how to create a modern, fast, and SEO-friendly personal blog using Astro, featuring MDX support, dark mode, and internationalization."
+pubDate: 2024-03-15T10:00:00
+updatedDate: 2024-11-18T14:30:00
+image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
+category: tutorial
+tags:
+  - Astro
+  - Web Development
+  - Tutorial
+  - JavaScript
+featured: true
+lang: en
+author: Wenjie Xu
+toc: true
+comments: true
+---
+
+import Callout from '@components/mdx/Callout.astro';
+
+## Why Astro?
+
+Astro is a modern static site generator that offers the best of both worlds: the developer experience of component-based frameworks and the performance of static HTML.
+
+<Callout type="tip">
+  Astro ships zero JavaScript by default, making your site blazing fast!
+</Callout>
+
+### Key Features
+
+- **Zero JS by default** - Only ship JavaScript when you need it
+- **Component Islands** - Use React, Vue, Svelte, or any framework
+- **Content Collections** - Type-safe content management
+- **Built-in optimizations** - Images, CSS, and more
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ or Bun
+- A code editor (VS Code recommended)
+
+### Create a New Project
+
+```bash
+# Using npm
+npm create astro@latest my-blog
+
+# Using bun (recommended)
+bun create astro my-blog
+```
+
+### Project Structure
+
+```
+my-blog/
+├── src/
+│   ├── content/
+│   │   └── blog/         # Your blog posts
+│   ├── components/       # UI components
+│   ├── layouts/          # Page layouts
+│   └── pages/            # Routes
+├── public/               # Static assets
+└── astro.config.mjs      # Configuration
+```
+
+## Content Collections
+
+Astro 5 introduced a powerful content layer API for managing your blog posts.
+
+### Define Your Schema
+
+```typescript
+// src/content.config.ts
+import { defineCollection, z } from 'astro:content';
+
+const blog = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    image: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    featured: z.boolean().default(false),
+  }),
+});
+
+export const collections = { blog };
+```
+
+### Query Your Content
+
+```typescript
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const featuredPosts = posts.filter(post => post.data.featured);
+```
+
+## Adding MDX Support
+
+MDX allows you to use JSX components in your Markdown files.
+
+### Installation
+
+```bash
+bun add @astrojs/mdx
+```
+
+### Configuration
+
+```javascript
+// astro.config.mjs
+import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
+
+export default defineConfig({
+  integrations: [mdx()],
+});
+```
+
+## Dark Mode with Tailwind
+
+Implementing dark mode is straightforward with Tailwind CSS.
+
+### Setup
+
+```javascript
+// tailwind.config.mjs
+export default {
+  darkMode: 'class',
+  // ...
+};
+```
+
+### Theme Toggle Component
+
+```jsx
+function ThemeToggle() {
+  const toggleTheme = () => {
+    document.documentElement.classList.toggle('dark');
+  };
+  
+  return (
+    <button onClick={toggleTheme}>
+      Toggle Theme
+    </button>
+  );
+}
+```
+
+## Internationalization (i18n)
+
+Support multiple languages using Astro's built-in i18n features.
+
+### Configuration
+
+```javascript
+// astro.config.mjs
+export default defineConfig({
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'zh'],
+    routing: {
+      prefixDefaultLocale: true,
+    },
+  },
+});
+```
+
+## Performance Optimization
+
+<Callout type="warning">
+  Always test your site's performance before and after optimization!
+</Callout>
+
+### Image Optimization
+
+```astro
+---
+import { Image } from 'astro:assets';
+import myImage from '../assets/hero.jpg';
+---
+
+<Image src={myImage} alt="Hero image" />
+```
+
+### Code Splitting
+
+Use dynamic imports for heavy components:
+
+```javascript
+const HeavyComponent = await import('./HeavyComponent');
+```
+
+## Deployment
+
+Astro sites can be deployed anywhere that supports static hosting.
+
+### Popular Options
+
+| Platform | Pros | Cons |
+|----------|------|------|
+| Vercel | Easy setup, Edge functions | Vendor lock-in |
+| Netlify | Great DX, Forms | Build time limits |
+| Cloudflare Pages | Fast, Free | Limited build options |
+| GitHub Pages | Free, Simple | Manual setup |
+
+## Conclusion
+
+Astro is an excellent choice for building personal blogs. Its focus on performance, combined with flexibility in choosing your preferred UI framework, makes it a powerful tool for developers.
+
+**Next steps:**
+1. Explore Astro's official documentation
+2. Join the Astro Discord community
+3. Start building your own blog!
+
+Happy coding! 🚀

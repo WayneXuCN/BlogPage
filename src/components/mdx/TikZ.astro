@@ -1,0 +1,119 @@
+---
+/**
+ * TikZ.astro
+ * TikZ 图形组件
+ * 
+ * 在构建时，使用 node-tikzjax 将 TikZ 代码渲染为 SVG
+ * 此组件显示预渲染的 SVG 或内联渲染
+ * 
+ * 用法：
+ * <TikZ 
+ *   src="/tikz/diagram.svg"
+ *   alt="示意图"
+ *   caption="TikZ 绘制的示意图"
+ * />
+ * 
+ * 或内联 TikZ 代码（需要构建时处理）：
+ * <TikZ 
+ *   code={`
+ *     \\begin{tikzpicture}
+ *       \\draw (0,0) circle (1cm);
+ *     \\end{tikzpicture}
+ *   `}
+ *   caption="圆形示例"
+ * />
+ */
+interface Props {
+  /** 预渲染 SVG 的路径 */
+  src?: string;
+  /** TikZ 代码（用于内联渲染） */
+  code?: string;
+  /** 图片替代文本 */
+  alt?: string;
+  /** 图片说明 */
+  caption?: string;
+  /** 宽度 */
+  width?: string;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const { 
+  src, 
+  code, 
+  alt = 'TikZ diagram', 
+  caption, 
+  width = 'auto',
+  class: className = '' 
+} = Astro.props;
+
+// 如果有代码但没有 src，尝试在构建时渲染
+let svgContent = '';
+if (code && !src) {
+  // 在构建时使用 node-tikzjax 渲染
+  // 这需要在 astro.config.mjs 中配置 vite 插件
+  // 或使用 scripts/render-tikz.ts 预处理
+  try {
+    // @ts-ignore - 这是构建时的导入
+    const tikzjax = await import('node-tikzjax');
+    svgContent = await tikzjax.default(code.trim());
+  } catch (error) {
+    console.error('TikZ render error:', error);
+    svgContent = '';
+  }
+}
+---
+
+<figure class:list={['tikz-container my-8 flex flex-col items-center', className]}>
+  <div 
+    class="tikz-diagram bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto"
+    style={`max-width: ${width};`}
+  >
+    {src ? (
+      <img 
+        src={src} 
+        alt={alt}
+        class="tikz-image max-w-full h-auto dark:invert dark:hue-rotate-180"
+        loading="lazy"
+      />
+    ) : svgContent ? (
+      <div 
+        class="tikz-svg dark:invert dark:hue-rotate-180"
+        set:html={svgContent}
+      />
+    ) : code ? (
+      <!-- 如果渲染失败，显示代码块 -->
+      <div class="tikz-fallback">
+        <div class="text-sm text-amber-600 dark:text-amber-400 mb-2">
+          ⚠️ TikZ 图形无法渲染，显示源代码：
+        </div>
+        <pre class="text-xs bg-gray-100 dark:bg-gray-900 p-3 rounded overflow-x-auto"><code>{code.trim()}</code></pre>
+      </div>
+    ) : (
+      <div class="text-gray-400 text-sm">
+        TikZ 图形未提供
+      </div>
+    )}
+  </div>
+  {caption && (
+    <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+      {caption}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .tikz-svg svg {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* 深色模式下反转 SVG 颜色 */
+  .dark .tikz-svg svg {
+    filter: invert(1) hue-rotate(180deg);
+  }
+  
+  .dark .tikz-image {
+    filter: invert(1) hue-rotate(180deg);
+  }
+</style>

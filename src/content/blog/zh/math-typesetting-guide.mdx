@@ -1,0 +1,142 @@
+---
+title: "数学公式排版指南"
+description: "详细介绍如何在博客中使用 KaTeX 进行数学公式排版，包括常用符号和示例。"
+pubDate: 2024-01-25
+image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200&h=630&fit=crop"
+category: tutorial
+tags:
+  - 数学
+  - KaTeX
+  - LaTeX
+  - 教程
+featured: true
+lang: zh
+author: wenjie
+math: true
+toc: true
+comments: true
+---
+
+import Theorem from '@components/mdx/Theorem.astro';
+import Definition from '@components/mdx/Definition.astro';
+import Proof from '@components/mdx/Proof.astro';
+import Callout from '@components/mdx/Callout.astro';
+
+## 基础语法
+
+本博客使用 KaTeX 渲染数学公式，语法与 LaTeX 兼容。
+
+### 行内公式
+
+使用单个 `$` 符号包裹行内公式：`$E = mc^2$` 渲染为 $E = mc^2$。
+
+### 块级公式
+
+使用双 `$$` 符号创建独立的公式块：
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$
+
+## 常用数学符号
+
+### 希腊字母
+
+| 符号 | 代码 | 符号 | 代码 |
+|------|------|------|------|
+| $\alpha$ | `\alpha` | $\beta$ | `\beta` |
+| $\gamma$ | `\gamma` | $\delta$ | `\delta` |
+| $\epsilon$ | `\epsilon` | $\theta$ | `\theta` |
+| $\lambda$ | `\lambda` | $\sigma$ | `\sigma` |
+
+### 运算符
+
+$$
+\sum_{i=1}^{n} x_i \quad \prod_{i=1}^{n} x_i \quad \int_a^b f(x)dx \quad \lim_{x \to \infty} f(x)
+$$
+
+## 学术环境示例
+
+<Definition title="系统韧性">
+  系统韧性是指系统在面对扰动时，能够吸收、适应并从扰动中恢复的能力。数学上可以表示为：
+  
+  $$
+  R = \frac{\int_0^T P(t) dt}{T \cdot P_0}
+  $$
+  
+  其中 $P(t)$ 为系统在时刻 $t$ 的性能，$P_0$ 为初始性能，$T$ 为恢复时间。
+</Definition>
+
+<Theorem title="贝叶斯定理">
+  设 $A$ 和 $B$ 是两个事件，且 $P(B) > 0$，则：
+  
+  $$
+  P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
+  $$
+</Theorem>
+
+<Proof>
+  由条件概率的定义：
+  
+  $$
+  P(A|B) = \frac{P(A \cap B)}{P(B)}
+  $$
+  
+  同理：
+  
+  $$
+  P(B|A) = \frac{P(A \cap B)}{P(A)}
+  $$
+  
+  因此 $P(A \cap B) = P(B|A) \cdot P(A)$，代入第一个式子即得证。
+</Proof>
+
+## 矩阵与线性代数
+
+### 矩阵表示
+
+$$
+A = \begin{pmatrix}
+a_{11} & a_{12} & \cdots & a_{1n} \\
+a_{21} & a_{22} & \cdots & a_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+a_{m1} & a_{m2} & \cdots & a_{mn}
+\end{pmatrix}
+$$
+
+### 行列式
+
+$$
+\det(A) = \begin{vmatrix}
+a & b \\
+c & d
+\end{vmatrix} = ad - bc
+$$
+
+## 复杂网络中的应用
+
+在复杂网络研究中，常用的数学公式包括：
+
+### 度分布
+
+$$
+P(k) = \frac{n_k}{N}
+$$
+
+其中 $n_k$ 是度为 $k$ 的节点数量，$N$ 是总节点数。
+
+### 介数中心性
+
+$$
+C_B(v) = \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}}
+$$
+
+其中 $\sigma_{st}$ 是节点 $s$ 到 $t$ 的最短路径数，$\sigma_{st}(v)$ 是经过节点 $v$ 的最短路径数。
+
+<Callout type="note">
+  KaTeX 支持大部分 LaTeX 数学命令，完整列表请参考 [KaTeX 文档](https://katex.org/docs/supported.html)。
+</Callout>
+
+## 总结
+
+掌握数学公式排版对于学术博客至关重要。KaTeX 提供了高质量的渲染效果，配合 MDX 的学术环境组件，可以创建专业的学术内容。

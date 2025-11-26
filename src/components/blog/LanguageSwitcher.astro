@@ -1,0 +1,31 @@
+---
+/**
+ * LanguageSwitcher.astro
+ * 语言切换组件
+ */
+
+interface Props {
+  lang: 'zh' | 'en';
+  currentPath: string;
+}
+
+const { lang, currentPath } = Astro.props;
+
+// 计算切换后的路径
+const targetLang = lang === 'zh' ? 'en' : 'zh';
+const newPath = currentPath.replace(/^\/(zh|en)/, `/${targetLang}`);
+
+const labels = {
+  zh: { current: '中文', target: 'EN' },
+  en: { current: 'EN', target: '中文' },
+};
+---
+
+<a
+  href={newPath}
+  class="px-3 py-1.5 text-sm font-medium border border-gray-300 dark:border-gray-600 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors"
+  title={lang === 'zh' ? 'Switch to English' : '切换到中文'}
+  data-astro-prefetch
+>
+  {labels[lang].target}
+</a>

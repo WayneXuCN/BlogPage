@@ -1,0 +1,116 @@
+---
+/**
+ * 归档页面
+ * 路由: /[lang]/blog/archive
+ */
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig, getPostUrl } from '../../../../config';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'zh' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params;
+const currentLang = lang as 'zh' | 'en';
+
+// 获取当前语言的所有文章
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.lang === currentLang;
+});
+
+// 按年份分组
+const postsByYear = allPosts.reduce((acc, post) => {
+  const year = new Date(post.data.pubDate).getFullYear();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(post);
+  return acc;
+}, {} as Record<number, typeof allPosts>);
+
+// 按年份降序排列
+const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
+
+// 每年内按日期降序排列
+years.forEach(year => {
+  postsByYear[year].sort((a, b) => 
+    new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+  );
+});
+
+// 页面信息
+const pageTitle = currentLang === 'zh' ? '归档' : 'Archive';
+const siteTitle = currentLang === 'zh' ? siteConfig.title.zh : siteConfig.title.en;
+const description = currentLang === 'zh' 
+  ? '按时间线浏览所有文章' 
+  : 'Browse all posts by timeline';
+---
+
+<BaseLayout 
+  title={`${pageTitle} - ${siteTitle}`}
+  description={description}
+  lang={currentLang}
+>
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <header class="mb-12">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+        {pageTitle}
+      </h1>
+      <p class="text-gray-600 dark:text-gray-400">
+        {currentLang === 'zh' 
+          ? `共 ${allPosts.length} 篇文章` 
+          : `${allPosts.length} posts in total`}
+      </p>
+    </header>
+    
+    <div class="archive-timeline">
+      {years.map((year) => (
+        <section class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-3">
+            <span class="text-primary-500">{year}</span>
+            <span class="text-sm font-normal text-gray-400">
+              ({postsByYear[year].length})
+            </span>
+          </h2>
+          
+          <ul class="space-y-4 border-l-2 border-gray-200 dark:border-gray-700 pl-6">
+            {postsByYear[year].map((post) => {
+              const postYear = new Date(post.data.pubDate).getFullYear();
+              const month = new Date(post.data.pubDate).toLocaleDateString(
+                currentLang === 'zh' ? 'zh-CN' : 'en-US',
+                { month: 'short', day: 'numeric' }
+              );
+              // 从 post.id 提取 slug (格式: "zh/welcome-to-my-blog" -> "welcome-to-my-blog")
+              const slug = post.id.includes('/') ? post.id.split('/').pop()! : post.id;
+              
+              return (
+                <li class="relative">
+                  <div class="absolute -left-[1.6rem] w-3 h-3 bg-gray-300 dark:bg-gray-600 rounded-full top-1.5"></div>
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+                    <time class="text-sm text-gray-500 dark:text-gray-400 font-mono shrink-0 w-16">
+                      {month}
+                    </time>
+                    <a 
+                      href={getPostUrl(slug, currentLang, postYear)}
+                      class="text-gray-900 dark:text-gray-100 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                    >
+                      {post.data.title}
+                    </a>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .archive-timeline li:hover .absolute {
+    background-color: var(--color-primary-500, #3b82f6);
+  }
+</style>

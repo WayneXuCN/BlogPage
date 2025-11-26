@@ -1,0 +1,73 @@
+---
+title: "Welcome to My Academic Blog"
+description: "This is my first blog post, introducing the purpose of this blog and my research directions."
+pubDate: 2024-01-15
+image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&h=630&fit=crop"
+category: thoughts
+tags:
+  - blog
+  - academic
+  - introduction
+featured: true
+lang: en
+author: wenjie
+toc: true
+comments: true
+---
+
+import Callout from '@components/mdx/Callout.astro';
+
+## Introduction
+
+Welcome to my academic blog! I'm Wenjie Xu, currently a Ph.D. candidate at the Institutes of Science and Development, Chinese Academy of Sciences.
+
+<Callout type="info">
+  This is my new blog built with Astro, featuring MDX support, math formulas, and code highlighting.
+</Callout>
+
+## About My Research
+
+My research primarily focuses on the following areas:
+
+1. **Critical Infrastructure Risk Management** - Studying risk propagation mechanisms in energy and transportation networks
+2. **System Resilience Assessment** - Developing data-driven resilience evaluation methods
+3. **Emergency Decision Optimization** - Optimal recovery strategies under resource constraints
+
+## Mathematical Formula Example
+
+This blog supports KaTeX mathematical formula rendering. For example, Bayes' theorem can be expressed as:
+
+$$
+P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
+$$
+
+Inline formulas are also supported, such as $E = mc^2$.
+
+## Code Example
+
+```python
+import numpy as np
+import networkx as nx
+
+def calculate_resilience(G: nx.Graph, failure_nodes: list) -> float:
+    """Calculate network resilience after node failures"""
+    G_copy = G.copy()
+    G_copy.remove_nodes_from(failure_nodes)
+    
+    if len(G_copy) == 0:
+        return 0.0
+    
+    largest_cc = max(nx.connected_components(G_copy), key=len)
+    return len(largest_cc) / len(G)
+```
+
+## Future Plans
+
+In this blog, I will share:
+
+- Academic research progress and paper reviews
+- Technical tutorials and tool recommendations
+- Thoughts on complex systems and risk management
+- Personal reflections
+
+Looking forward to connecting with you!

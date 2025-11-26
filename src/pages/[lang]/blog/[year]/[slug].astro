@@ -1,0 +1,40 @@
+---
+/**
+ * 文章详情页
+ * 路由: /[lang]/blog/[year]/[slug]
+ */
+import PostLayout from '../../../../layouts/PostLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  
+  return posts.map((post) => {
+    const year = new Date(post.data.pubDate).getFullYear();
+    // id 格式: lang/slug-name，需要提取纯 slug
+    const idParts = post.id.split('/');
+    const lang = idParts[0];
+    const slug = idParts.slice(1).join('/') || idParts[0];
+    
+    return {
+      params: { 
+        lang, 
+        year: String(year), 
+        slug 
+      },
+      props: { post },
+    };
+  });
+}
+
+interface Props {
+  post: Awaited<ReturnType<typeof getCollection>>[number];
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<PostLayout post={post} headings={headings}>
+  <Content />
+</PostLayout>

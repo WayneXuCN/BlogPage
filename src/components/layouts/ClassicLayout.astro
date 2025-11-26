@@ -1,0 +1,125 @@
+---
+/**
+ * ClassicLayout.astro
+ * 经典列表式布局
+ */
+import type { CollectionEntry } from 'astro:content';
+import type { ClassicLayoutConfig } from '../../config';
+import PostCard from '../blog/PostCard.astro';
+import Pagination from '../blog/Pagination.astro';
+import FeaturedSection from './FeaturedSection.astro';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  featuredPosts: CollectionEntry<'blog'>[];
+  config: ClassicLayoutConfig;
+  lang?: 'zh' | 'en';
+  currentPage: number;
+  totalPages: number;
+}
+
+const { posts, featuredPosts, config, lang = 'zh', currentPage, totalPages } = Astro.props;
+
+const i18n = {
+  zh: { latestPosts: '最新文章', allPosts: '全部文章' },
+  en: { latestPosts: 'Latest Posts', allPosts: 'All Posts' },
+};
+
+const t = i18n[lang];
+---
+
+<div class="classic-layout">
+  <!-- 精选文章 -->
+  {featuredPosts.length > 0 && currentPage === 1 && (
+    <FeaturedSection posts={featuredPosts} lang={lang} />
+  )}
+  
+  <!-- 文章列表 -->
+  <section class="mt-12">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">
+      {currentPage === 1 ? t.latestPosts : t.allPosts}
+    </h2>
+    
+    <div class="space-y-8">
+      {posts.map((post) => (
+        <article class="group">
+          <a 
+            href={`/${lang}/blog/${post.data.pubDate.getFullYear()}/${post.id}/`}
+            class="block p-6 -mx-6 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+          >
+            <div class="flex flex-col sm:flex-row gap-6">
+              <!-- 封面图 -->
+              {post.data.image && (
+                <div class="sm:w-48 flex-shrink-0">
+                  <img
+                    src={post.data.image}
+                    alt={post.data.title}
+                    class="w-full h-32 sm:h-full object-cover rounded-xl"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              
+              <div class="flex-1 min-w-0">
+                <!-- 分类和日期 -->
+                <div class="flex items-center gap-3 text-sm mb-2">
+                  <span class="text-blue-600 dark:text-blue-400 font-medium">
+                    {lang === 'zh' ? '学术研究' : 'Research'}
+                  </span>
+                  <span class="text-gray-400">·</span>
+                  <time class="text-gray-500 dark:text-gray-400" datetime={post.data.pubDate.toISOString()}>
+                    {post.data.pubDate.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                    })}
+                  </time>
+                  {config.showReadingTime && (
+                    <>
+                      <span class="text-gray-400">·</span>
+                      <span class="text-gray-500 dark:text-gray-400">
+                        {Math.ceil(post.data.description.length / 100) + 2} {lang === 'zh' ? '分钟阅读' : 'min read'}
+                      </span>
+                    </>
+                  )}
+                </div>
+                
+                <!-- 标题 -->
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2">
+                  {post.data.title}
+                </h3>
+                
+                <!-- 摘要 -->
+                {config.showExcerpt && (
+                  <p class="text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
+                    {post.data.description.slice(0, config.excerptLength)}
+                    {post.data.description.length > config.excerptLength ? '...' : ''}
+                  </p>
+                )}
+                
+                <!-- 标签 -->
+                {config.showTags && post.data.tags && post.data.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-2">
+                    {post.data.tags.slice(0, 4).map(tag => (
+                      <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+    
+    <!-- 分页 -->
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      baseUrl={`/${lang}/blog/`}
+      lang={lang}
+    />
+  </section>
+</div>

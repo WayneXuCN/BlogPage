@@ -1,0 +1,35 @@
+---
+/**
+ * Theorem.astro
+ * 定理环境组件（学术风格）
+ * 
+ * 用法：
+ * <Theorem name="勾股定理" number="1.1">直角三角形两直角边的平方和等于斜边的平方。</Theorem>
+ */
+
+interface Props {
+  name?: string;
+  number?: string | number;
+  type?: 'theorem' | 'lemma' | 'proposition' | 'corollary';
+}
+
+const { name, number, type = 'theorem' } = Astro.props;
+
+const labels = {
+  theorem: { zh: '定理', en: 'Theorem' },
+  lemma: { zh: '引理', en: 'Lemma' },
+  proposition: { zh: '命题', en: 'Proposition' },
+  corollary: { zh: '推论', en: 'Corollary' },
+};
+
+const label = labels[type].zh;
+---
+
+<div class="theorem-block my-6 p-5 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
+  <div class="theorem-header font-bold text-blue-800 dark:text-blue-200 mb-2">
+    {label}{number && ` ${number}`}{name && ` (${name})`}
+  </div>
+  <div class="theorem-content italic text-gray-800 dark:text-gray-200">
+    <slot />
+  </div>
+</div>

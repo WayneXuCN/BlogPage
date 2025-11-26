@@ -1,0 +1,70 @@
+---
+/**
+ * /zh/about - 中文关于页面
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { siteConfig } from '../../config';
+
+const lang = 'zh' as const;
+---
+
+<BaseLayout
+  title={`关于 | ${siteConfig.title.zh}`}
+  description="关于徐文杰 - 学术研究者"
+  lang={lang}
+>
+  <div class="max-w-3xl mx-auto">
+    <!-- 个人信息 -->
+    <section class="text-center mb-16">
+      <img
+        src={siteConfig.authorInfo.avatar}
+        alt={siteConfig.author.zh}
+        class="w-32 h-32 rounded-full mx-auto mb-6 shadow-lg ring-4 ring-white dark:ring-gray-800"
+      />
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        {siteConfig.author.zh}
+      </h1>
+      <p class="text-gray-600 dark:text-gray-400 text-lg">
+        博士研究生 · 研究员
+      </p>
+      
+      <!-- 社交链接 -->
+      <div class="flex justify-center gap-4 mt-6">
+        {siteConfig.social.map((link) => (
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-all"
+            title={link.platform}
+          >
+            <i class={`${link.icon} text-lg`}></i>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- 简介 -->
+    <section class="prose prose-lg dark:prose-invert max-w-none">
+      <h2>关于我</h2>
+      <p>
+        你好！我是徐文杰，中国科学院科技战略咨询研究院的博士研究生。
+        我的研究方向主要集中在关键基础设施风险管理、系统韧性评估和应急决策优化。
+      </p>
+
+      <h2>研究方向</h2>
+      <ul>
+        <li><strong>关键基础设施风险</strong> — 研究能源、交通等基础设施网络的风险传播机制</li>
+        <li><strong>系统韧性评估</strong> — 开发数据驱动的韧性评估方法论</li>
+        <li><strong>应急决策优化</strong> — 在资源受限条件下的最优恢复策略研究</li>
+      </ul>
+
+      <h2>联系我</h2>
+      <p>
+        欢迎通过邮件联系我：
+        <a href={`mailto:${siteConfig.authorInfo.email}`}>{siteConfig.authorInfo.email}</a>
+        ，或通过上方的社交平台与我交流。
+      </p>
+    </section>
+  </div>
+</BaseLayout>

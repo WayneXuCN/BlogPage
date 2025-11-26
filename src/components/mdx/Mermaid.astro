@@ -1,0 +1,143 @@
+---
+/**
+ * Mermaid.astro
+ * Mermaid 图表组件
+ * 
+ * 用法：
+ * <Mermaid 
+ *   chart={`
+ *     graph TD
+ *       A[开始] --> B{判断}
+ *       B -->|是| C[处理]
+ *       B -->|否| D[结束]
+ *   `}
+ *   caption="流程图示例"
+ * />
+ */
+interface Props {
+  chart: string;
+  caption?: string;
+  class?: string;
+}
+
+const { chart, caption, class: className = '' } = Astro.props;
+
+// 生成唯一ID
+const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<figure class:list={['mermaid-container my-8', className]}>
+  <div 
+    id={id}
+    class="mermaid-chart flex justify-center items-center min-h-[100px] bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 overflow-x-auto"
+    data-chart={chart.trim()}
+  >
+    <!-- 加载占位 -->
+    <div class="mermaid-loading text-gray-400">
+      <svg class="animate-spin h-6 w-6" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </div>
+  </div>
+  {caption && (
+    <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+      {caption}
+    </figcaption>
+  )}
+</figure>
+
+<script>
+  // 延迟加载 Mermaid
+  let mermaidLoaded = false;
+  let mermaidInstance: typeof import('mermaid').default | null = null;
+  
+  async function loadMermaid() {
+    if (mermaidLoaded) return mermaidInstance;
+    
+    const mermaid = (await import('mermaid')).default;
+    
+    // 配置 Mermaid
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
+      fontFamily: "'Noto Sans SC', sans-serif",
+      securityLevel: 'loose',
+    });
+    
+    mermaidLoaded = true;
+    mermaidInstance = mermaid;
+    return mermaid;
+  }
+  
+  async function renderChart(container: HTMLElement) {
+    const chart = container.dataset.chart;
+    if (!chart) return;
+    
+    try {
+      const mermaid = await loadMermaid();
+      if (!mermaid) return;
+      
+      // 移除加载占位
+      const loading = container.querySelector('.mermaid-loading');
+      if (loading) loading.remove();
+      
+      // 渲染图表
+      const { svg } = await mermaid.render(
+        `mermaid-svg-${Math.random().toString(36).slice(2, 9)}`,
+        chart
+      );
+      
+      container.innerHTML = svg;
+    } catch (error) {
+      console.error('Mermaid render error:', error);
+      container.innerHTML = `<div class="text-red-500 text-sm">图表渲染失败</div>`;
+    }
+  }
+  
+  // 初始化所有图表
+  function initMermaidCharts() {
+    document.querySelectorAll<HTMLElement>('.mermaid-chart[data-chart]').forEach(renderChart);
+  }
+  
+  // 主题切换时重新渲染
+  function handleThemeChange() {
+    if (mermaidInstance) {
+      mermaidInstance.initialize({
+        startOnLoad: false,
+        theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
+        fontFamily: "'Noto Sans SC', sans-serif",
+        securityLevel: 'loose',
+      });
+      
+      // 重新渲染所有图表
+      document.querySelectorAll<HTMLElement>('.mermaid-chart[data-chart]').forEach(async (container) => {
+        await renderChart(container);
+      });
+    }
+  }
+  
+  // 监听主题变化
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.attributeName === 'class') {
+        handleThemeChange();
+      }
+    });
+  });
+  
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+  
+  // 页面加载完成后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMermaidCharts);
+  } else {
+    initMermaidCharts();
+  }
+  
+  // 支持 View Transitions
+  document.addEventListener('astro:page-load', initMermaidCharts);
+</script>

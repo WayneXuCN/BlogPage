@@ -1,0 +1,267 @@
+---
+/**
+ * PostCard.astro
+ * 文章卡片组件 - 支持有/无封面图两种布局
+ * 无封面图时采用紧凑型横向布局
+ */
+import type { CollectionEntry } from 'astro:content';
+import { getPostUrl, formatDate, calculateReadingTime, siteConfig, getTagUrl, getCategoryUrl } from '../../config';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  lang?: 'zh' | 'en';
+  /** 变体：default（自适应）| compact（紧凑型）| featured（精选大卡片） */
+  variant?: 'default' | 'compact' | 'featured';
+  /** 是否显示摘要 */
+  showExcerpt?: boolean;
+  /** 是否强制显示/隐藏封面图 */
+  forceImage?: boolean | null;
+}
+
+const { 
+  post, 
+  lang = 'zh', 
+  variant = 'default',
+  showExcerpt = true,
+  forceImage = null,
+} = Astro.props;
+
+const { title, description, pubDate, updatedDate, category, tags, image, featured } = post.data;
+// 从 post.id 提取 slug (格式: "zh/welcome-to-my-blog" -> "welcome-to-my-blog")
+const slug = post.id.includes('/') ? post.id.split('/').pop()! : post.id;
+const year = new Date(pubDate).getFullYear();
+const postUrl = getPostUrl(slug, lang, year);
+const categoryConfig = siteConfig.categories[category];
+const categoryLabel = lang === 'zh' ? categoryConfig?.name?.zh : categoryConfig?.name?.en;
+
+// 阅读时间估计
+const readingTime = Math.ceil((description?.length || 0) / 100) + 2;
+
+// 是否显示图片
+const hasImage = forceImage !== null ? forceImage : !!image;
+
+// 分类颜色映射 - 用于分类标签
+const categoryColors: Record<string, string> = {
+  blue: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  green: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  purple: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+  orange: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
+  pink: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
+};
+
+// 左边框颜色映射 - 用于无图卡片
+const borderColors: Record<string, string> = {
+  blue: 'border-l-blue-500',
+  green: 'border-l-green-500',
+  purple: 'border-l-purple-500',
+  orange: 'border-l-orange-500',
+  pink: 'border-l-pink-500',
+};
+---
+
+{variant === 'featured' ? (
+  <!-- 精选大卡片 -->
+  <a
+    href={postUrl}
+    class="group relative block rounded-2xl overflow-hidden bg-gray-900 aspect-[16/9] card-hover"
+  >
+    {hasImage ? (
+      <img
+        src={image}
+        alt={title}
+        class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        loading="lazy"
+      />
+    ) : (
+      <div class="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-indigo-600/20" />
+    )}
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+    <div class="absolute inset-0 p-6 flex flex-col justify-end">
+      {featured && (
+        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-yellow-500 text-black w-fit mb-3">
+          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+          {lang === 'zh' ? '精选' : 'Featured'}
+        </span>
+      )}
+      <span class="text-sm text-blue-400 font-medium mb-2">{categoryConfig?.icon} {categoryLabel}</span>
+      <h3 class="text-xl sm:text-2xl font-bold text-white mb-2 line-clamp-2 group-hover:text-blue-300 transition-colors">
+        {title}
+      </h3>
+      <p class="text-sm text-gray-300 line-clamp-2 mb-3">{description}</p>
+      <div class="flex items-center gap-4 text-xs text-gray-400">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate, lang)}</time>
+        <span>·</span>
+        <span>{readingTime} {lang === 'zh' ? '分钟' : 'min'}</span>
+      </div>
+    </div>
+  </a>
+) : variant === 'compact' ? (
+  <!-- 紧凑型卡片（横向） -->
+  <a
+    href={postUrl}
+    class="group flex items-start gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+  >
+    {hasImage && image && (
+      <img
+        src={image}
+        alt={title}
+        class="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+        loading="lazy"
+      />
+    )}
+    <div class="min-w-0 flex-1">
+      <h3 class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+        {title}
+      </h3>
+      <time class="text-xs text-gray-500 dark:text-gray-400 mt-1 block">
+        {formatDate(pubDate, lang)}
+      </time>
+    </div>
+  </a>
+) : hasImage && image ? (
+  <!-- 标准卡片 - 有封面图（垂直布局） -->
+  <article class="group card-hover rounded-2xl overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all duration-300">
+    <a href={postUrl} class="block aspect-[16/9] overflow-hidden">
+      <img
+        src={image}
+        alt={title}
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        loading="lazy"
+      />
+    </a>
+    
+    <div class="p-5">
+      <!-- 分类和精选标记 -->
+      <div class="flex items-center justify-between mb-3">
+        <a
+          href={getCategoryUrl(category, lang)}
+          class={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full transition-colors ${categoryColors[categoryConfig?.color || 'blue']}`}
+        >
+          <span>{categoryConfig?.icon}</span>
+          {categoryLabel}
+        </a>
+        {featured && (
+          <span class="inline-flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-400">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            {lang === 'zh' ? '精选' : 'Featured'}
+          </span>
+        )}
+      </div>
+      
+      <!-- 标题 -->
+      <a href={postUrl}>
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 mb-2">
+          {title}
+        </h3>
+      </a>
+      
+      <!-- 摘要 -->
+      {showExcerpt && description && (
+        <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4">
+          {description}
+        </p>
+      )}
+      
+      <!-- 元信息 -->
+      <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+        <div class="flex items-center gap-2">
+          <time datetime={pubDate.toISOString()}>{formatDate(pubDate, lang)}</time>
+          {updatedDate && (
+            <span class="text-green-600 dark:text-green-400" title={`${lang === 'zh' ? '更新于' : 'Updated'}: ${formatDate(updatedDate, lang)}`}>
+              (已更新)
+            </span>
+          )}
+        </div>
+        <span>{readingTime} {lang === 'zh' ? '分钟阅读' : 'min read'}</span>
+      </div>
+      
+      <!-- 标签 -->
+      {tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+          {tags.slice(0, 3).map(tag => (
+            <a
+              href={getTagUrl(tag, lang)}
+              class="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              #{tag}
+            </a>
+          ))}
+          {tags.length > 3 && (
+            <span class="text-xs px-2 py-0.5 text-gray-400">+{tags.length - 3}</span>
+          )}
+        </div>
+      )}
+    </div>
+  </article>
+) : (
+  <!-- 无封面图卡片 - 简洁横向布局 -->
+  <article class={`group card-hover rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 ${borderColors[categoryConfig?.color || 'blue']}`}>
+    <a href={postUrl} class="block p-5">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex-1 min-w-0">
+          <!-- 分类和精选 -->
+          <div class="flex items-center gap-2 mb-2">
+            <span class={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${categoryColors[categoryConfig?.color || 'blue']}`}>
+              {categoryConfig?.icon} {categoryLabel}
+            </span>
+            {featured && (
+              <span class="inline-flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-400">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </span>
+            )}
+          </div>
+          
+          <!-- 标题 -->
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 mb-2">
+            {title}
+          </h3>
+          
+          <!-- 摘要 -->
+          {showExcerpt && description && (
+            <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
+              {description}
+            </p>
+          )}
+          
+          <!-- 元信息和标签 -->
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-500 dark:text-gray-400">
+            <time datetime={pubDate.toISOString()}>{formatDate(pubDate, lang)}</time>
+            <span>{readingTime} {lang === 'zh' ? '分钟阅读' : 'min read'}</span>
+            {tags && tags.length > 0 && (
+              <div class="flex items-center gap-1">
+                {tags.slice(0, 2).map(tag => (
+                  <span class="text-gray-400 dark:text-gray-500">#{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <!-- 右侧箭头 -->
+        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+    </a>
+  </article>
+)}
+
+<style>
+  .card-hover {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                box-shadow 0.4s ease,
+                border-color 0.3s ease;
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-4px);
+  }
+</style>

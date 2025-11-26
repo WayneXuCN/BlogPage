@@ -1,0 +1,123 @@
+---
+/**
+ * Pagination.astro
+ * 分页组件
+ */
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+  lang?: 'zh' | 'en';
+}
+
+const { currentPage, totalPages, baseUrl, lang = 'zh' } = Astro.props;
+
+const i18n = {
+  zh: { prev: '上一页', next: '下一页', page: '第', of: '页，共' },
+  en: { prev: 'Previous', next: 'Next', page: 'Page', of: 'of' },
+};
+
+const t = i18n[lang];
+
+// 生成页码数组
+function getPageNumbers(): (number | string)[] {
+  const pages: (number | string)[] = [];
+  const delta = 2; // 当前页前后显示的页数
+  
+  for (let i = 1; i <= totalPages; i++) {
+    if (
+      i === 1 ||
+      i === totalPages ||
+      (i >= currentPage - delta && i <= currentPage + delta)
+    ) {
+      pages.push(i);
+    } else if (pages[pages.length - 1] !== '...') {
+      pages.push('...');
+    }
+  }
+  
+  return pages;
+}
+
+const pageNumbers = getPageNumbers();
+
+function getPageUrl(page: number): string {
+  // baseUrl 应该是类似 /zh/blog/page/ 的格式
+  // 对于第1页，返回去掉 /page/ 的基础路径
+  const basePath = baseUrl.replace(/\/page\/$/, '/');
+  if (page === 1) return basePath;
+  return `${baseUrl}${page}/`;
+}
+---
+
+{totalPages > 1 && (
+  <nav class="flex items-center justify-center gap-1 mt-12" aria-label="Pagination">
+    <!-- 上一页 -->
+    {currentPage > 1 ? (
+      <a
+        href={getPageUrl(currentPage - 1)}
+        class="flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        aria-label={t.prev}
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span class="hidden sm:inline">{t.prev}</span>
+      </a>
+    ) : (
+      <span class="flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg cursor-not-allowed">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span class="hidden sm:inline">{t.prev}</span>
+      </span>
+    )}
+    
+    <!-- 页码 -->
+    <div class="hidden sm:flex items-center gap-1">
+      {pageNumbers.map((page) => (
+        page === '...' ? (
+          <span class="px-3 py-2 text-gray-400">...</span>
+        ) : page === currentPage ? (
+          <span class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg">
+            {page}
+          </span>
+        ) : (
+          <a
+            href={getPageUrl(page as number)}
+            class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
+            {page}
+          </a>
+        )
+      ))}
+    </div>
+    
+    <!-- 移动端页码显示 -->
+    <span class="sm:hidden px-4 py-2 text-sm text-gray-600 dark:text-gray-400">
+      {currentPage} / {totalPages}
+    </span>
+    
+    <!-- 下一页 -->
+    {currentPage < totalPages ? (
+      <a
+        href={getPageUrl(currentPage + 1)}
+        class="flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+        aria-label={t.next}
+      >
+        <span class="hidden sm:inline">{t.next}</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    ) : (
+      <span class="flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg cursor-not-allowed">
+        <span class="hidden sm:inline">{t.next}</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </span>
+    )}
+  </nav>
+)}

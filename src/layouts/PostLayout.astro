@@ -1,0 +1,304 @@
+---
+/**
+ * PostLayout.astro
+ * 博客文章详情页布局 - 包含阅读进度条和更新时间
+ */
+import BaseLayout from './BaseLayout.astro';
+import TableOfContents from '../components/blog/TableOfContents.astro';
+import PostMeta from '../components/blog/PostMeta.astro';
+import SeriesNav from '../components/blog/SeriesNav.astro';
+import RelatedPosts from '../components/blog/RelatedPosts.astro';
+import Comments from '../components/blog/Comments';
+import { siteConfig, formatDate, calculateReadingTime, getCategoryUrl, getTagUrl } from '../config';
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  headings?: { depth: number; slug: string; text: string }[];
+  content?: string;
+}
+
+const { post, headings = [], content = '' } = Astro.props;
+const { title, description, pubDate, updatedDate, category, tags, image, lang = 'zh', series, seriesOrder, math = false, toc = true, comments = true, author } = post.data;
+
+// 计算阅读时间
+const readingTime = calculateReadingTime(content);
+
+// 分类配置
+const categoryConfig = siteConfig.categories[category];
+const categoryLabel = lang === 'zh' ? categoryConfig?.name?.zh : categoryConfig?.name?.en;
+
+// 获取系列文章
+let seriesPosts: CollectionEntry<'blog'>[] = [];
+if (series) {
+  const allPosts = await getCollection('blog', ({ data }) => !data.draft && data.series === series);
+  seriesPosts = allPosts.sort((a, b) => (a.data.seriesOrder || 0) - (b.data.seriesOrder || 0));
+}
+
+// 获取相关文章（同分类或同标签）
+const allPosts = await getCollection('blog', ({ data }) => !data.draft && data.lang === lang);
+const relatedPosts = allPosts
+  .filter(p => p.id !== post.id)
+  .filter(p => p.data.category === category || p.data.tags?.some(t => tags?.includes(t)))
+  .slice(0, 4);
+
+// 多语言文案
+const i18n = {
+  zh: {
+    publishedOn: '发布于',
+    updatedOn: '更新于',
+    readingTime: '阅读时间',
+    minutes: '分钟',
+    toc: '目录',
+    share: '分享文章',
+    copyLink: '复制链接',
+    relatedPosts: '相关文章',
+    comments: '评论',
+    backToTop: '返回顶部',
+  },
+  en: {
+    publishedOn: 'Published on',
+    updatedOn: 'Updated on',
+    readingTime: 'Reading time',
+    minutes: 'min',
+    toc: 'Table of Contents',
+    share: 'Share',
+    copyLink: 'Copy link',
+    relatedPosts: 'Related Posts',
+    comments: 'Comments',
+    backToTop: 'Back to top',
+  },
+};
+
+const t = i18n[lang];
+---
+
+<BaseLayout
+  title={`${title} | ${siteConfig.title[lang]}`}
+  description={description}
+  author={author || siteConfig.author[lang]}
+  lang={lang}
+  type="article"
+  publishedTime={pubDate}
+  modifiedTime={updatedDate}
+  ogImage={image}
+  math={math}
+>
+  <!-- 阅读进度条 -->
+  {siteConfig.features.readingProgress && (
+    <div class="reading-progress fixed top-0 left-0 right-0 h-1 z-50">
+      <div id="progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-500 w-0 transition-all duration-150" />
+    </div>
+  )}
+  
+  <article class="max-w-none">
+    <!-- 文章头部 -->
+    <header class="mb-8 pb-8 border-b border-gray-200 dark:border-gray-800">
+      <!-- 分类标签 -->
+      <div class="flex items-center gap-3 mb-4">
+        <a
+          href={getCategoryUrl(category, lang)}
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+        >
+          <span>{categoryConfig?.icon}</span>
+          {categoryLabel}
+        </a>
+      </div>
+      
+      <!-- 标题 -->
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-6">
+        {title}
+      </h1>
+      
+      <!-- 描述 -->
+      {description && (
+        <p class="text-lg text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+          {description}
+        </p>
+      )}
+      
+      <!-- 元信息 -->
+      <PostMeta
+        pubDate={pubDate}
+        updatedDate={updatedDate}
+        readingTime={readingTime}
+        lang={lang}
+        author={author}
+      />
+      
+      <!-- 标签 -->
+      {tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-2 mt-6">
+          {tags.map(tag => (
+            <a
+              href={getTagUrl(tag, lang)}
+              class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            >
+              #{tag}
+            </a>
+          ))}
+        </div>
+      )}
+    </header>
+    
+    <!-- 封面图 -->
+    {image && (
+      <figure class="mb-12 -mx-4 sm:mx-0">
+        <img
+          src={image}
+          alt={title}
+          class="w-full rounded-none sm:rounded-2xl object-cover max-h-[500px]"
+          loading="eager"
+        />
+      </figure>
+    )}
+    
+    <!-- 系列文章导航 -->
+    {series && seriesPosts.length > 1 && (
+      <SeriesNav
+        series={series}
+        posts={seriesPosts}
+        currentPost={post}
+        lang={lang}
+      />
+    )}
+    
+    <!-- 主体内容区 -->
+    <div class="lg:grid lg:grid-cols-[1fr_220px] lg:gap-12">
+      <!-- 文章内容 -->
+      <div class="prose prose-lg dark:prose-invert max-w-none
+        prose-headings:scroll-mt-24
+        prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline
+        prose-code:before:content-none prose-code:after:content-none
+        prose-code:px-1.5 prose-code:py-0.5 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:rounded prose-code:text-red-600 dark:prose-code:text-red-400
+        prose-pre:bg-gray-50 dark:prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-700
+        prose-img:rounded-xl prose-img:shadow-lg
+        prose-blockquote:border-l-blue-500 prose-blockquote:bg-blue-50/50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic
+        prose-table:overflow-x-auto
+        prose-hr:border-gray-200 dark:prose-hr:border-gray-800
+      ">
+        <slot />
+      </div>
+      
+      <!-- 侧边栏（目录） -->
+      {toc && headings.length > 0 && (
+        <aside class="hidden lg:block">
+          <div class="sticky top-24">
+            <TableOfContents headings={headings} lang={lang} />
+          </div>
+        </aside>
+      )}
+    </div>
+    
+    <!-- 文章底部 -->
+    <footer class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+      <!-- 分享按钮 -->
+      {siteConfig.features.socialShare && (
+        <div class="flex items-center justify-between mb-8 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+          <span class="text-gray-600 dark:text-gray-400 font-medium">{t.share}</span>
+          <div class="flex items-center gap-2">
+            <button
+              id="copy-link-btn"
+              class="p-2.5 rounded-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 shadow-sm hover:shadow transition-all"
+              title={t.copyLink}
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+            </button>
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.href)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-2.5 rounded-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-400 shadow-sm hover:shadow transition-all"
+              title="Twitter/X"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+            <a
+              href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-2.5 rounded-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-blue-700 shadow-sm hover:shadow transition-all"
+              title="LinkedIn"
+            >
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+            <a
+              href={`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(Astro.url.href)}`}
+              class="p-2.5 rounded-lg bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-green-600 shadow-sm hover:shadow transition-all"
+              title="Email"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      )}
+      
+      <!-- 相关文章 -->
+      {siteConfig.features.relatedPosts && relatedPosts.length > 0 && (
+        <RelatedPosts posts={relatedPosts} lang={lang} />
+      )}
+      
+      <!-- 评论区 -->
+      {siteConfig.features.comments && comments && (
+        <section class="mt-12">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            {t.comments}
+          </h2>
+          <Comments client:visible lang={lang} />
+        </section>
+      )}
+    </footer>
+  </article>
+  
+  <script>
+    // 阅读进度条
+    const progressBar = document.getElementById('progress-bar');
+    if (progressBar) {
+      function updateProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = `${Math.min(100, progress)}%`;
+      }
+      
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+    }
+    
+    // 复制链接功能
+    const copyBtn = document.getElementById('copy-link-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          // 显示成功提示
+          const originalHTML = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+          setTimeout(() => {
+            copyBtn.innerHTML = originalHTML;
+          }, 2000);
+        } catch (e) {
+          console.error('Failed to copy:', e);
+        }
+      });
+    }
+  </script>
+</BaseLayout>
+
+<style>
+  .reading-progress {
+    background: transparent;
+  }
+</style>

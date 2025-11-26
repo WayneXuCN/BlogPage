@@ -1,0 +1,22 @@
+---
+/**
+ * Definition.astro
+ * 定义环境组件（学术风格）
+ */
+
+interface Props {
+  term?: string;
+  number?: string | number;
+}
+
+const { term, number } = Astro.props;
+---
+
+<div class="definition-block my-6 p-5 bg-green-50 dark:bg-green-900/20 rounded-lg border-l-4 border-green-500">
+  <div class="definition-header font-bold text-green-800 dark:text-green-200 mb-2">
+    定义{number && ` ${number}`}{term && ` (${term})`}
+  </div>
+  <div class="definition-content text-gray-800 dark:text-gray-200">
+    <slot />
+  </div>
+</div>
