@@ -39,7 +39,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     pathname === '/favicon.ico' ||
     pathname === '/robots.txt' ||
     pathname === '/sitemap.xml' ||
-    pathname === '/site.webmanifest'
+    pathname === '/site.webmanifest' ||
+    pathname === '/404/' || // 404 页面直接放行
+    pathname === '/zh/404/' || // 中文 404 页面直接放行
+    pathname === '/en/404/' // 英文 404 页面直接放行
   ) {
     return next();
   }

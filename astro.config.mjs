@@ -29,8 +29,8 @@ export default defineConfig({
 
   // 自定义重定向配置
   redirects: {
-    // 根路径重定向到默认语言
-    '/': '/zh/',
+    // 移除根路径重定向，由index.astro直接处理
+    '/zh/': '/zh/blog/',
     '/blog/': '/zh/blog/',
   },
   
