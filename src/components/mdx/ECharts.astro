@@ -16,16 +16,23 @@
  */
 interface Props {
   /** ECharts 配置对象 */
-  config: Record<string, unknown>;
+  config?: Record<string, unknown>;
+  /** ECharts 配置对象（别名） */
+  option?: Record<string, unknown>;
   /** 图表说明 */
   caption?: string;
-  /** 图表高度 */
-  height?: number;
+  /** 图表高度（支持数字或字符串如 "400px"） */
+  height?: number | string;
   /** 自定义类名 */
   class?: string;
 }
 
-const { config, caption, height = 400, class: className = '' } = Astro.props;
+const { config: configProp, option, caption, height: heightProp = 400, class: className = '' } = Astro.props;
+
+// 支持两种属性名
+const config = configProp || option || {};
+// 支持数字和字符串高度
+const height = typeof heightProp === 'number' ? `${heightProp}px` : heightProp;
 
 // 生成唯一ID
 const id = `echarts-${Math.random().toString(36).slice(2, 9)}`;
@@ -35,7 +42,7 @@ const id = `echarts-${Math.random().toString(36).slice(2, 9)}`;
   <div
     id={id}
     class="echarts-chart w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
-    style={`height: ${height}px;`}
+    style={`height: ${height};`}
     data-config={JSON.stringify(config)}
   >
     <!-- 加载占位 -->

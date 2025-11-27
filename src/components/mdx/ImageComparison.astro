@@ -14,9 +14,13 @@
  */
 interface Props {
   /** 前图片（左侧/滑块前） */
-  beforeImage: string;
+  beforeImage?: string;
   /** 后图片（右侧/滑块后） */
-  afterImage: string;
+  afterImage?: string;
+  /** 前图片（别名） */
+  beforeSrc?: string;
+  /** 后图片（别名） */
+  afterSrc?: string;
   /** 前图片标签 */
   beforeLabel?: string;
   /** 后图片标签 */
@@ -34,8 +38,10 @@ interface Props {
 }
 
 const {
-  beforeImage,
-  afterImage,
+  beforeImage: beforeImageProp,
+  afterImage: afterImageProp,
+  beforeSrc,
+  afterSrc,
   beforeLabel = 'Before',
   afterLabel = 'After',
   beforeAlt = '对比前',
@@ -44,6 +50,10 @@ const {
   caption,
   class: className = '',
 } = Astro.props;
+
+// 支持两种属性名
+const beforeImage = beforeImageProp || beforeSrc || '';
+const afterImage = afterImageProp || afterSrc || '';
 
 // 生成唯一ID
 const id = `compare-${Math.random().toString(36).slice(2, 9)}`;

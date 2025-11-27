@@ -19,8 +19,8 @@ interface Props {
   layout?: Record<string, unknown>;
   /** Plotly 配置选项 */
   config?: Record<string, unknown>;
-  /** 图表高度 */
-  height?: number;
+  /** 图表高度（支持数字或字符串如 "400px"） */
+  height?: number | string;
   /** 图表说明 */
   caption?: string;
   /** 自定义类名 */
@@ -31,10 +31,13 @@ const {
   data,
   layout = {},
   config = {},
-  height = 400,
+  height: heightProp = 400,
   caption,
   class: className = '',
 } = Astro.props;
+
+// 支持数字和字符串高度
+const height = typeof heightProp === 'number' ? `${heightProp}px` : heightProp;
 
 // 生成唯一ID
 const id = `plotly-${Math.random().toString(36).slice(2, 9)}`;
@@ -61,7 +64,7 @@ const defaultLayout = {
   <div
     id={id}
     class="plotly-chart w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
-    style={`height: ${height}px;`}
+    style={`height: ${height};`}
     data-plotly-data={JSON.stringify(data)}
     data-plotly-layout={JSON.stringify(defaultLayout)}
     data-plotly-config={JSON.stringify(defaultConfig)}
@@ -181,21 +184,19 @@ const defaultLayout = {
     }
   }
 
-  // 清理所有图表
-  async function cleanupAllCharts() {
-    const Plotly = (await import('plotly.js-dist-min')).default;
-    document.querySelectorAll<HTMLElement>('.plotly-chart[data-plotly-data]').forEach(container => {
-      try {
-        Plotly.purge(container);
-        container.dataset.initialized = '';
-      } catch (e) {
-        // 忽略
-      }
-    });
+  // 清理所有图表（同步版本，用于 before-swap）
+  function cleanupAllCharts() {
+    // 只清理 ResizeObservers，不清理 Plotly 实例
+    // Plotly 实例会在页面卸载时自动清理
     resizeObservers.forEach((observer) => {
       observer.disconnect();
     });
     resizeObservers.clear();
+    
+    // 重置初始化状态，以便新页面可以重新初始化
+    document.querySelectorAll<HTMLElement>('.plotly-chart[data-plotly-data]').forEach(container => {
+      container.dataset.initialized = '';
+    });
   }
 
   // 主题切换时重新渲染
@@ -269,6 +270,11 @@ const defaultLayout = {
   // 页面卸载前清理（View Transitions）
   function handleBeforeSwap() {
     cleanupAllCharts();
+    // 清理主题监听器
+    if (themeObserver) {
+      themeObserver.disconnect();
+      themeObserver = null;
+    }
   }
 
   // 初始化
@@ -277,17 +283,34 @@ const defaultLayout = {
     setupThemeObserver();
   }
 
+  // 使用标志防止重复初始化
+  let initialized = false;
+
   // 页面加载后初始化
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
+  function handleLoad() {
+    if (initialized) return;
+    initialized = true;
     init();
   }
 
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', handleLoad);
+  } else {
+    handleLoad();
+  }
+
   // 支持 View Transitions - 页面切换前清理
-  document.addEventListener('astro:before-swap', handleBeforeSwap);
+  document.addEventListener('astro:before-swap', () => {
+    handleBeforeSwap();
+    initialized = false;
+  });
   // 支持 View Transitions - 新页面加载后初始化
-  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:page-load', () => {
+    // astro:page-load 在 View Transitions 后触发
+    // 需要重新初始化
+    initAllCharts();
+    setupThemeObserver();
+  });
 </script>
 
 <style is:global>

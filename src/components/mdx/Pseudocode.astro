@@ -58,13 +58,16 @@ const displayCaption = caption || title;
 
 // 生成唯一ID
 const id = `pseudocode-${Math.random().toString(36).slice(2, 9)}`;
+
+// 使用 Base64 编码来安全传递代码内容
+const encodedCode = Buffer.from(code).toString('base64');
 ---
 
 <figure class:list={['pseudocode-container my-8', className]}>
   <div
     id={id}
     class="pseudocode-wrapper bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 overflow-x-auto"
-    data-code={code}
+    data-code-base64={encodedCode}
   >
     <!-- 加载占位 -->
     <div class="pseudocode-loading flex items-center justify-center py-8 text-gray-400">
@@ -138,8 +141,11 @@ const id = `pseudocode-${Math.random().toString(36).slice(2, 9)}`;
   }
 
   async function renderPseudocode(container: HTMLElement) {
-    const code = container.dataset.code;
-    if (!code) return;
+    const encodedCode = container.dataset.codeBase64;
+    if (!encodedCode || container.dataset.initialized === 'true') return;
+
+    // 解码 Base64
+    const code = atob(encodedCode);
 
     try {
       const pseudocode = await loadPseudocode();
@@ -148,29 +154,38 @@ const id = `pseudocode-${Math.random().toString(36).slice(2, 9)}`;
       const loading = container.querySelector('.pseudocode-loading');
       if (loading) loading.remove();
 
-      // 创建渲染容器
-      const renderTarget = document.createElement('div');
-      renderTarget.className = 'pseudocode-output';
-      container.appendChild(renderTarget);
-
-      // 渲染伪代码
-      pseudocode.renderElement(renderTarget, code, {
+      // 使用 renderToString 渲染伪代码为 HTML
+      const htmlOutput = pseudocode.renderToString(code, {
         lineNumber: true,
         noEnd: false,
       });
+
+      // 创建渲染容器并插入 HTML
+      const renderTarget = document.createElement('div');
+      renderTarget.className = 'pseudocode-output';
+      renderTarget.innerHTML = htmlOutput;
+      container.appendChild(renderTarget);
+
+      container.dataset.initialized = 'true';
 
     } catch (error) {
       console.error('Pseudocode render error:', error);
       container.innerHTML = `
         <div class="text-amber-600 dark:text-amber-400 text-sm mb-2">⚠️ 伪代码渲染失败，显示源代码：</div>
-        <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded text-xs overflow-x-auto"><code>${code}</code></pre>
+        <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded text-xs overflow-x-auto"><code>${escapeHtml(code)}</code></pre>
       `;
     }
   }
 
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
   // 初始化所有伪代码
   function initAllPseudocode() {
-    document.querySelectorAll<HTMLElement>('.pseudocode-wrapper[data-code]').forEach(renderPseudocode);
+    document.querySelectorAll<HTMLElement>('.pseudocode-wrapper[data-code-base64]').forEach(renderPseudocode);
   }
 
   // 页面加载后初始化

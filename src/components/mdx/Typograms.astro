@@ -126,13 +126,25 @@ const id = `typogram-${Math.random().toString(36).slice(2, 9)}`;
         container.innerHTML = `<pre class="font-mono text-sm whitespace-pre text-gray-700 dark:text-gray-300">${escapeHtml(code)}</pre>`;
       }
 
-      // 调整 SVG 在深色模式下的颜色
+      // 调整 SVG 的颜色以适应主题
       const svgEl = container.querySelector('svg');
       if (svgEl) {
         const isDark = document.documentElement.classList.contains('dark');
-        if (isDark) {
-          svgEl.style.filter = 'invert(1)';
-        }
+        // 设置 SVG 的 stroke 和 fill 颜色
+        svgEl.style.setProperty('--typogram-stroke', isDark ? '#e5e7eb' : '#1f2937');
+        svgEl.style.setProperty('--typogram-fill', isDark ? '#e5e7eb' : '#1f2937');
+        // 遍历所有路径和文本元素设置颜色
+        svgEl.querySelectorAll('path, line, polyline, polygon, rect, circle, ellipse').forEach((el: any) => {
+          if (el.getAttribute('stroke') && el.getAttribute('stroke') !== 'none') {
+            el.setAttribute('stroke', isDark ? '#e5e7eb' : '#1f2937');
+          }
+          if (el.getAttribute('fill') && el.getAttribute('fill') !== 'none' && el.getAttribute('fill') !== 'transparent') {
+            el.setAttribute('fill', isDark ? '#e5e7eb' : '#1f2937');
+          }
+        });
+        svgEl.querySelectorAll('text').forEach((el: any) => {
+          el.setAttribute('fill', isDark ? '#e5e7eb' : '#1f2937');
+        });
       }
       
       container.dataset.initialized = 'true';
@@ -152,9 +164,20 @@ const id = `typogram-${Math.random().toString(36).slice(2, 9)}`;
 
   // 主题切换处理
   function handleThemeChange() {
-    document.querySelectorAll<HTMLElement>('.typograms-chart svg').forEach(svg => {
-      const isDark = document.documentElement.classList.contains('dark');
-      svg.style.filter = isDark ? 'invert(1)' : 'none';
+    const isDark = document.documentElement.classList.contains('dark');
+    document.querySelectorAll<SVGElement>('.typograms-chart svg').forEach(svg => {
+      // 设置 SVG 的 stroke 和 fill 颜色
+      svg.querySelectorAll('path, line, polyline, polygon, rect, circle, ellipse').forEach((el: any) => {
+        if (el.getAttribute('stroke') && el.getAttribute('stroke') !== 'none') {
+          el.setAttribute('stroke', isDark ? '#e5e7eb' : '#1f2937');
+        }
+        if (el.getAttribute('fill') && el.getAttribute('fill') !== 'none' && el.getAttribute('fill') !== 'transparent') {
+          el.setAttribute('fill', isDark ? '#e5e7eb' : '#1f2937');
+        }
+      });
+      svg.querySelectorAll('text').forEach((el: any) => {
+        el.setAttribute('fill', isDark ? '#e5e7eb' : '#1f2937');
+      });
     });
   }
 

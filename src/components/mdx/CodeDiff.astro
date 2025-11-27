@@ -14,7 +14,17 @@
  */
 interface Props {
   /** Git diff 格式的差异内容 */
-  diff: string;
+  diff?: string;
+  /** 旧代码（用于生成 diff） */
+  oldCode?: string;
+  /** 新代码（用于生成 diff） */
+  newCode?: string;
+  /** 旧代码标题 */
+  oldTitle?: string;
+  /** 新代码标题 */
+  newTitle?: string;
+  /** 代码语言 */
+  language?: string;
   /** 输出格式：并排或行内 */
   outputFormat?: 'side-by-side' | 'line-by-line';
   /** 是否显示文件列表 */
@@ -28,13 +38,89 @@ interface Props {
 }
 
 const {
-  diff,
-  outputFormat = 'line-by-line',
-  showFiles = true,
+  diff: diffProp,
+  oldCode,
+  newCode,
+  oldTitle = 'Original',
+  newTitle = 'Modified',
+  language = 'text',
+  outputFormat = 'side-by-side',
+  showFiles = false,
   highlight = true,
   caption,
   class: className = '',
 } = Astro.props;
+
+// 如果提供了 oldCode/newCode，则生成 unified diff 格式
+function generateUnifiedDiff(oldStr: string, newStr: string, oldFile: string, newFile: string): string {
+  const oldLines = oldStr.split('\n');
+  const newLines = newStr.split('\n');
+  
+  let diff = `--- ${oldFile}\n+++ ${newFile}\n@@ -1,${oldLines.length} +1,${newLines.length} @@\n`;
+  
+  // 简单的逐行对比
+  const maxLen = Math.max(oldLines.length, newLines.length);
+  let i = 0, j = 0;
+  
+  while (i < oldLines.length || j < newLines.length) {
+    const oldLine = i < oldLines.length ? oldLines[i] : null;
+    const newLine = j < newLines.length ? newLines[j] : null;
+    
+    if (oldLine === newLine) {
+      diff += ` ${oldLine}\n`;
+      i++;
+      j++;
+    } else {
+      // 查找匹配的行
+      let foundInNew = -1;
+      let foundInOld = -1;
+      
+      if (oldLine !== null) {
+        foundInNew = newLines.slice(j).indexOf(oldLine);
+      }
+      if (newLine !== null) {
+        foundInOld = oldLines.slice(i).indexOf(newLine);
+      }
+      
+      if (foundInNew !== -1 && (foundInOld === -1 || foundInNew <= foundInOld)) {
+        // 新代码中找到了旧行，先输出新增的行
+        for (let k = 0; k < foundInNew; k++) {
+          diff += `+${newLines[j + k]}\n`;
+        }
+        j += foundInNew;
+      } else if (foundInOld !== -1) {
+        // 旧代码中找到了新行，先输出删除的行
+        for (let k = 0; k < foundInOld; k++) {
+          diff += `-${oldLines[i + k]}\n`;
+        }
+        i += foundInOld;
+      } else {
+        // 都没找到，直接输出删除和新增
+        if (oldLine !== null) {
+          diff += `-${oldLine}\n`;
+          i++;
+        }
+        if (newLine !== null) {
+          diff += `+${newLine}\n`;
+          j++;
+        }
+      }
+    }
+  }
+  
+  return diff;
+}
+
+let diff: string;
+if (diffProp) {
+  diff = diffProp;
+} else if (oldCode !== undefined && newCode !== undefined) {
+  const oldFileName = `a/${oldTitle || 'file'}.${language}`;
+  const newFileName = `b/${newTitle || 'file'}.${language}`;
+  diff = generateUnifiedDiff(oldCode, newCode, oldFileName, newFileName);
+} else {
+  diff = '';
+}
 
 // 生成唯一ID
 const id = `diff-${Math.random().toString(36).slice(2, 9)}`;
@@ -47,7 +133,6 @@ const id = `diff-${Math.random().toString(36).slice(2, 9)}`;
     data-diff={diff}
     data-output-format={outputFormat}
     data-show-files={showFiles}
-    data-highlight={highlight}
   >
     <!-- 加载占位 -->
     <div class="codediff-loading flex items-center justify-center py-12 text-gray-400">
@@ -85,7 +170,6 @@ const id = `diff-${Math.random().toString(36).slice(2, 9)}`;
     const diffStr = container.dataset.diff;
     const outputFormat = (container.dataset.outputFormat as 'side-by-side' | 'line-by-line') || 'line-by-line';
     const showFiles = container.dataset.showFiles === 'true';
-    const highlight = container.dataset.highlight === 'true';
 
     if (!diffStr) return;
 
@@ -100,7 +184,6 @@ const id = `diff-${Math.random().toString(36).slice(2, 9)}`;
         drawFileList: showFiles,
         outputFormat,
         matching: 'lines',
-        highlight,
         renderNothingWhenEmpty: false,
       });
 

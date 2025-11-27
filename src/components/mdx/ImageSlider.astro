@@ -28,8 +28,12 @@ interface Props {
   interval?: number;
   /** 是否显示分页器 */
   pagination?: boolean;
+  /** 是否显示分页器（别名） */
+  showPagination?: boolean;
   /** 是否显示导航按钮 */
   navigation?: boolean;
+  /** 是否显示导航按钮（别名） */
+  showNavigation?: boolean;
   /** 是否循环播放 */
   loop?: boolean;
   /** 轮播说明 */
@@ -42,21 +46,33 @@ const {
   images,
   autoplay = false,
   interval = 5000,
-  pagination = true,
-  navigation = true,
+  pagination: paginationProp,
+  showPagination,
+  navigation: navigationProp,
+  showNavigation,
   loop = true,
   caption,
   class: className = '',
 } = Astro.props;
 
+// 支持两种属性名，默认为 true
+const pagination = paginationProp ?? showPagination ?? true;
+const navigation = navigationProp ?? showNavigation ?? true;
+
 // 生成唯一ID
 const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
+
+// 静态导入 Swiper CSS - 这会在构建时被正确处理
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 ---
 
-<figure class:list={['image-slider-container my-8', className]}>
+<figure class:list={['image-slider-container my-8 max-w-4xl mx-auto', className]}>
   <div
     id={id}
-    class="swiper-container rounded-lg overflow-hidden shadow-lg"
+    class="swiper rounded-lg overflow-hidden shadow-lg relative"
+    style="height: 400px;"
     data-autoplay={autoplay}
     data-interval={interval}
     data-pagination={pagination}
@@ -69,7 +85,7 @@ const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
           <img
             src={image.src}
             alt={image.alt || `幻灯片 ${index + 1}`}
-            class="w-full h-auto object-cover"
+            class="w-full h-full object-cover"
             loading={index === 0 ? 'eager' : 'lazy'}
           />
           {image.caption && (
@@ -104,44 +120,11 @@ const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
   // 动态导入 Swiper 以减少初始 bundle 体积
   // 存储 Swiper 实例和清理函数
   const swiperInstances = new Map<string, any>();
-  let cssLoaded = false;
-
-  async function loadSwiperCSS() {
-    if (cssLoaded) return;
-    
-    // 使用 link 标签动态加载 CSS（更可靠的方式）
-    const cssUrls = [
-      'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
-    ];
-    
-    const loadPromises = cssUrls.map(url => {
-      return new Promise<void>((resolve) => {
-        // 检查是否已加载
-        if (document.querySelector(`link[href="${url}"]`)) {
-          resolve();
-          return;
-        }
-        
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = url;
-        link.onload = () => resolve();
-        link.onerror = () => resolve(); // 即使失败也继续
-        document.head.appendChild(link);
-      });
-    });
-    
-    await Promise.all(loadPromises);
-    cssLoaded = true;
-  }
 
   async function initSlider(container: HTMLElement) {
     if (container.dataset.initialized === 'true') return;
 
     try {
-      // 加载 CSS
-      await loadSwiperCSS();
-      
       // 动态导入 Swiper 和模块
       const [{ default: Swiper }, { Navigation, Pagination, Autoplay, Keyboard }] = await Promise.all([
         import('swiper'),
@@ -157,7 +140,7 @@ const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
       // 销毁已有实例
       cleanupSlider(container.id);
 
-      // 创建新实例
+      // 创建新实例 - 使用容器内的选择器避免冲突
       const swiper = new Swiper(container, {
         modules: [Navigation, Pagination, Autoplay, Keyboard],
         loop,
@@ -169,13 +152,13 @@ const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
           disableOnInteraction: false,
         } : false,
         pagination: pagination ? {
-          el: '.swiper-pagination',
+          el: container.querySelector('.swiper-pagination') as HTMLElement,
           clickable: true,
           dynamicBullets: true,
         } : false,
         navigation: navigation ? {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
+          nextEl: container.querySelector('.swiper-button-next') as HTMLElement,
+          prevEl: container.querySelector('.swiper-button-prev') as HTMLElement,
         } : false,
       });
 
@@ -202,14 +185,14 @@ const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
     });
     swiperInstances.clear();
     // 重置初始化状态
-    document.querySelectorAll<HTMLElement>('.swiper-container[data-autoplay]').forEach(container => {
+    document.querySelectorAll<HTMLElement>('.swiper[data-autoplay]').forEach(container => {
       container.dataset.initialized = '';
     });
   }
 
   // 初始化所有轮播
   function initAllSliders() {
-    document.querySelectorAll<HTMLElement>('.swiper-container[data-autoplay]').forEach(initSlider);
+    document.querySelectorAll<HTMLElement>('.swiper[data-autoplay]').forEach(initSlider);
   }
 
   // 页面加载后初始化
@@ -227,13 +210,18 @@ const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
 
 <style is:global>
   /* Swiper 自定义样式 */
-  .image-slider-container .swiper-container {
+  .image-slider-container .swiper {
     --swiper-theme-color: #3b82f6;
     --swiper-navigation-size: 24px;
+    width: 100%;
+    height: 100%;
   }
 
   .image-slider-container .swiper-slide {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .image-slider-container .swiper-button-prev,
@@ -244,6 +232,12 @@ const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
     border-radius: 50%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.2s;
+  }
+
+  .image-slider-container .swiper-button-prev::after,
+  .image-slider-container .swiper-button-next::after {
+    font-size: 18px;
+    font-weight: bold;
   }
 
   .image-slider-container .swiper-button-prev:hover,

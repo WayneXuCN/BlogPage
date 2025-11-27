@@ -14,15 +14,23 @@
  *   caption="地图说明"
  * />
  */
+interface Marker {
+  lat: number;
+  lng: number;
+  popup?: string;
+}
+
 interface Props {
   /** GeoJSON 数据 */
   geojson?: Record<string, unknown>;
+  /** 标记点数组 */
+  markers?: Marker[];
   /** 地图中心点 [lat, lng] */
   center?: [number, number];
   /** 缩放级别 */
   zoom?: number;
-  /** 地图高度 */
-  height?: number;
+  /** 地图高度（支持数字或字符串如 "400px"） */
+  height?: number | string;
   /** 图层样式 */
   style?: Record<string, unknown>;
   /** 地图说明 */
@@ -33,13 +41,17 @@ interface Props {
 
 const {
   geojson,
+  markers,
   center,
   zoom = 10,
-  height = 400,
+  height: heightProp = 400,
   style = { color: '#3388ff', weight: 2, fillOpacity: 0.3 },
   caption,
   class: className = '',
 } = Astro.props;
+
+// 支持数字和字符串高度
+const height = typeof heightProp === 'number' ? `${heightProp}px` : heightProp;
 
 // 生成唯一ID
 const id = `map-${Math.random().toString(36).slice(2, 9)}`;
@@ -50,14 +62,19 @@ if (!defaultCenter && geojson) {
   // 使用默认中心点，实际中心会在客户端计算
   defaultCenter = [0, 0];
 }
+// 如果有 markers 但没有中心点，使用第一个 marker 的位置
+if (!defaultCenter && markers && markers.length > 0) {
+  defaultCenter = [markers[0].lat, markers[0].lng];
+}
 ---
 
 <figure class:list={['geomap-container my-8', className]}>
   <div
     id={id}
     class="geomap-chart w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
-    style={`height: ${height}px;`}
+    style={`height: ${height};`}
     data-geojson={geojson ? JSON.stringify(geojson) : undefined}
+    data-markers={markers ? JSON.stringify(markers) : undefined}
     data-center={defaultCenter ? JSON.stringify(defaultCenter) : undefined}
     data-zoom={zoom}
     data-style={JSON.stringify(style)}
@@ -116,6 +133,7 @@ if (!defaultCenter && geojson) {
     if (container.dataset.initialized === 'true') return;
 
     const geojsonStr = container.dataset.geojson;
+    const markersStr = container.dataset.markers;
     const centerStr = container.dataset.center;
     const zoom = parseInt(container.dataset.zoom || '10', 10);
     const styleStr = container.dataset.style;
@@ -155,6 +173,17 @@ if (!defaultCenter && geojson) {
         : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
       leaflet.tileLayer(tileUrl, { attribution }).addTo(map);
+
+      // 添加标记点
+      if (markersStr) {
+        const markers = JSON.parse(markersStr) as Array<{ lat: number; lng: number; popup?: string }>;
+        markers.forEach(marker => {
+          const m = leaflet.marker([marker.lat, marker.lng]).addTo(map);
+          if (marker.popup) {
+            m.bindPopup(marker.popup);
+          }
+        });
+      }
 
       // 添加 GeoJSON 图层
       if (geojsonStr) {
