@@ -26,8 +26,11 @@
         // View Transitions：页面切换后重新应用主题
         document.addEventListener('astro:after-swap', applyTheme);
       })();
-    </script><!-- Shiki 双主题 CSS --><!-- Google Analytics --><link rel="stylesheet" href="/_astro/_slug_.BYu-RMB_.css">
-<link rel="stylesheet" href="/_astro/_slug_.C8Hz8vPX.css"><script type="module" src="/_astro/page.H-sGAUOa.js"></script><style>[data-astro-transition-scope="astro-ka5hbhd5-1"] { view-transition-name: astro-ka5hbhd5-1; }@layer astro { ::view-transition-old(astro-ka5hbhd5-1) { 
+    </script><!-- Shiki 双主题 CSS --><!-- Google Analytics --><link rel="stylesheet" href="/_astro/CodeDiff.C_gyQmZQ.css">
+<link rel="stylesheet" href="/_astro/_slug_.B04Pzx52.css">
+<link rel="stylesheet" href="/_astro/photoswipe.DSulWsr7.css">
+<link rel="stylesheet" href="/_astro/leaflet.Dgihpmma.css">
+<link rel="stylesheet" href="/_astro/_slug_.BeNmAD_z.css"><script type="module" src="/_astro/page.H-sGAUOa.js"></script><style>[data-astro-transition-scope="astro-ka5hbhd5-1"] { view-transition-name: astro-ka5hbhd5-1; }@layer astro { ::view-transition-old(astro-ka5hbhd5-1) { 
 	animation-duration: 180ms;
 	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
 	animation-fill-mode: both;
@@ -63,7 +66,7 @@
 	animation-duration: 180ms;
 	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
 	animation-fill-mode: both;
-	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300 flex flex-col"> <!-- 页头 --> <header class="sticky top-0 z-40 w-full backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800"> <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl"> <div class="flex items-center justify-between h-16"> <!-- Logo / 站点名称 --> <a href="/en/" class="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"> <span class="hidden sm:inline">Wenjie Xu&#39;s Blog</span> <span class="sm:hidden">Blog</span> </a> <!-- 桌面端导航 --> <nav class="hidden md:flex items-center space-x-1"> <a href="/en/blog/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Home </a><a href="/en/blog/categories/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Categories </a><a href="/en/blog/archive/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Archive </a><a href="/en/about/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> About </a> </nav> <!-- 右侧工具栏 --> <div class="flex items-center space-x-2"> <!-- 搜索 --> <!-- 搜索按钮 --><button id="search-btn" class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="Search posts..." title="Search posts... (⌘K)" data-astro-cid-p5mqvocy> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-p5mqvocy> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" data-astro-cid-p5mqvocy></path> </svg> </button> <!-- 搜索模态框 --> <div id="search-modal" class="search-modal fixed inset-0 z-50 hidden" role="dialog" aria-modal="true" aria-label="Search posts..." data-astro-cid-p5mqvocy> <!-- 背景遮罩 --> <div class="search-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm" data-astro-cid-p5mqvocy></div> <!-- 对话框 - 固定在视口上方 --> <div class="relative z-10 w-full h-full flex justify-center items-start pt-[10vh] sm:pt-[15vh] px-4 pb-4 overflow-hidden" data-astro-cid-p5mqvocy> <div class="search-dialog w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex flex-col max-h-[75vh] animate-fade-in-up" data-astro-cid-p5mqvocy> <!-- 搜索头部 --> <div class="flex items-center border-b border-gray-200 dark:border-gray-700 px-4 flex-shrink-0" data-astro-cid-p5mqvocy> <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-p5mqvocy> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" data-astro-cid-p5mqvocy></path> </svg> <input id="search-input" type="text" placeholder="Search posts..." class="flex-1 px-4 py-4 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none text-lg" autocomplete="off" data-astro-cid-p5mqvocy> <button id="search-close" class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 flex-shrink-0" aria-label="Close" data-astro-cid-p5mqvocy> <kbd class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded font-mono" data-astro-cid-p5mqvocy>ESC</kbd> </button> </div> <!-- 搜索结果容器 --> <div id="search-results" class="flex-1 overflow-y-auto p-4 min-h-[100px]" data-astro-cid-p5mqvocy> <p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8" data-astro-cid-p5mqvocy> Type to search </p> </div> <!-- 搜索底部 --> <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 flex-shrink-0" data-astro-cid-p5mqvocy> <div class="flex items-center gap-4" data-astro-cid-p5mqvocy> <span class="flex items-center gap-1" data-astro-cid-p5mqvocy> <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono" data-astro-cid-p5mqvocy>↵</kbd> Select </span> <span class="flex items-center gap-1" data-astro-cid-p5mqvocy> <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono" data-astro-cid-p5mqvocy>↑↓</kbd> Navigate </span> </div> <span class="flex items-center gap-1.5" data-astro-cid-p5mqvocy> <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" data-astro-cid-p5mqvocy> <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" data-astro-cid-p5mqvocy></path> </svg>
+	animation-name: astroFadeIn; }</style></head> <body class="min-h-screen bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300 flex flex-col"> <!-- 页头 --> <header class="sticky top-0 z-40 w-full backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800"> <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl"> <div class="flex items-center justify-between h-16"> <!-- Logo / 站点名称 --> <a href="/en/" class="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"> <span class="hidden sm:inline">Wenjie Xu&#39;s Blog</span> <span class="sm:hidden">Blog</span> </a> <!-- 桌面端导航 --> <nav class="hidden md:flex items-center space-x-1"> <a href="/en/blog/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Home </a><a href="/en/blog/categories/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Categories </a><a href="/en/blog/archive/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Archive </a><a href="/en/about/" class="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> About </a> </nav> <!-- 右侧工具栏 --> <div class="flex items-center space-x-2"> <!-- 搜索 --> <!-- 搜索按钮 - 使用 data 属性标识 --><button type="button" data-search-btn class="search-trigger-btn p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer relative z-10" aria-label="Search posts..." title="Search posts... (⌘K)" data-astro-cid-p5mqvocy> <svg class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-p5mqvocy> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" data-astro-cid-p5mqvocy></path> </svg> </button> <!-- 搜索模态框 - 放在 body 末尾通过 portal 或高 z-index 确保显示 --> <div data-search-modal class="search-modal fixed inset-0 hidden" role="dialog" aria-modal="true" aria-label="Search posts..." data-astro-cid-p5mqvocy> <!-- 背景遮罩 --> <div data-search-backdrop class="search-backdrop absolute inset-0 bg-black/60 backdrop-blur-sm" data-astro-cid-p5mqvocy></div> <!-- 对话框 - 固定在视口上方 --> <div class="search-dialog-wrapper relative z-10 w-full h-full flex justify-center items-start pt-[10vh] sm:pt-[15vh] px-4 pb-4" data-astro-cid-p5mqvocy> <div class="search-dialog w-full max-w-2xl bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex flex-col max-h-[75vh] animate-fade-in-up overflow-hidden" data-astro-cid-p5mqvocy> <!-- 搜索头部 --> <div class="flex items-center border-b border-gray-200 dark:border-gray-700 px-4 flex-shrink-0" data-astro-cid-p5mqvocy> <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-p5mqvocy> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" data-astro-cid-p5mqvocy></path> </svg> <input data-search-input type="text" placeholder="Search posts..." class="flex-1 px-4 py-4 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none text-lg" autocomplete="off" data-astro-cid-p5mqvocy> <button type="button" data-search-close class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 flex-shrink-0 cursor-pointer" aria-label="Close" data-astro-cid-p5mqvocy> <kbd class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded font-mono pointer-events-none" data-astro-cid-p5mqvocy>ESC</kbd> </button> </div> <!-- 搜索结果容器 --> <div data-search-results class="flex-1 overflow-y-auto p-4 min-h-[100px]" data-astro-cid-p5mqvocy> <p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8" data-astro-cid-p5mqvocy> Type to search </p> </div> <!-- 搜索底部 --> <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 flex-shrink-0" data-astro-cid-p5mqvocy> <div class="flex items-center gap-4" data-astro-cid-p5mqvocy> <span class="flex items-center gap-1" data-astro-cid-p5mqvocy> <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono" data-astro-cid-p5mqvocy>↵</kbd> Select </span> <span class="flex items-center gap-1" data-astro-cid-p5mqvocy> <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded font-mono" data-astro-cid-p5mqvocy>↑↓</kbd> Navigate </span> </div> <span class="flex items-center gap-1.5" data-astro-cid-p5mqvocy> <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" data-astro-cid-p5mqvocy> <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" data-astro-cid-p5mqvocy></path> </svg>
 Pagefind
 </span> </div> </div> </div> </div> <script>(function(){const t = "{\"placeholder\":\"Search posts...\",\"tip\":\"Type to search\",\"noResults\":\"No results found\",\"loading\":\"Searching...\",\"select\":\"Select\",\"navigate\":\"Navigate\",\"close\":\"Close\"}";
 
@@ -76,18 +79,23 @@ Pagefind
   async function initPagefind() {
     if (pagefindInstance) return pagefindInstance;
     if (isPagefindLoading) {
-      // 等待加载完成
-      return new Promise(resolve => {
-        const checkInterval = setInterval(() => {
+      // 等待加载完成 - 使用 Promise 替代 setInterval 轮询
+      return new Promise((resolve, reject) => {
+        const maxWait = 10000; // 10秒超时
+        const startTime = Date.now();
+        
+        const check = () => {
           if (pagefindInstance) {
-            clearInterval(checkInterval);
             resolve(pagefindInstance);
-          }
-          if (!isPagefindLoading && !pagefindInstance) {
-            clearInterval(checkInterval);
+          } else if (!isPagefindLoading) {
             resolve(null);
+          } else if (Date.now() - startTime > maxWait) {
+            reject(new Error('Pagefind loading timeout'));
+          } else {
+            requestAnimationFrame(check);
           }
-        }, 50);
+        };
+        check();
       });
     }
 
@@ -95,185 +103,257 @@ Pagefind
 
     try {
       // 动态加载 Pagefind - 使用相对于站点根目录的路径
-      const basePath = window.location.origin;
-      pagefindInstance = await import(`${basePath}/pagefind/pagefind.js`);
+      // 在开发模式下，pagefind 可能不可用，需要优雅降级
+      const basePath = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL;
+      const pagefindUrl = `${basePath}/pagefind/pagefind.js`;
+      
+      // 检查文件是否存在（仅在非生产环境）
+      if (import.meta.env.DEV) {
+        try {
+          const response = await fetch(pagefindUrl, { method: 'HEAD' });
+          if (!response.ok) throw new Error('Pagefind not found');
+        } catch (e) {
+          console.warn('Pagefind index not found. Search will not work in dev mode unless you run `bun run build` first.');
+          isPagefindLoading = false;
+          return null;
+        }
+      }
+
+      pagefindInstance = await import(/* @vite-ignore */ pagefindUrl);
       await pagefindInstance.init();
       isPagefindLoading = false;
       return pagefindInstance;
     } catch (e) {
-      console.warn('Pagefind not available. Run `bun run build` first to enable search.', e);
+      console.warn('Pagefind load error:', e);
       isPagefindLoading = false;
       return null;
     }
   }
 
-  function initSearch() {
-    // DOM 元素
-    const searchBtn = document.getElementById('search-btn');
-    const searchModal = document.getElementById('search-modal');
-    const searchInput = document.getElementById('search-input');
-    const searchClose = document.getElementById('search-close');
-    const searchResults = document.getElementById('search-results');
-    const searchBackdrop = searchModal?.querySelector('.search-backdrop');
+  // 使用事件委托和 AbortController 管理事件
+  let abortController = null;
+  let searchTimeout = null;
+  let currentIndex = 0;
 
-    if (!searchBtn || !searchModal) return;
-
-    let currentIndex = 0;
-    let searchTimeout = null;
-
-    // 打开搜索
-    function openSearch() {
-      searchModal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      setTimeout(() => searchInput?.focus(), 100);
-      // 预加载 Pagefind
-      initPagefind();
-    }
-
-    // 关闭搜索
-    function closeSearch() {
-      searchModal.classList.add('hidden');
-      document.body.style.overflow = '';
-      if (searchInput) searchInput.value = '';
-      if (searchResults) {
-        searchResults.innerHTML = `<p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8">${texts.tip}</p>`;
-      }
-    }
-
-    // 克隆并替换按钮以移除旧事件
-    const newSearchBtn = searchBtn.cloneNode(true);
-    searchBtn.parentNode?.replaceChild(newSearchBtn, searchBtn);
-
-    // 事件绑定
-    newSearchBtn.addEventListener('click', e => {
-      e.preventDefault();
-      e.stopPropagation();
-      openSearch();
+  function openSearch() {
+    const modal = document.querySelector('[data-search-modal]');
+    const input = document.querySelector('[data-search-input]');
+    if (!modal) return;
+    
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    
+    // 延迟聚焦以确保动画完成
+    requestAnimationFrame(() => {
+      setTimeout(() => input?.focus(), 50);
     });
+    
+    // 预加载 Pagefind
+    initPagefind();
+  }
 
-    searchClose?.addEventListener('click', closeSearch);
-    searchBackdrop?.addEventListener('click', closeSearch);
+  function closeSearch() {
+    const modal = document.querySelector('[data-search-modal]');
+    const input = document.querySelector('[data-search-input]');
+    const results = document.querySelector('[data-search-results]');
+    
+    if (!modal) return;
+    
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+    
+    if (input) input.value = '';
+    if (results) {
+      results.innerHTML = `<p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8">${texts.tip}</p>`;
+    }
+    
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+      searchTimeout = null;
+    }
+    currentIndex = 0;
+  }
 
-    // ESC 关闭 和 Cmd/Ctrl + K 快捷键
-    function handleKeydown(e) {
-      if (e.key === 'Escape' && !searchModal.classList.contains('hidden')) {
-        closeSearch();
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault();
-        if (searchModal.classList.contains('hidden')) {
-          openSearch();
-        } else {
-          closeSearch();
-        }
-      }
+  async function handleSearch(query) {
+    const results = document.querySelector('[data-search-results]');
+    if (!results) return;
+
+    if (!query.trim()) {
+      results.innerHTML = `<p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8">${texts.tip}</p>`;
+      return;
     }
 
-    // 移除旧的键盘监听器
-    document.removeEventListener('keydown', handleKeydown);
-    document.addEventListener('keydown', handleKeydown);
+    // 显示加载状态
+    results.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">${texts.loading}</p>`;
 
-    // 搜索输入
-    searchInput?.addEventListener('input', async e => {
-      const query = e.target.value.trim();
+    const pf = await initPagefind();
+    if (!pf) {
+      results.innerHTML = `<p class="text-center text-amber-600 dark:text-amber-400 py-8">搜索功能需要先运行 build 命令生成索引</p>`;
+      return;
+    }
 
-      if (searchTimeout) clearTimeout(searchTimeout);
+    try {
+      const search = await pf.search(query);
 
-      if (!query) {
-        if (searchResults) {
-          searchResults.innerHTML = `<p class="search-tip text-center text-gray-500 dark:text-gray-400 py-8">${texts.tip}</p>`;
-        }
+      if (search.results.length === 0) {
+        results.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">${texts.noResults}</p>`;
         return;
       }
 
-      // 显示加载状态
-      if (searchResults) {
-        searchResults.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">${texts.loading}</p>`;
-      }
+      // 获取结果详情
+      const searchResults = await Promise.all(search.results.slice(0, 10).map(r => r.data()));
 
-      searchTimeout = window.setTimeout(async () => {
-        const pf = await initPagefind();
+      results.innerHTML = searchResults
+        .map((result, index) => `
+          <a 
+            href="${result.url}" 
+            class="search-result-item block p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mb-2 ${index === 0 ? 'bg-gray-50 dark:bg-gray-700/50' : ''}"
+            data-index="${index}"
+          >
+            <h3 class="font-semibold text-gray-900 dark:text-white mb-1 line-clamp-1">${result.meta?.title || 'Untitled'}</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">${result.excerpt || ''}</p>
+          </a>
+        `)
+        .join('');
 
-        if (!pf || !searchResults) {
-          searchResults.innerHTML = `<p class="text-center text-amber-600 dark:text-amber-400 py-8">搜索功能需要先运行 build 命令生成索引</p>`;
-          return;
-        }
-
-        try {
-          const search = await pf.search(query);
-
-          if (search.results.length === 0) {
-            searchResults.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">${texts.noResults}</p>`;
-            return;
-          }
-
-          // 获取结果详情
-          const results = await Promise.all(search.results.slice(0, 10).map(r => r.data()));
-
-          searchResults.innerHTML = results
-            .map(
-              (result, index) => `
-            <a 
-              href="${result.url}" 
-              class="search-result-item block p-4 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mb-2 ${index === 0 ? 'bg-gray-50 dark:bg-gray-700/50' : ''}"
-              data-index="${index}"
-            >
-              <h3 class="font-semibold text-gray-900 dark:text-white mb-1 line-clamp-1">${result.meta?.title || 'Untitled'}</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">${result.excerpt || ''}</p>
-            </a>
-          `
-            )
-            .join('');
-
-          currentIndex = 0;
-        } catch (err) {
-          console.error('Search error:', err);
-          searchResults.innerHTML = `<p class="text-center text-red-500 dark:text-red-400 py-8">搜索出错，请重试</p>`;
-        }
-      }, 200);
-    });
-
-    // 键盘导航
-    searchModal.addEventListener('keydown', e => {
-      const items = searchResults?.querySelectorAll('.search-result-item');
-      if (!items || items.length === 0) return;
-
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        currentIndex = (currentIndex + 1) % items.length;
-        items.forEach((item, i) => {
-          item.classList.toggle('bg-gray-50', i === currentIndex);
-          item.classList.toggle('dark:bg-gray-700/50', i === currentIndex);
-        });
-        items[currentIndex].scrollIntoView({ block: 'nearest' });
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        currentIndex = (currentIndex - 1 + items.length) % items.length;
-        items.forEach((item, i) => {
-          item.classList.toggle('bg-gray-50', i === currentIndex);
-          item.classList.toggle('dark:bg-gray-700/50', i === currentIndex);
-        });
-        items[currentIndex].scrollIntoView({ block: 'nearest' });
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        const activeItem = items[currentIndex];
-        if (activeItem) {
-          window.location.href = activeItem.getAttribute('href');
-        }
-      }
-    });
+      currentIndex = 0;
+    } catch (err) {
+      console.error('Search error:', err);
+      results.innerHTML = `<p class="text-center text-red-500 dark:text-red-400 py-8">搜索出错，请重试</p>`;
+    }
   }
 
-  // 初始化和页面切换后重新初始化
+  function handleKeyboardNavigation(e) {
+    const results = document.querySelector('[data-search-results]');
+    const items = results?.querySelectorAll('.search-result-item');
+    if (!items || items.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      currentIndex = (currentIndex + 1) % items.length;
+      updateActiveItem(items);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      currentIndex = (currentIndex - 1 + items.length) % items.length;
+      updateActiveItem(items);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const activeItem = items[currentIndex];
+      if (activeItem) {
+        window.location.href = activeItem.getAttribute('href') || '';
+      }
+    }
+  }
+
+  function updateActiveItem(items) {
+    items.forEach((item, i) => {
+      item.classList.toggle('bg-gray-50', i === currentIndex);
+      item.classList.toggle('dark:bg-gray-700/50', i === currentIndex);
+    });
+    items[currentIndex]?.scrollIntoView({ block: 'nearest' });
+  }
+
+  function initSearch() {
+    // 清理旧的事件监听器
+    if (abortController) {
+      abortController.abort();
+    }
+    abortController = new AbortController();
+    const { signal } = abortController;
+
+    // 使用事件委托绑定到 document
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+      
+      // 搜索按钮点击
+      if (target.closest('[data-search-btn]')) {
+        e.preventDefault();
+        e.stopPropagation();
+        openSearch();
+        return;
+      }
+      
+      // 关闭按钮点击
+      if (target.closest('[data-search-close]')) {
+        e.preventDefault();
+        closeSearch();
+        return;
+      }
+      
+      // 背景遮罩点击
+      if (target.closest('[data-search-backdrop]')) {
+        closeSearch();
+        return;
+      }
+    }, { signal });
+
+    // 键盘快捷键
+    document.addEventListener('keydown', (e) => {
+      const modal = document.querySelector('[data-search-modal]');
+      if (!modal) return;
+      
+      const isOpen = !modal.classList.contains('hidden');
+      
+      // ESC 关闭
+      if (e.key === 'Escape' && isOpen) {
+        closeSearch();
+        return;
+      }
+      
+      // Cmd/Ctrl + K 切换
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (isOpen) {
+          closeSearch();
+        } else {
+          openSearch();
+        }
+        return;
+      }
+      
+      // 键盘导航（仅在打开时）
+      if (isOpen && ['ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) {
+        handleKeyboardNavigation(e);
+      }
+    }, { signal });
+
+    // 搜索输入
+    document.addEventListener('input', (e) => {
+      const target = e.target;
+      if (!target.matches('[data-search-input]')) return;
+      
+      const query = target.value.trim();
+      
+      if (searchTimeout) clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => handleSearch(query), 200);
+    }, { signal });
+  }
+
+  function cleanupSearch() {
+    if (abortController) {
+      abortController.abort();
+      abortController = null;
+    }
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+      searchTimeout = null;
+    }
+    // 确保模态框关闭
+    const modal = document.querySelector('[data-search-modal]');
+    if (modal && !modal.classList.contains('hidden')) {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // 初始化
   initSearch();
+  
+  // View Transitions 支持
+  document.addEventListener('astro:before-swap', cleanupSearch);
   document.addEventListener('astro:page-load', initSearch);
-})();</script>  <!-- 语言切换 --> <a href="/zh/contact/" class="px-3 py-1.5 text-sm font-medium border border-gray-300 dark:border-gray-600 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors" title="切换到中文" data-astro-prefetch> 中文 </a> <!-- 主题切换 --> <button id="theme-toggle" class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="切换主题" title="切换主题"> <!-- 太阳图标（深色模式下显示） --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- 月亮图标（浅色模式下显示） --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function c(){const e=document.getElementById("theme-toggle");if(e){const t=e.cloneNode(!0);e.parentNode?.replaceChild(t,e),t.addEventListener("click",()=>{const n=document.documentElement.classList.contains("dark"),o=n?"light":"dark";document.documentElement.classList.toggle("dark",!n),localStorage.setItem("theme",o),window.dispatchEvent(new CustomEvent("theme-change",{detail:{theme:o}}))})}}c();document.addEventListener("astro:page-load",c);</script> <!-- 移动端菜单按钮 --> <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="打开菜单" aria-expanded="false"> <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg> </button> </div> </div> </div> <!-- 移动端导航菜单 --> <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"> <nav class="container mx-auto px-4 py-4 space-y-1"> <a href="/en/blog/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Home </a><a href="/en/blog/categories/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Categories </a><a href="/en/blog/archive/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Archive </a><a href="/en/about/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> About </a> </nav> </div> </header> <script type="module">function d(){const a=document.getElementById("mobile-menu-btn"),n=document.getElementById("mobile-menu");if(!a||!n)return;const e=a.cloneNode(!0);a.parentNode?.replaceChild(e,a),e.addEventListener("click",t=>{t.preventDefault(),t.stopPropagation();const i=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",String(!i)),n.classList.toggle("hidden")}),n.querySelectorAll("a").forEach(t=>{t.addEventListener("click",()=>{n.classList.add("hidden"),e.setAttribute("aria-expanded","false")})}),document.addEventListener("click",t=>{!n.contains(t.target)&&!e.contains(t.target)&&(n.classList.add("hidden"),e.setAttribute("aria-expanded","false"))})}d();document.addEventListener("astro:page-load",d);</script> <!-- 主内容区域 --> <main class="flex-1 container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 sm:py-12 max-w-6xl" data-astro-transition-scope="astro-ka5hbhd5-1">  <div class="max-w-2xl mx-auto"> <header class="text-center mb-12"> <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Get in Touch</h1> <p class="text-gray-600 dark:text-gray-400 text-lg">
-I'd love to hear from you. Feel free to reach out!
-</p> </header> <!-- Contact Methods --> <div class="grid gap-6 mb-12"> <!-- Email --> <a href="mailto:wenjie.xu.cn@outlook.com" class="group flex items-center gap-4 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all"> <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform"> <i class="fas fa-envelope text-xl"></i> </div> <div> <h3 class="font-semibold text-gray-900 dark:text-white">Email</h3> <p class="text-gray-600 dark:text-gray-400">wenjie.xu.cn@outlook.com</p> </div> </a> <!-- Social Links --> <a href="https://github.com/WayneXuCN" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all"> <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:scale-110 transition-transform"> <i class="fab fa-github text-xl"></i> </div> <div> <h3 class="font-semibold text-gray-900 dark:text-white">GitHub</h3> <p class="text-gray-600 dark:text-gray-400 text-sm">https://github.com/WayneXuCN</p> </div> </a><a href="https://scholar.google.com/citations?user=eWTidmsAAAAJ" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all"> <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:scale-110 transition-transform"> <i class="fas fa-graduation-cap text-xl"></i> </div> <div> <h3 class="font-semibold text-gray-900 dark:text-white">Google Scholar</h3> <p class="text-gray-600 dark:text-gray-400 text-sm">https://scholar.google.com/citations?user=eWTidmsAAAAJ</p> </div> </a><a href="mailto:wenjie.xu.cn@outlook.com" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all"> <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:scale-110 transition-transform"> <i class="fas fa-envelope text-xl"></i> </div> <div> <h3 class="font-semibold text-gray-900 dark:text-white">Email</h3> <p class="text-gray-600 dark:text-gray-400 text-sm">mailto:wenjie.xu.cn@outlook.com</p> </div> </a> </div> <!-- Message --> <div class="text-center p-8 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-100 dark:border-blue-800/50"> <p class="text-gray-700 dark:text-gray-300">
-For academic collaboration or research discussions, please include a brief introduction
-        about yourself and your research interests.
-</p> </div> </div>  </main> <!-- 页脚 --> <footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50"> <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-12"> <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> <!-- 站点信息 --> <div class="space-y-4"> <h3 class="text-lg font-semibold text-gray-900 dark:text-white"> Wenjie Xu&#39;s Blog </h3> <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed"> Sharing academic research, tutorials, and life reflections </p> </div> <!-- 快速链接 --> <div class="space-y-4"> <h3 class="text-lg font-semibold text-gray-900 dark:text-white"> Quick Links </h3> <ul class="space-y-2"> <li> <a href="/en/blog/categories/" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"> Categories </a> </li> <li> <a href="/en/blog/archive/" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"> Archive </a> </li> <li> <a href="/en/rss.xml" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors inline-flex items-center gap-1"> <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"> <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"></path> </svg> RSS Feed </a> </li> </ul> </div> <!-- 社交链接 --> <div class="space-y-4"> <h3 class="text-lg font-semibold text-gray-900 dark:text-white"> Connect </h3> <div class="flex space-x-4"> <a href="https://github.com/WayneXuCN" target="_blank" rel="noopener noreferrer" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" aria-label="GitHub" title="GitHub"> <i class="fab fa-github text-xl"></i> </a><a href="https://scholar.google.com/citations?user=eWTidmsAAAAJ" target="_blank" rel="noopener noreferrer" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" aria-label="Google Scholar" title="Google Scholar"> <i class="fas fa-graduation-cap text-xl"></i> </a><a href="mailto:wenjie.xu.cn@outlook.com" target="_blank" rel="noopener noreferrer" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" aria-label="Email" title="Email"> <i class="fas fa-envelope text-xl"></i> </a> </div> </div> </div> <!-- 底部版权 --> <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4"> <p class="text-sm text-gray-600 dark:text-gray-400"> © 2025 徐文杰. All rights reserved. </p> <p class="text-sm text-gray-500 dark:text-gray-500"> Powered by Astro <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="hover:text-gray-900 dark:hover:text-white transition-colors">  Astro
-</a> </p> </div> </div> </footer> <!-- 返回顶部按钮 --> <button id="back-to-top" class="fixed bottom-8 right-8 p-3 bg-gray-800 dark:bg-gray-700 text-white rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-gray-700 dark:hover:bg-gray-600 z-50" aria-label="返回顶部"> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path> </svg> </button> <script type="module">function n(){document.querySelectorAll("pre.astro-code").forEach(t=>{if(t.parentElement?.classList.contains("code-block-wrapper"))return;const o=document.createElement("div");o.className="code-block-wrapper",t.parentNode?.insertBefore(o,t),o.appendChild(t);const e=document.createElement("button");e.className="copy-code-btn",e.innerHTML=`
+})();</script>  <!-- 语言切换 --> <a href="/zh/contact/" class="px-3 py-1.5 text-sm font-medium border border-gray-300 dark:border-gray-600 rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors" title="切换到中文" data-astro-prefetch> 中文 </a> <!-- 主题切换 --> <button id="theme-toggle" class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="切换主题" title="切换主题"> <!-- 太阳图标（深色模式下显示） --> <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path> </svg> <!-- 月亮图标（浅色模式下显示） --> <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path> </svg> </button> <script type="module">function c(){const e=document.getElementById("theme-toggle");if(e){const t=e.cloneNode(!0);e.parentNode?.replaceChild(t,e),t.addEventListener("click",()=>{const n=document.documentElement.classList.contains("dark"),o=n?"light":"dark";document.documentElement.classList.toggle("dark",!n),localStorage.setItem("theme",o),window.dispatchEvent(new CustomEvent("theme-change",{detail:{theme:o}}))})}}c();document.addEventListener("astro:page-load",c);</script> <!-- 移动端菜单按钮 --> <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" aria-label="打开菜单" aria-expanded="false"> <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path> </svg> </button> </div> </div> </div> <!-- 移动端导航菜单 --> <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900"> <nav class="container mx-auto px-4 py-4 space-y-1"> <a href="/en/blog/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Home </a><a href="/en/blog/categories/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Categories </a><a href="/en/blog/archive/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> Archive </a><a href="/en/about/" class="block px-4 py-3 rounded-lg text-base font-medium transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"> About </a> </nav> </div> </header> <script type="module">let n=null;function c(){const i=document.getElementById("mobile-menu-btn"),o=document.getElementById("mobile-menu");if(!i||!o)return;n&&(document.removeEventListener("click",n),n=null);const d=i.cloneNode(!0);i.parentNode?.replaceChild(d,i),d.addEventListener("click",e=>{e.preventDefault(),e.stopPropagation();const t=d.getAttribute("aria-expanded")==="true";d.setAttribute("aria-expanded",String(!t)),o.classList.toggle("hidden")}),o.querySelectorAll("a").forEach(e=>{const t=e.cloneNode(!0);e.parentNode?.replaceChild(t,e),t.addEventListener("click",()=>{o.classList.add("hidden"),d.setAttribute("aria-expanded","false")})}),n=e=>{const t=document.getElementById("mobile-menu-btn"),a=document.getElementById("mobile-menu");!t||!a||!a.contains(e.target)&&!t.contains(e.target)&&(a.classList.add("hidden"),t.setAttribute("aria-expanded","false"))},document.addEventListener("click",n)}function r(){n&&(document.removeEventListener("click",n),n=null)}c();document.addEventListener("astro:before-swap",r);document.addEventListener("astro:page-load",c);</script> <!-- 主内容区域 --> <main class="flex-1 container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 sm:py-12 max-w-6xl" data-astro-transition-scope="astro-ka5hbhd5-1">  <div class="max-w-2xl mx-auto"> <header class="text-center mb-12"> <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4"> Contact </h1> <p class="text-gray-600 dark:text-gray-400 text-lg"> I&#39;d love to hear from you. Feel free to reach out! </p> </header> <!-- Contact Methods --> <div class="grid gap-6 mb-12"> <!-- Email --> <a href="mailto:wenjie.xu.cn@outlook.com" class="group flex items-center gap-4 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all"> <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform"> <i class="fas fa-envelope text-xl"></i> </div> <div> <h3 class="font-semibold text-gray-900 dark:text-white">Email</h3> <p class="text-gray-600 dark:text-gray-400">wenjie.xu.cn@outlook.com</p> </div> </a> <!-- Social Links --> <a href="https://github.com/WayneXuCN" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all"> <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:scale-110 transition-transform"> <i class="github text-xl"></i> </div> <div> <h3 class="font-semibold text-gray-900 dark:text-white">GitHub</h3> <p class="text-gray-600 dark:text-gray-400 text-sm">https://github.com/WayneXuCN</p> </div> </a><a href="https://scholar.google.com/citations?user=eWTidmsAAAAJ" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all"> <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:scale-110 transition-transform"> <i class="google-scholar text-xl"></i> </div> <div> <h3 class="font-semibold text-gray-900 dark:text-white">Google Scholar</h3> <p class="text-gray-600 dark:text-gray-400 text-sm">https://scholar.google.com/citations?user=eWTidmsAAAAJ</p> </div> </a><a href="mailto:wenjie.xu.cn@outlook.com" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-4 p-6 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all"> <div class="w-12 h-12 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 group-hover:scale-110 transition-transform"> <i class="email text-xl"></i> </div> <div> <h3 class="font-semibold text-gray-900 dark:text-white">Email</h3> <p class="text-gray-600 dark:text-gray-400 text-sm">mailto:wenjie.xu.cn@outlook.com</p> </div> </a> </div> <!-- Message --> <div class="text-center p-8 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-100 dark:border-blue-800/50 prose prose-gray dark:prose-invert max-w-none"> <p>For academic collaboration or research discussions, please include a brief introduction about yourself and your research interests.</p> </div> </div>  </main> <!-- 页脚 --> <footer class="border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50"> <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-12"> <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> <!-- 站点信息 --> <div class="space-y-4"> <h3 class="text-lg font-semibold text-gray-900 dark:text-white"> Wenjie Xu&#39;s Blog </h3> <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed"> Sharing academic research, tutorials, and life reflections </p> </div> <!-- 快速链接 --> <div class="space-y-4"> <h3 class="text-lg font-semibold text-gray-900 dark:text-white"> Quick Links </h3> <ul class="space-y-2"> <li> <a href="/en/blog/categories/" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"> Categories </a> </li> <li> <a href="/en/blog/archive/" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"> Archive </a> </li> <li> <a href="/en/rss.xml" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors inline-flex items-center gap-1"> <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"> <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z"></path> </svg> RSS Feed </a> </li> </ul> </div> <!-- 社交链接 --> <div class="space-y-4"> <h3 class="text-lg font-semibold text-gray-900 dark:text-white"> Connect </h3> <div class="flex space-x-4"> <a href="https://github.com/WayneXuCN" target="_blank" rel="noopener noreferrer" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" aria-label="GitHub" title="GitHub"> <i class="github text-xl"></i> </a><a href="https://scholar.google.com/citations?user=eWTidmsAAAAJ" target="_blank" rel="noopener noreferrer" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" aria-label="Google Scholar" title="Google Scholar"> <i class="google-scholar text-xl"></i> </a><a href="mailto:wenjie.xu.cn@outlook.com" target="_blank" rel="noopener noreferrer" class="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors" aria-label="Email" title="Email"> <i class="email text-xl"></i> </a> </div> </div> </div> <!-- 底部版权 --> <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4"> <p class="text-sm text-gray-600 dark:text-gray-400"> © 2025 徐文杰. All rights reserved. </p> <p class="text-sm text-gray-500 dark:text-gray-500"> Powered by Astro <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="hover:text-gray-900 dark:hover:text-white transition-colors">  Astro
+</a> </p> </div> </div> </footer> <!-- 返回顶部按钮 --> <button id="back-to-top" class="fixed bottom-8 right-8 p-3 bg-gray-800 dark:bg-gray-700 text-white rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-gray-700 dark:hover:bg-gray-600 z-50" aria-label="返回顶部"> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path> </svg> </button> <script type="module">const r=new WeakMap;function s(){document.querySelectorAll("pre.astro-code").forEach(t=>{if(t.parentElement?.classList.contains("code-block-wrapper"))return;const n=document.createElement("div");n.className="code-block-wrapper",t.parentNode?.insertBefore(n,t),n.appendChild(t);const e=document.createElement("button");e.className="copy-code-btn",e.innerHTML=`
             <span class="copy-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -285,4 +365,4 @@ For academic collaboration or research discussions, please include a brief intro
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </span>
-          `,e.setAttribute("aria-label","复制代码"),e.setAttribute("title","复制"),e.addEventListener("click",async()=>{const r=t.querySelector("code")?.textContent||t.textContent||"";try{await navigator.clipboard.writeText(r),e.classList.add("copied"),e.setAttribute("title","已复制"),setTimeout(()=>{e.classList.remove("copied"),e.setAttribute("title","复制")},2e3)}catch(i){console.error("复制失败:",i)}}),o.appendChild(e)})}n();document.addEventListener("astro:page-load",n);</script> <script type="module">const i=document.getElementById("back-to-top");i&&(window.addEventListener("scroll",()=>{window.scrollY>300?(i.classList.remove("opacity-0","invisible"),i.classList.add("opacity-100","visible")):(i.classList.add("opacity-0","invisible"),i.classList.remove("opacity-100","visible"))}),i.addEventListener("click",()=>{window.scrollTo({top:0,behavior:"smooth"})}));</script> </body> </html>
+          `,e.setAttribute("aria-label","复制代码"),e.setAttribute("title","复制");const c=async()=>{const i=t.querySelector("code")?.textContent||t.textContent||"";try{await navigator.clipboard.writeText(i),e.classList.add("copied"),e.setAttribute("title","已复制"),setTimeout(()=>{e.classList.remove("copied"),e.setAttribute("title","复制")},2e3)}catch(a){console.error("复制失败:",a)}};e.addEventListener("click",c),r.set(e,c),n.appendChild(e)})}function d(){document.querySelectorAll(".copy-code-btn").forEach(o=>{const t=r.get(o);t&&(o.removeEventListener("click",t),r.delete(o))})}s();document.addEventListener("astro:before-swap",d);document.addEventListener("astro:page-load",s);</script> <script type="module">let t=null,o=null;function i(){const e=document.getElementById("back-to-top");e&&(t&&window.removeEventListener("scroll",t),o&&e.removeEventListener("click",o),t=()=>{window.scrollY>300?(e.classList.remove("opacity-0","invisible"),e.classList.add("opacity-100","visible")):(e.classList.add("opacity-0","invisible"),e.classList.remove("opacity-100","visible"))},o=()=>{window.scrollTo({top:0,behavior:"smooth"})},window.addEventListener("scroll",t,{passive:!0}),e.addEventListener("click",o))}function n(){if(t&&(window.removeEventListener("scroll",t),t=null),o){const e=document.getElementById("back-to-top");e&&e.removeEventListener("click",o),o=null}}i();document.addEventListener("astro:before-swap",n);document.addEventListener("astro:page-load",i);</script> </body> </html>
