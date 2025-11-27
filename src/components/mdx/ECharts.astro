@@ -67,16 +67,19 @@ const id = `echarts-${Math.random().toString(36).slice(2, 9)}`;
 </figure>
 
 <script>
-  import * as echarts from 'echarts';
+  // 动态导入 ECharts 以减少初始 bundle 体积
+  // 存储图表实例和清理函数
+  const chartInstances = new Map<string, any>();
+  const resizeObservers = new Map<string, ResizeObserver>();
+  let themeObserver: MutationObserver | null = null;
 
-  // 存储图表实例
-  const chartInstances = new Map<string, echarts.ECharts>();
-
-  function initChart(container: HTMLElement) {
+  async function initChart(container: HTMLElement) {
     const configStr = container.dataset.config;
-    if (!configStr) return;
+    if (!configStr || container.dataset.initialized === 'true') return;
 
     try {
+      // 动态导入 ECharts
+      const echarts = await import('echarts');
       const config = JSON.parse(configStr);
       
       // 移除加载占位
@@ -87,23 +90,22 @@ const id = `echarts-${Math.random().toString(36).slice(2, 9)}`;
       const isDark = document.documentElement.classList.contains('dark');
       
       // 销毁已有实例
-      const existingChart = chartInstances.get(container.id);
-      if (existingChart) {
-        existingChart.dispose();
-      }
+      cleanupChart(container.id);
 
       // 创建图表实例
       const chart = echarts.init(container, isDark ? 'dark' : undefined);
       chartInstances.set(container.id, chart);
+      container.dataset.initialized = 'true';
 
       // 设置配置
       chart.setOption(config);
 
-      // 响应式调整
+      // 响应式调整 - 存储 ResizeObserver 以便清理
       const resizeObserver = new ResizeObserver(() => {
         chart.resize();
       });
       resizeObserver.observe(container);
+      resizeObservers.set(container.id, resizeObserver);
 
     } catch (error) {
       console.error('ECharts render error:', error);
@@ -111,8 +113,35 @@ const id = `echarts-${Math.random().toString(36).slice(2, 9)}`;
     }
   }
 
+  // 清理单个图表
+  function cleanupChart(id: string) {
+    const chart = chartInstances.get(id);
+    if (chart) {
+      chart.dispose();
+      chartInstances.delete(id);
+    }
+    const observer = resizeObservers.get(id);
+    if (observer) {
+      observer.disconnect();
+      resizeObservers.delete(id);
+    }
+  }
+
+  // 清理所有图表
+  function cleanupAllCharts() {
+    chartInstances.forEach((chart, id) => {
+      chart.dispose();
+    });
+    chartInstances.clear();
+    resizeObservers.forEach((observer) => {
+      observer.disconnect();
+    });
+    resizeObservers.clear();
+  }
+
   // 主题切换时重新渲染
-  function handleThemeChange() {
+  async function handleThemeChange() {
+    const echarts = await import('echarts');
     document.querySelectorAll<HTMLElement>('.echarts-chart[data-config]').forEach(container => {
       const chart = chartInstances.get(container.id);
       if (chart) {
@@ -134,27 +163,44 @@ const id = `echarts-${Math.random().toString(36).slice(2, 9)}`;
     document.querySelectorAll<HTMLElement>('.echarts-chart[data-config]').forEach(initChart);
   }
 
-  // 监听主题变化
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-      if (mutation.attributeName === 'class') {
-        handleThemeChange();
-      }
+  // 设置主题监听器（单例模式）
+  function setupThemeObserver() {
+    if (themeObserver) return;
+    
+    themeObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.attributeName === 'class') {
+          handleThemeChange();
+        }
+      });
     });
-  });
 
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class'],
-  });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
+
+  // 页面卸载前清理（View Transitions）
+  function handleBeforeSwap() {
+    cleanupAllCharts();
+  }
+
+  // 初始化
+  function init() {
+    initAllCharts();
+    setupThemeObserver();
+  }
 
   // 页面加载后初始化
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAllCharts);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    initAllCharts();
+    init();
   }
 
-  // 支持 View Transitions
-  document.addEventListener('astro:page-load', initAllCharts);
+  // 支持 View Transitions - 页面切换前清理
+  document.addEventListener('astro:before-swap', handleBeforeSwap);
+  // 支持 View Transitions - 新页面加载后初始化
+  document.addEventListener('astro:page-load', init);
 </script>

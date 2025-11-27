@@ -110,7 +110,6 @@ const seriesSchema = z.object({
 
 /**
  * i18n 翻译 Schema
- * 使用明确的结构而非 z.record(z.any()) 以获得类型安全
  */
 const i18nSchema = z.object({
   site: z.object({

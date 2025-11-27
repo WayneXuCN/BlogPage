@@ -21,7 +21,7 @@ const siteConfig = await getSiteConfig();
 // 获取导航项
 const navItems = await getNavItems(lang);
 
-// 检查当前路径是否匹配导航项 - 精确匹配逻辑
+// 检查当前路径是否匹配导航项
 function isActive(href: string): boolean {
   // 移除尾部斜杠进行比较
   const cleanHref = href.replace(/\/$/, '');
@@ -131,16 +131,27 @@ function isActive(href: string): boolean {
 
 <script>
   // 使用 astro:page-load 确保在 View Transitions 后重新绑定事件
+  // 使用命名函数和全局状态避免重复绑定
+  let mobileMenuInitialized = false;
+  let documentClickHandler: ((e: Event) => void) | null = null;
+
   function initMobileMenu() {
     const menuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenu = document.getElementById('mobile-menu');
 
     if (!menuBtn || !mobileMenu) return;
 
+    // 如果已经初始化过，先清理旧的事件监听器
+    if (documentClickHandler) {
+      document.removeEventListener('click', documentClickHandler);
+      documentClickHandler = null;
+    }
+
     // 移除旧的事件监听器（如果存在）
     const newMenuBtn = menuBtn.cloneNode(true) as HTMLElement;
     menuBtn.parentNode?.replaceChild(newMenuBtn, menuBtn);
 
+    // 菜单按钮点击事件
     newMenuBtn.addEventListener('click', e => {
       e.preventDefault();
       e.stopPropagation();
@@ -151,22 +162,45 @@ function isActive(href: string): boolean {
 
     // 点击链接后关闭菜单
     mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
+      // 移除旧监听器
+      const newLink = link.cloneNode(true) as HTMLElement;
+      link.parentNode?.replaceChild(newLink, link);
+      
+      newLink.addEventListener('click', () => {
         mobileMenu.classList.add('hidden');
         newMenuBtn.setAttribute('aria-expanded', 'false');
       });
     });
 
     // 点击外部关闭菜单
-    document.addEventListener('click', e => {
-      if (!mobileMenu.contains(e.target as Node) && !newMenuBtn.contains(e.target as Node)) {
-        mobileMenu.classList.add('hidden');
-        newMenuBtn.setAttribute('aria-expanded', 'false');
+    documentClickHandler = (e: Event) => {
+      const currentMenuBtn = document.getElementById('mobile-menu-btn');
+      const currentMobileMenu = document.getElementById('mobile-menu');
+      if (!currentMenuBtn || !currentMobileMenu) return;
+      
+      if (!currentMobileMenu.contains(e.target as Node) && !currentMenuBtn.contains(e.target as Node)) {
+        currentMobileMenu.classList.add('hidden');
+        currentMenuBtn.setAttribute('aria-expanded', 'false');
       }
-    });
+    };
+    
+    document.addEventListener('click', documentClickHandler);
+    mobileMenuInitialized = true;
+  }
+
+  // 页面切换前清理
+  function cleanupMobileMenu() {
+    if (documentClickHandler) {
+      document.removeEventListener('click', documentClickHandler);
+      documentClickHandler = null;
+    }
+    mobileMenuInitialized = false;
   }
 
   // 初始化和页面切换后重新初始化
   initMobileMenu();
+  
+  // View Transitions 支持
+  document.addEventListener('astro:before-swap', cleanupMobileMenu);
   document.addEventListener('astro:page-load', initMobileMenu);
 </script>

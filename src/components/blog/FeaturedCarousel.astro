@@ -140,6 +140,9 @@ const t = i18n[lang];
 )}
 
 <script>
+  // 存储每个轮播的清理函数
+  const carouselCleanups = new Map<Element, () => void>();
+
   function initCarousel() {
     const carousels = document.querySelectorAll('.featured-carousel');
     
@@ -186,42 +189,94 @@ const t = i18n[lang];
       function startAutoPlay() { if (autoPlay && !autoPlayTimer) autoPlayTimer = window.setInterval(nextSlide, interval); }
       function stopAutoPlay() { if (autoPlayTimer) { clearInterval(autoPlayTimer); autoPlayTimer = null; } }
       
-      [prevBtn, nextBtn].forEach((btn, i) => {
-        if (!btn) return;
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          stopAutoPlay();
-          i === 0 ? prevSlide() : nextSlide();
-          startAutoPlay();
-        });
-      });
+      // 按钮事件处理
+      const handlePrevClick = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+        stopAutoPlay();
+        prevSlide();
+        startAutoPlay();
+      };
       
+      const handleNextClick = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+        stopAutoPlay();
+        nextSlide();
+        startAutoPlay();
+      };
+      
+      prevBtn?.addEventListener('click', handlePrevClick);
+      nextBtn?.addEventListener('click', handleNextClick);
+      
+      // 指示器事件处理
+      const indicatorHandlers: Array<(e: Event) => void> = [];
       indicators.forEach((ind, index) => {
-        ind.addEventListener('click', (e) => {
+        const handler = (e: Event) => {
           e.preventDefault();
           e.stopPropagation();
           stopAutoPlay();
           showSlide(index);
           startAutoPlay();
-        });
+        };
+        indicatorHandlers.push(handler);
+        ind.addEventListener('click', handler);
       });
       
-      container.addEventListener('mouseenter', stopAutoPlay);
-      container.addEventListener('mouseleave', startAutoPlay);
+      // 鼠标悬停事件
+      const handleMouseEnter = () => stopAutoPlay();
+      const handleMouseLeave = () => startAutoPlay();
       
+      container.addEventListener('mouseenter', handleMouseEnter);
+      container.addEventListener('mouseleave', handleMouseLeave);
+      
+      // 触摸事件
       let touchStartX = 0;
-      container.addEventListener('touchstart', (e) => { touchStartX = (e as TouchEvent).changedTouches[0].screenX; stopAutoPlay(); }, { passive: true });
-      container.addEventListener('touchend', (e) => {
+      const handleTouchStart = (e: Event) => { 
+        touchStartX = (e as TouchEvent).changedTouches[0].screenX; 
+        stopAutoPlay(); 
+      };
+      const handleTouchEnd = (e: Event) => {
         const diff = touchStartX - (e as TouchEvent).changedTouches[0].screenX;
         if (Math.abs(diff) > 50) diff > 0 ? nextSlide() : prevSlide();
         startAutoPlay();
-      }, { passive: true });
+      };
       
+      container.addEventListener('touchstart', handleTouchStart, { passive: true });
+      container.addEventListener('touchend', handleTouchEnd, { passive: true });
+      
+      // 启动自动播放
       startAutoPlay();
+      
+      // 存储清理函数
+      carouselCleanups.set(carousel, () => {
+        stopAutoPlay();
+        prevBtn?.removeEventListener('click', handlePrevClick);
+        nextBtn?.removeEventListener('click', handleNextClick);
+        indicators.forEach((ind, i) => {
+          ind.removeEventListener('click', indicatorHandlers[i]);
+        });
+        container.removeEventListener('mouseenter', handleMouseEnter);
+        container.removeEventListener('mouseleave', handleMouseLeave);
+        container.removeEventListener('touchstart', handleTouchStart);
+        container.removeEventListener('touchend', handleTouchEnd);
+        carousel.removeAttribute('data-initialized');
+      });
     });
   }
   
+  // 清理所有轮播
+  function cleanupAllCarousels() {
+    carouselCleanups.forEach((cleanup, carousel) => {
+      cleanup();
+    });
+    carouselCleanups.clear();
+  }
+  
+  // 初始化
   initCarousel();
+  
+  // View Transitions 支持
+  document.addEventListener('astro:before-swap', cleanupAllCarousels);
   document.addEventListener('astro:page-load', initCarousel);
 </script>

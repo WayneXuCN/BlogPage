@@ -76,16 +76,18 @@ const fullSpec = {
 </figure>
 
 <script>
-  import embed from 'vega-embed';
-
+  // 动态导入 vega-embed 以减少初始 bundle 体积
   // 存储图表视图实例
-  const viewInstances = new Map<string, unknown>();
+  const viewInstances = new Map<string, any>();
+  let themeObserver: MutationObserver | null = null;
 
   async function initChart(container: HTMLElement) {
     const specStr = container.dataset.spec;
-    if (!specStr) return;
+    if (!specStr || container.dataset.initialized === 'true') return;
 
     try {
+      // 动态导入 vega-embed
+      const { default: embed } = await import('vega-embed');
       const spec = JSON.parse(specStr);
       
       // 移除加载占位
@@ -96,10 +98,7 @@ const fullSpec = {
       const isDark = document.documentElement.classList.contains('dark');
 
       // 销毁已有实例
-      const existingView = viewInstances.get(container.id);
-      if (existingView && typeof (existingView as any).finalize === 'function') {
-        (existingView as any).finalize();
-      }
+      cleanupChart(container.id);
 
       // 清空容器
       container.innerHTML = '';
@@ -117,6 +116,7 @@ const fullSpec = {
       });
 
       viewInstances.set(container.id, result.view);
+      container.dataset.initialized = 'true';
 
     } catch (error) {
       console.error('Vega-Lite render error:', error);
@@ -124,9 +124,34 @@ const fullSpec = {
     }
   }
 
+  // 清理单个图表
+  function cleanupChart(id: string) {
+    const view = viewInstances.get(id);
+    if (view && typeof view.finalize === 'function') {
+      view.finalize();
+      viewInstances.delete(id);
+    }
+  }
+
+  // 清理所有图表
+  function cleanupAllCharts() {
+    viewInstances.forEach((view, id) => {
+      if (view && typeof view.finalize === 'function') {
+        view.finalize();
+      }
+    });
+    viewInstances.clear();
+    // 重置初始化状态
+    document.querySelectorAll<HTMLElement>('.vega-chart[data-spec]').forEach(container => {
+      container.dataset.initialized = '';
+    });
+  }
+
   // 主题切换时重新渲染
   function handleThemeChange() {
     document.querySelectorAll<HTMLElement>('.vega-chart[data-spec]').forEach(container => {
+      // 标记为未初始化以强制重新渲染
+      container.dataset.initialized = '';
       initChart(container);
     });
   }
@@ -136,29 +161,46 @@ const fullSpec = {
     document.querySelectorAll<HTMLElement>('.vega-chart[data-spec]').forEach(initChart);
   }
 
-  // 监听主题变化
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-      if (mutation.attributeName === 'class') {
-        handleThemeChange();
-      }
+  // 设置主题监听器（单例模式）
+  function setupThemeObserver() {
+    if (themeObserver) return;
+    
+    themeObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.attributeName === 'class') {
+          handleThemeChange();
+        }
+      });
     });
-  });
 
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class'],
-  });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
+
+  // 页面卸载前清理（View Transitions）
+  function handleBeforeSwap() {
+    cleanupAllCharts();
+  }
+
+  // 初始化
+  function init() {
+    initAllCharts();
+    setupThemeObserver();
+  }
 
   // 页面加载后初始化
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAllCharts);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    initAllCharts();
+    init();
   }
 
-  // 支持 View Transitions
-  document.addEventListener('astro:page-load', initAllCharts);
+  // 支持 View Transitions - 页面切换前清理
+  document.addEventListener('astro:before-swap', handleBeforeSwap);
+  // 支持 View Transitions - 新页面加载后初始化
+  document.addEventListener('astro:page-load', init);
 </script>
 
 <style>

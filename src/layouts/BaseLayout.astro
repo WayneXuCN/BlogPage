@@ -2,7 +2,6 @@
 /**
  * BaseLayout.astro
  * 全局布局组件，包含 meta、manifest、GA 条件脚本、主题初始化
- * 博客系统基础布局
  */
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
@@ -306,11 +305,24 @@ const currentPath = Astro.url.pathname;
     </button>
     
     <script>
-      // 返回顶部按钮逻辑
-      const backToTopBtn = document.getElementById('back-to-top');
-      
-      if (backToTopBtn) {
-        window.addEventListener('scroll', () => {
+      // 返回顶部按钮逻辑 - 优化版本，添加事件清理
+      let scrollHandler: ((e: Event) => void) | null = null;
+      let backToTopClickHandler: ((e: Event) => void) | null = null;
+
+      function initBackToTop() {
+        const backToTopBtn = document.getElementById('back-to-top');
+        if (!backToTopBtn) return;
+
+        // 清理旧的事件监听器
+        if (scrollHandler) {
+          window.removeEventListener('scroll', scrollHandler);
+        }
+        if (backToTopClickHandler) {
+          backToTopBtn.removeEventListener('click', backToTopClickHandler);
+        }
+
+        // 定义新的处理函数
+        scrollHandler = () => {
           if (window.scrollY > 300) {
             backToTopBtn.classList.remove('opacity-0', 'invisible');
             backToTopBtn.classList.add('opacity-100', 'visible');
@@ -318,16 +330,43 @@ const currentPath = Astro.url.pathname;
             backToTopBtn.classList.add('opacity-0', 'invisible');
             backToTopBtn.classList.remove('opacity-100', 'visible');
           }
-        });
-        
-        backToTopBtn.addEventListener('click', () => {
+        };
+
+        backToTopClickHandler = () => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        };
+
+        // 添加事件监听器
+        window.addEventListener('scroll', scrollHandler, { passive: true });
+        backToTopBtn.addEventListener('click', backToTopClickHandler);
       }
+
+      function cleanupBackToTop() {
+        if (scrollHandler) {
+          window.removeEventListener('scroll', scrollHandler);
+          scrollHandler = null;
+        }
+        if (backToTopClickHandler) {
+          const btn = document.getElementById('back-to-top');
+          if (btn) {
+            btn.removeEventListener('click', backToTopClickHandler);
+          }
+          backToTopClickHandler = null;
+        }
+      }
+
+      // 初始化
+      initBackToTop();
+      
+      // View Transitions 支持
+      document.addEventListener('astro:before-swap', cleanupBackToTop);
+      document.addEventListener('astro:page-load', initBackToTop);
     </script>
     
     <script>
-      // 代码块复制按钮功能
+      // 代码块复制按钮功能 - 优化版本，添加事件清理
+      const copyBtnHandlers = new WeakMap<HTMLElement, (e: Event) => void>();
+
       function initCodeCopy() {
         const codeBlocks = document.querySelectorAll('pre.astro-code');
         
@@ -360,8 +399,9 @@ const currentPath = Astro.url.pathname;
           copyBtn.setAttribute('aria-label', '复制代码');
           copyBtn.setAttribute('title', '复制');
           
-          copyBtn.addEventListener('click', async () => {
-            const code = block.querySelector('code')?.textContent || block.textContent || '';
+          // 定义点击处理函数
+          const clickHandler = async () => {
+            const code = (block as HTMLElement).querySelector('code')?.textContent || (block as HTMLElement).textContent || '';
             
             try {
               await navigator.clipboard.writeText(code);
@@ -375,14 +415,31 @@ const currentPath = Astro.url.pathname;
             } catch (err) {
               console.error('复制失败:', err);
             }
-          });
+          };
+          
+          copyBtn.addEventListener('click', clickHandler);
+          copyBtnHandlers.set(copyBtn, clickHandler);
           
           wrapper.appendChild(copyBtn);
         });
       }
+
+      // 清理复制按钮事件（View Transitions 时调用）
+      function cleanupCodeCopy() {
+        document.querySelectorAll('.copy-code-btn').forEach(btn => {
+          const handler = copyBtnHandlers.get(btn as HTMLElement);
+          if (handler) {
+            btn.removeEventListener('click', handler);
+            copyBtnHandlers.delete(btn as HTMLElement);
+          }
+        });
+      }
       
-      // 初始化和页面切换后重新初始化
+      // 初始化
       initCodeCopy();
+      
+      // View Transitions 支持
+      document.addEventListener('astro:before-swap', cleanupCodeCopy);
       document.addEventListener('astro:page-load', initCodeCopy);
     </script>
   </body>

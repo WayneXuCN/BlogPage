@@ -48,13 +48,21 @@ const title = lang === 'zh' ? '目录' : 'Contents';
 
 <script>
   // 目录高亮当前章节
+  let tocObserver: IntersectionObserver | null = null;
+
   function initTocHighlight() {
     const tocLinks = document.querySelectorAll('.toc-link');
     const headings = document.querySelectorAll('article h2[id], article h3[id]');
 
     if (tocLinks.length === 0 || headings.length === 0) return;
 
-    const observer = new IntersectionObserver(
+    // 先清理旧的 observer
+    if (tocObserver) {
+      tocObserver.disconnect();
+      tocObserver = null;
+    }
+
+    tocObserver = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -95,16 +103,23 @@ const title = lang === 'zh' ? '目录' : 'Contents';
       }
     );
 
-    headings.forEach(heading => observer.observe(heading));
-
-    // View Transitions 后重新初始化
-    document.addEventListener('astro:after-swap', () => {
-      observer.disconnect();
-      initTocHighlight();
-    });
+    headings.forEach(heading => tocObserver!.observe(heading));
   }
 
+  // 清理函数
+  function cleanupTocHighlight() {
+    if (tocObserver) {
+      tocObserver.disconnect();
+      tocObserver = null;
+    }
+  }
+
+  // 初始化
   initTocHighlight();
+  
+  // View Transitions 支持
+  document.addEventListener('astro:before-swap', cleanupTocHighlight);
+  document.addEventListener('astro:page-load', initTocHighlight);
 </script>
 
 <style>

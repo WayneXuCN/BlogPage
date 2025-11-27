@@ -35,7 +35,7 @@ export default function Comments({ lang = 'zh', giscus }: CommentsProps) {
     const isDark = document.documentElement.classList.contains('dark');
     setTheme(isDark ? 'dark' : 'light');
 
-    // 监听主题变化 - 使用 MutationObserver 监听 class 变化
+    // 监听主题变化
     const observer = new MutationObserver(mutations => {
       mutations.forEach(mutation => {
         if (mutation.attributeName === 'class') {
@@ -57,7 +57,7 @@ export default function Comments({ lang = 'zh', giscus }: CommentsProps) {
 
     window.addEventListener('theme-change', handleThemeChange as EventListener);
 
-    // 监听 Astro 页面加载事件（用于 View Transitions）
+    // 监听 Astro 页面加载事件
     const handlePageLoad = () => {
       const isDark = document.documentElement.classList.contains('dark');
       setTheme(isDark ? 'dark' : 'light');

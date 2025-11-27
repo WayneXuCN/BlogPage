@@ -95,16 +95,22 @@ const defaultLayout = {
 </figure>
 
 <script>
-  import Plotly from 'plotly.js-dist-min';
+  // 动态导入 Plotly 以减少初始 bundle 体积
+  // 存储清理函数
+  const resizeObservers = new Map<string, ResizeObserver>();
+  let themeObserver: MutationObserver | null = null;
 
-  function initChart(container: HTMLElement) {
+  async function initChart(container: HTMLElement) {
     const dataStr = container.dataset.plotlyData;
     const layoutStr = container.dataset.plotlyLayout;
     const configStr = container.dataset.plotlyConfig;
 
-    if (!dataStr) return;
+    if (!dataStr || container.dataset.initialized === 'true') return;
 
     try {
+      // 动态导入 Plotly
+      const Plotly = (await import('plotly.js-dist-min')).default;
+      
       const data = JSON.parse(dataStr);
       const layout = layoutStr ? JSON.parse(layoutStr) : {};
       const config = configStr ? JSON.parse(configStr) : {};
@@ -137,14 +143,19 @@ const defaultLayout = {
         },
       };
 
+      // 清理已有实例
+      cleanupChart(container.id, container);
+      
       // 创建图表
-      Plotly.newPlot(container, data, themedLayout, config);
+      await Plotly.newPlot(container, data, themedLayout, config);
+      container.dataset.initialized = 'true';
 
-      // 响应式调整
+      // 响应式调整 - 存储 ResizeObserver 以便清理
       const resizeObserver = new ResizeObserver(() => {
         Plotly.Plots.resize(container);
       });
       resizeObserver.observe(container);
+      resizeObservers.set(container.id, resizeObserver);
 
     } catch (error) {
       console.error('Plotly render error:', error);
@@ -152,9 +163,46 @@ const defaultLayout = {
     }
   }
 
-  // 主题切换时重新渲染
-  function handleThemeChange() {
+  // 清理单个图表
+  async function cleanupChart(id: string, container?: HTMLElement) {
+    const observer = resizeObservers.get(id);
+    if (observer) {
+      observer.disconnect();
+      resizeObservers.delete(id);
+    }
+    // Plotly 清理
+    if (container) {
+      try {
+        const Plotly = (await import('plotly.js-dist-min')).default;
+        Plotly.purge(container);
+      } catch (e) {
+        // 忽略 - Plotly 可能未加载
+      }
+    }
+  }
+
+  // 清理所有图表
+  async function cleanupAllCharts() {
+    const Plotly = (await import('plotly.js-dist-min')).default;
     document.querySelectorAll<HTMLElement>('.plotly-chart[data-plotly-data]').forEach(container => {
+      try {
+        Plotly.purge(container);
+        container.dataset.initialized = '';
+      } catch (e) {
+        // 忽略
+      }
+    });
+    resizeObservers.forEach((observer) => {
+      observer.disconnect();
+    });
+    resizeObservers.clear();
+  }
+
+  // 主题切换时重新渲染
+  async function handleThemeChange() {
+    const Plotly = (await import('plotly.js-dist-min')).default;
+    
+    document.querySelectorAll<HTMLElement>('.plotly-chart[data-plotly-data]').forEach(async container => {
       const dataStr = container.dataset.plotlyData;
       const layoutStr = container.dataset.plotlyLayout;
       const configStr = container.dataset.plotlyConfig;
@@ -200,29 +248,46 @@ const defaultLayout = {
     document.querySelectorAll<HTMLElement>('.plotly-chart[data-plotly-data]').forEach(initChart);
   }
 
-  // 监听主题变化
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-      if (mutation.attributeName === 'class') {
-        handleThemeChange();
-      }
+  // 设置主题监听器（单例模式）
+  function setupThemeObserver() {
+    if (themeObserver) return;
+    
+    themeObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.attributeName === 'class') {
+          handleThemeChange();
+        }
+      });
     });
-  });
 
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class'],
-  });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
+
+  // 页面卸载前清理（View Transitions）
+  function handleBeforeSwap() {
+    cleanupAllCharts();
+  }
+
+  // 初始化
+  function init() {
+    initAllCharts();
+    setupThemeObserver();
+  }
 
   // 页面加载后初始化
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAllCharts);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    initAllCharts();
+    init();
   }
 
-  // 支持 View Transitions
-  document.addEventListener('astro:page-load', initAllCharts);
+  // 支持 View Transitions - 页面切换前清理
+  document.addEventListener('astro:before-swap', handleBeforeSwap);
+  // 支持 View Transitions - 新页面加载后初始化
+  document.addEventListener('astro:page-load', init);
 </script>
 
 <style is:global>

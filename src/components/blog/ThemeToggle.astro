@@ -37,7 +37,7 @@
     const themeToggle = document.getElementById('theme-toggle');
 
     if (themeToggle) {
-      // 移除旧的事件监听器（如果存在）
+      // 移除旧的事件监听器
       const newThemeToggle = themeToggle.cloneNode(true);
       themeToggle.parentNode?.replaceChild(newThemeToggle, themeToggle);
 
@@ -48,7 +48,7 @@
         document.documentElement.classList.toggle('dark', !isDark);
         localStorage.setItem('theme', newTheme);
 
-        // 触发自定义事件，供其他组件（如 giscus）监听
+        // 触发自定义事件，供其他组件监听
         window.dispatchEvent(
           new CustomEvent('theme-change', {
             detail: { theme: newTheme },

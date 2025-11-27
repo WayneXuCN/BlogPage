@@ -86,15 +86,17 @@ const id = `typogram-${Math.random().toString(36).slice(2, 9)}`;
 </figure>
 
 <script>
-  // 使用 CDN 加载 typograms
+  // 使用 CDN 加载 typograms - 改进版：添加清理逻辑
   let typogramsLoaded = false;
   let typogramsModule: any = null;
+  let themeObserver: MutationObserver | null = null;
 
   async function loadTypograms() {
     if (typogramsLoaded) return typogramsModule;
 
     try {
       // 从 CDN 加载 typograms (使用 esm.run CDN)
+      // 注意：建议将 typograms 添加到 package.json 依赖中以获得更好的缓存
       typogramsModule = await import('https://esm.run/typograms@0.5.1');
       typogramsLoaded = true;
       return typogramsModule;
@@ -106,7 +108,7 @@ const id = `typogram-${Math.random().toString(36).slice(2, 9)}`;
 
   async function renderTypogram(container: HTMLElement) {
     const code = container.dataset.code;
-    if (!code) return;
+    if (!code || container.dataset.initialized === 'true') return;
 
     try {
       const typograms = await loadTypograms();
@@ -132,6 +134,8 @@ const id = `typogram-${Math.random().toString(36).slice(2, 9)}`;
           svgEl.style.filter = 'invert(1)';
         }
       }
+      
+      container.dataset.initialized = 'true';
     } catch (error) {
       console.error('Typogram render error:', error);
       // 显示原始代码作为后备
@@ -159,29 +163,48 @@ const id = `typogram-${Math.random().toString(36).slice(2, 9)}`;
     document.querySelectorAll<HTMLElement>('.typograms-chart[data-code]').forEach(renderTypogram);
   }
 
-  // 监听主题变化
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-      if (mutation.attributeName === 'class') {
-        handleThemeChange();
-      }
+  // 设置主题监听器（单例模式）
+  function setupThemeObserver() {
+    if (themeObserver) return;
+    
+    themeObserver = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.attributeName === 'class') {
+          handleThemeChange();
+        }
+      });
     });
-  });
 
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['class'],
-  });
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
+
+  // 页面卸载前清理（View Transitions）
+  function handleBeforeSwap() {
+    // 重置初始化状态
+    document.querySelectorAll<HTMLElement>('.typograms-chart[data-code]').forEach(container => {
+      container.dataset.initialized = '';
+    });
+  }
+
+  // 初始化
+  function init() {
+    initAllTypograms();
+    setupThemeObserver();
+  }
 
   // 页面加载后初始化
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAllTypograms);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    initAllTypograms();
+    init();
   }
 
   // 支持 View Transitions
-  document.addEventListener('astro:page-load', initAllTypograms);
+  document.addEventListener('astro:before-swap', handleBeforeSwap);
+  document.addEventListener('astro:page-load', init);
 </script>
 
 <style>

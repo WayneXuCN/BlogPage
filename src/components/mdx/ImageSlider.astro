@@ -101,51 +101,110 @@ const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
 </figure>
 
 <script>
-  import Swiper from 'swiper';
-  import { Navigation, Pagination, Autoplay, Keyboard } from 'swiper/modules';
-  import 'swiper/css';
-  import 'swiper/css/navigation';
-  import 'swiper/css/pagination';
+  // 动态导入 Swiper 以减少初始 bundle 体积
+  // 存储 Swiper 实例和清理函数
+  const swiperInstances = new Map<string, any>();
+  let cssLoaded = false;
 
-  // 存储 Swiper 实例
-  const swiperInstances = new Map<string, Swiper>();
-
-  function initSlider(container: HTMLElement) {
-    const autoplay = container.dataset.autoplay === 'true';
-    const interval = parseInt(container.dataset.interval || '5000', 10);
-    const pagination = container.dataset.pagination === 'true';
-    const navigation = container.dataset.navigation === 'true';
-    const loop = container.dataset.loop === 'true';
-
-    // 销毁已有实例
-    const existingSwiper = swiperInstances.get(container.id);
-    if (existingSwiper) {
-      existingSwiper.destroy(true, true);
-    }
-
-    // 创建新实例
-    const swiper = new Swiper(container, {
-      modules: [Navigation, Pagination, Autoplay, Keyboard],
-      loop,
-      keyboard: {
-        enabled: true,
-      },
-      autoplay: autoplay ? {
-        delay: interval,
-        disableOnInteraction: false,
-      } : false,
-      pagination: pagination ? {
-        el: '.swiper-pagination',
-        clickable: true,
-        dynamicBullets: true,
-      } : false,
-      navigation: navigation ? {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      } : false,
+  async function loadSwiperCSS() {
+    if (cssLoaded) return;
+    
+    // 使用 link 标签动态加载 CSS（更可靠的方式）
+    const cssUrls = [
+      'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
+    ];
+    
+    const loadPromises = cssUrls.map(url => {
+      return new Promise<void>((resolve) => {
+        // 检查是否已加载
+        if (document.querySelector(`link[href="${url}"]`)) {
+          resolve();
+          return;
+        }
+        
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = url;
+        link.onload = () => resolve();
+        link.onerror = () => resolve(); // 即使失败也继续
+        document.head.appendChild(link);
+      });
     });
+    
+    await Promise.all(loadPromises);
+    cssLoaded = true;
+  }
 
-    swiperInstances.set(container.id, swiper);
+  async function initSlider(container: HTMLElement) {
+    if (container.dataset.initialized === 'true') return;
+
+    try {
+      // 加载 CSS
+      await loadSwiperCSS();
+      
+      // 动态导入 Swiper 和模块
+      const [{ default: Swiper }, { Navigation, Pagination, Autoplay, Keyboard }] = await Promise.all([
+        import('swiper'),
+        import('swiper/modules'),
+      ]);
+
+      const autoplay = container.dataset.autoplay === 'true';
+      const interval = parseInt(container.dataset.interval || '5000', 10);
+      const pagination = container.dataset.pagination === 'true';
+      const navigation = container.dataset.navigation === 'true';
+      const loop = container.dataset.loop === 'true';
+
+      // 销毁已有实例
+      cleanupSlider(container.id);
+
+      // 创建新实例
+      const swiper = new Swiper(container, {
+        modules: [Navigation, Pagination, Autoplay, Keyboard],
+        loop,
+        keyboard: {
+          enabled: true,
+        },
+        autoplay: autoplay ? {
+          delay: interval,
+          disableOnInteraction: false,
+        } : false,
+        pagination: pagination ? {
+          el: '.swiper-pagination',
+          clickable: true,
+          dynamicBullets: true,
+        } : false,
+        navigation: navigation ? {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        } : false,
+      });
+
+      swiperInstances.set(container.id, swiper);
+      container.dataset.initialized = 'true';
+    } catch (error) {
+      console.error('Swiper init error:', error);
+    }
+  }
+
+  // 清理单个轮播
+  function cleanupSlider(id: string) {
+    const swiper = swiperInstances.get(id);
+    if (swiper) {
+      swiper.destroy(true, true);
+      swiperInstances.delete(id);
+    }
+  }
+
+  // 清理所有轮播
+  function cleanupAllSliders() {
+    swiperInstances.forEach((swiper, id) => {
+      swiper.destroy(true, true);
+    });
+    swiperInstances.clear();
+    // 重置初始化状态
+    document.querySelectorAll<HTMLElement>('.swiper-container[data-autoplay]').forEach(container => {
+      container.dataset.initialized = '';
+    });
   }
 
   // 初始化所有轮播
@@ -160,7 +219,9 @@ const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
     initAllSliders();
   }
 
-  // 支持 View Transitions
+  // 支持 View Transitions - 页面切换前清理
+  document.addEventListener('astro:before-swap', cleanupAllSliders);
+  // 支持 View Transitions - 新页面加载后初始化
   document.addEventListener('astro:page-load', initAllSliders);
 </script>
 

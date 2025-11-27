@@ -8,6 +8,7 @@ import remarkGithubAdmonitions from 'remark-github-beta-blockquote-admonitions';
 import rehypeKatex from 'rehype-katex';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://astro.build/config
 export default defineConfig({
@@ -180,12 +181,33 @@ export default defineConfig({
 
   // Vite 配置
   vite: {
+    plugins: [
+      visualizer({
+        filename: './dist/stats.html',
+        open: false,
+        gzipSize: true,
+        brotliSize: true,
+      }),
+    ],
     optimizeDeps: {
-      include: ['react', 'react-dom', 'mermaid', 'chart.js'],
+      // 只预构建核心依赖，重型图表库使用动态导入
+      include: ['react', 'react-dom'],
+      exclude: ['echarts', 'plotly.js-dist-min', 'chart.js', 'vega', 'vega-lite', 'vega-embed', 'mermaid'],
     },
     // 解决 mermaid ESM 问题
     ssr: {
       noExternal: ['mermaid'],
+    },
+    build: {
+      // 代码分割配置
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // 将 React 单独打包
+            'react-vendor': ['react', 'react-dom'],
+          },
+        },
+      },
     },
   },
 });
