@@ -51,8 +51,9 @@ function getYear(post: CollectionEntry<'blog'>) {
 }
 
 // 按分类分组（可选功能）
-const postsByCategory = config.categorySections
-  ? Object.entries(
+type CategoryPostsEntry = [string, CollectionEntry<'blog'>[]];
+const postsByCategory: CategoryPostsEntry[] = config.categorySections
+  ? (Object.entries(
       posts.reduce(
         (acc, post) => {
           const cat = post.data.category;
@@ -62,7 +63,7 @@ const postsByCategory = config.categorySections
         },
         {} as Record<string, CollectionEntry<'blog'>[]>
       )
-    ).slice(0, 3) // 最多显示3个分类
+    ) as CategoryPostsEntry[]).slice(0, 3) // 最多显示3个分类
   : [];
 ---
 
@@ -115,36 +116,21 @@ const postsByCategory = config.categorySections
         {t.latestPosts}
       </h2>
     </div>
-    <div class='post-grid'>
-      {posts.map(post => <PostCard post={post} lang={lang} variant='default' showExcerpt={true} />)}
+    <div class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+      {posts.map((post, index) => {
+        // 首页第一篇文章作为 Hero 展示
+        const isHero = config.heroPost && index === 0 && currentPage === 1;
+        return (
+          <div class={isHero ? "md:col-span-2 lg:col-span-3" : ""}>
+            <PostCard 
+              post={post} 
+              lang={lang} 
+              variant={isHero ? 'featured' : 'default'} 
+              showExcerpt={true} 
+            />
+          </div>
+        );
+      })}
     </div>
   </section>
 </div>
-
-<style>
-  .post-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  @media (min-width: 640px) {
-    .post-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .post-grid > :global(article:not(:has(img))) {
-      grid-column: 1 / -1;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .post-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .post-grid > :global(article:not(:has(img))) {
-      grid-column: span 2;
-    }
-  }
-</style>

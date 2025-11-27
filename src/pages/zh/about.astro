@@ -4,16 +4,30 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getSiteConfig } from '../../utils/config';
+import { getCollection, render } from 'astro:content';
 
 const lang = 'zh' as const;
 
 // 获取配置
 const siteConfig = await getSiteConfig();
+
+// 获取关于页面内容
+const aboutPages = await getCollection('pages', (entry) => entry.id.startsWith('about/'));
+const aboutPage = aboutPages.find((page) => page.data.lang === lang);
+const { Content } = aboutPage ? await render(aboutPage) : { Content: null };
+
+// 定义社交链接类型
+interface SocialLink {
+  platform: string;
+  url: string;
+  icon: string;
+}
+const socialLinks: SocialLink[] = siteConfig.social || [];
 ---
 
 <BaseLayout
-  title={`关于 | ${siteConfig.title.zh}`}
-  description='关于徐文杰 - 学术研究者'
+  title={`${aboutPage?.data.title || '关于'} | ${siteConfig.title.zh}`}
+  description={aboutPage?.data.description || '关于徐文杰 - 学术研究者'}
   lang={lang}
 >
   <div class='max-w-3xl mx-auto'>
@@ -27,12 +41,14 @@ const siteConfig = await getSiteConfig();
       <h1 class='text-3xl font-bold text-gray-900 dark:text-white mb-2'>
         {siteConfig.author.zh}
       </h1>
-      <p class='text-gray-600 dark:text-gray-400 text-lg'>博士研究生 · 研究员</p>
+      <p class='text-gray-600 dark:text-gray-400 text-lg'>
+        {aboutPage?.data.subtitle || '博士研究生 · 研究员'}
+      </p>
 
       <!-- 社交链接 -->
       <div class='flex justify-center gap-4 mt-6'>
         {
-          siteConfig.social.map(link => (
+          socialLinks.map((link) => (
             <a
               href={link.url}
               target='_blank'
@@ -47,27 +63,20 @@ const siteConfig = await getSiteConfig();
       </div>
     </section>
 
-    <!-- 简介 -->
+    <!-- 内容区域 -->
     <section class='prose prose-lg dark:prose-invert max-w-none'>
-      <h2>关于我</h2>
-      <p>
-        你好！我是徐文杰，中国科学院科技战略咨询研究院的博士研究生。
-        我的研究方向主要集中在关键基础设施风险管理、系统韧性评估和应急决策优化。
-      </p>
-
-      <h2>研究方向</h2>
-      <ul>
-        <li><strong>关键基础设施风险</strong> — 研究能源、交通等基础设施网络的风险传播机制</li>
-        <li><strong>系统韧性评估</strong> — 开发数据驱动的韧性评估方法论</li>
-        <li><strong>应急决策优化</strong> — 在资源受限条件下的最优恢复策略研究</li>
-      </ul>
-
-      <h2>联系我</h2>
-      <p>
-        欢迎通过邮件联系我：
-        <a href={`mailto:${siteConfig.authorInfo.email}`}>{siteConfig.authorInfo.email}</a>
-        ，或通过上方的社交平台与我交流。
-      </p>
+      {Content ? <Content /> : (
+        <>
+          <h2>关于我</h2>
+          <p>你好！我是徐文杰</p>
+          <h2>联系我</h2>
+          <p>
+            欢迎通过邮件联系我：
+            <a href={`mailto:${siteConfig.authorInfo.email}`}>{siteConfig.authorInfo.email}</a>
+            ，或通过上方的社交平台与我交流。
+          </p>
+        </>
+      )}
     </section>
   </div>
 </BaseLayout>

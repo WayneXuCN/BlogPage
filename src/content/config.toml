@@ -30,38 +30,6 @@ avatar = "/assets/img/prof_pic.png"
 [authorInfo.bio]
 zh = "中国科学院博士研究生，研究方向为复杂系统风险管理与韧性评估"
 en = "PhD candidate at Chinese Academy of Sciences, focusing on complex system risk management and resilience assessment"
-
-# =============================================================================
-# 文章样式配置
-# Post Style Configuration
-# =============================================================================
-
-[post]
-# 文章排版风格: academic | minimal | magazine | distill
-# - academic: 经典学术风格，衬线字体，适合研究论文
-# - minimal: 简约现代风格，无衬线字体，干净清爽
-# - magazine: 杂志风格，大标题，视觉冲击力强
-# - distill: Distill.pub 学术期刊风格，侧边注释，适合深度技术文章
-style = "academic"
-
-# 目录位置: left | right | none
-# - left: 目录在左侧
-# - right: 目录在右侧
-# - none: 不显示目录（可在文章 frontmatter 中单独覆盖）
-tocPosition = "right"
-
-# 是否显示文章封面图
-showCoverImage = true
-
-# 是否显示作者信息
-showAuthor = true
-
-# 是否显示更新时间
-showUpdatedDate = true
-
-# 代码块样式: github | oneDark | dracula | nord
-codeTheme = "github"
-
 # =============================================================================
 # 首页配置
 # Home Page Configuration
@@ -93,6 +61,37 @@ heroPost = true
 sidebarPosts = 4
 categorySections = false
 postsPerCategory = 4
+
+# =============================================================================
+# 文章样式配置
+# Post Style Configuration
+# =============================================================================
+
+[post]
+# 文章排版风格: academic | minimal | magazine | distill
+# - academic: 经典学术风格，衬线字体，适合研究论文
+# - minimal: 简约现代风格，无衬线字体，干净清爽
+# - magazine: 杂志风格，大标题，视觉冲击力强
+# - distill: Distill.pub 学术期刊风格，侧边注释，适合深度技术文章
+style = "academic"
+
+# 目录位置: left | right | none
+# - left: 目录在左侧
+# - right: 目录在右侧
+# - none: 不显示目录（可在文章 frontmatter 中单独覆盖）
+tocPosition = "right"
+
+# 是否显示文章封面图
+showCoverImage = true
+
+# 是否显示作者信息
+showAuthor = true
+
+# 是否显示更新时间
+showUpdatedDate = true
+
+# 代码块样式: github | oneDark | dracula | nord
+codeTheme = "github"
 
 # =============================================================================
 # 功能开关
@@ -166,12 +165,12 @@ url = "mailto:wenjie.xu.cn@outlook.com"
 icon = "email"
 
 # =============================================================================
-# 分类配置（不使用 emoji，使用图标类名）
+# 分类配置
 # Categories Configuration
 # =============================================================================
 
 [categories.research]
-icon = "beaker"
+icon = ""
 color = "blue"
 [categories.research.name]
 zh = "学术研究"
@@ -181,7 +180,7 @@ zh = "学术论文、研究进展与科研心得"
 en = "Academic papers, research progress and insights"
 
 [categories.tutorial]
-icon = "book-open"
+icon = ""
 color = "green"
 [categories.tutorial.name]
 zh = "技术教程"
@@ -191,7 +190,7 @@ zh = "编程技巧、工具使用与实践指南"
 en = "Programming tips, tools and practical guides"
 
 [categories.thoughts]
-icon = "light-bulb"
+icon = ""
 color = "purple"
 [categories.thoughts.name]
 zh = "随想杂谈"
@@ -201,7 +200,7 @@ zh = "思考感悟与观点分享"
 en = "Reflections and perspectives"
 
 [categories.tools]
-icon = "wrench"
+icon = ""
 color = "orange"
 [categories.tools.name]
 zh = "工具推荐"
@@ -211,7 +210,7 @@ zh = "好用的软件、服务与资源推荐"
 en = "Useful software, services and resources"
 
 [categories.life]
-icon = "heart"
+icon = ""
 color = "pink"
 [categories.life.name]
 zh = "生活记录"

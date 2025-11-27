@@ -19,7 +19,12 @@ const { lang = 'zh', currentPath = '' } = Astro.props;
 const siteConfig = await getSiteConfig();
 
 // 获取导航项
-const navItems = await getNavItems(lang);
+interface NavItem {
+  key: string;
+  label: string;
+  href: string;
+}
+const navItems: NavItem[] = await getNavItems(lang);
 
 // 检查当前路径是否匹配导航项
 function isActive(href: string): boolean {
@@ -60,7 +65,7 @@ function isActive(href: string): boolean {
       <!-- 桌面端导航 -->
       <nav class='hidden md:flex items-center space-x-1'>
         {
-          navItems.map(item => (
+          navItems.map((item: NavItem) => (
             <a
               href={item.href}
               class={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -112,7 +117,7 @@ function isActive(href: string): boolean {
   >
     <nav class='container mx-auto px-4 py-4 space-y-1'>
       {
-        navItems.map(item => (
+        navItems.map((item: NavItem) => (
           <a
             href={item.href}
             class={`block px-4 py-3 rounded-lg text-base font-medium transition-colors ${

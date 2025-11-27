@@ -109,6 +109,17 @@ const seriesSchema = z.object({
 });
 
 /**
+ * 页面内容 Schema
+ * 用于关于页、联系页等静态页面的多语言内容
+ */
+const pageSchema = z.object({
+  lang: z.enum(['zh', 'en']),
+  title: z.string(),
+  description: z.string(),
+  subtitle: z.string().optional(),
+});
+
+/**
  * i18n 翻译 Schema
  */
 const i18nSchema = z.object({
@@ -427,6 +438,18 @@ const i18n = defineCollection({
 });
 
 /**
+ * 页面内容集合
+ * 文件结构：src/content/pages/[page]/[lang].mdx
+ */
+const pages = defineCollection({
+  loader: glob({
+    pattern: '**/*.{md,mdx}',
+    base: './src/content/pages',
+  }),
+  schema: pageSchema,
+});
+
+/**
  * 站点配置集合
  * 文件结构：src/content/config.toml
  */
@@ -447,6 +470,7 @@ export const collections = {
   authors,
   series,
   i18n,
+  pages,
   config,
 };
 
@@ -458,5 +482,6 @@ export const collections = {
 export type BlogSchema = z.infer<ReturnType<typeof blogSchema>>;
 export type AuthorSchema = z.infer<typeof authorSchema>;
 export type SeriesSchema = z.infer<typeof seriesSchema>;
+export type PageSchema = z.infer<typeof pageSchema>;
 export type I18nSchema = z.infer<typeof i18nSchema>;
 export type ConfigSchema = z.infer<typeof configSchema>;

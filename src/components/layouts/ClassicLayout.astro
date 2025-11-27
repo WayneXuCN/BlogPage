@@ -46,82 +46,15 @@ const t = i18n[lang];
       {currentPage === 1 ? t.latestPosts : t.allPosts}
     </h2>
     
-    <div class="space-y-8">
-      {posts.map((post) => {
-        // 从 post.id 提取 slug (格式: "zh/welcome-to-my-blog" -> "welcome-to-my-blog")
-        const slug = post.id.includes('/') ? post.id.split('/').pop()! : post.id;
-        return (
-          <article class="group">
-            <a 
-              href={`/${lang}/blog/${post.data.pubDate.getFullYear()}/${slug}/`}
-              class="block p-6 -mx-6 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-            >
-            <div class="flex flex-col sm:flex-row gap-6">
-              <!-- 内容 -->
-              <div class="flex-1 min-w-0">
-                <!-- 分类和日期 -->
-                <div class="flex items-center gap-3 text-sm mb-2">
-                  <span class="text-blue-600 dark:text-blue-400 font-medium">
-                    {lang === 'zh' ? '学术研究' : 'Research'}
-                  </span>
-                  <span class="text-gray-400">·</span>
-                  <time class="text-gray-500 dark:text-gray-400" datetime={post.data.pubDate.toISOString()}>
-                    {post.data.pubDate.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </time>
-                  {config.showReadingTime && (
-                    <>
-                      <span class="text-gray-400">·</span>
-                      <span class="text-gray-500 dark:text-gray-400">
-                        {Math.ceil(post.data.description.length / 100) + 2} {lang === 'zh' ? '分钟阅读' : 'min read'}
-                      </span>
-                    </>
-                  )}
-                </div>
-                
-                <!-- 标题 -->
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2">
-                  {post.data.title}
-                </h3>
-                
-                <!-- 摘要 -->
-                {config.showExcerpt && (
-                  <p class="text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
-                    {post.data.description.slice(0, config.excerptLength)}
-                    {post.data.description.length > config.excerptLength ? '...' : ''}
-                  </p>
-                )}
-                
-                <!-- 标签 -->
-                {config.showTags && post.data.tags && post.data.tags.length > 0 && (
-                  <div class="flex flex-wrap gap-2">
-                    {post.data.tags.slice(0, 4).map(tag => (
-                      <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-              
-              <!-- 封面图 -->
-              {post.data.image && (
-                <div class="sm:w-48 flex-shrink-0">
-                  <img
-                    src={post.data.image}
-                    alt={post.data.title}
-                    class="w-full h-32 sm:h-full object-cover rounded-xl"
-                    loading="lazy"
-                  />
-                </div>
-              )}
-            </div>
-          </a>
-        </article>
-      );})}
+    <div class="space-y-6">
+      {posts.map((post) => (
+        <PostCard 
+          post={post} 
+          lang={lang} 
+          variant="horizontal" 
+          showExcerpt={config.showExcerpt}
+        />
+      ))}
     </div>
     
     <!-- 分页 -->

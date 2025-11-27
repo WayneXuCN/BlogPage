@@ -37,7 +37,7 @@ const displayPosts = posts.slice(0, 4);
             post={post}
             lang={lang}
             variant="default"
-            showImage={true}
+            forceImage={true}
             showExcerpt={false}
           />
         ))}
@@ -45,12 +45,12 @@ const displayPosts = posts.slice(0, 4);
     ) : (
       <!-- 默认大卡片展示 -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {displayPosts.slice(0, 2).map((post, index) => (
+        {displayPosts.slice(0, 2).map((post) => (
           <PostCard
             post={post}
             lang={lang}
-            variant={index === 0 ? 'featured' : 'featured'}
-            showImage={true}
+            variant="featured"
+            forceImage={true}
           />
         ))}
       </div>

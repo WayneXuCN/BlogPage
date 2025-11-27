@@ -4,23 +4,39 @@
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getSiteConfig } from '../../utils/config';
+import { getCollection, render } from 'astro:content';
 
 const lang = 'en' as const;
 
 // 获取配置
 const siteConfig = await getSiteConfig();
+
+// 获取联系页面内容
+const contactPages = await getCollection('pages', (entry) => entry.id.startsWith('contact/'));
+const contactPage = contactPages.find((page) => page.data.lang === lang);
+const { Content } = contactPage ? await render(contactPage) : { Content: null };
+
+// 定义社交链接类型
+interface SocialLink {
+  platform: string;
+  url: string;
+  icon: string;
+}
+const socialLinks: SocialLink[] = siteConfig.social || [];
 ---
 
 <BaseLayout
-  title={`Contact | ${siteConfig.title.en}`}
-  description='Get in touch with Wenjie Xu'
+  title={`${contactPage?.data.title || 'Contact'} | ${siteConfig.title.en}`}
+  description={contactPage?.data.description || 'Get in touch with Wenjie Xu'}
   lang={lang}
 >
   <div class='max-w-2xl mx-auto'>
     <header class='text-center mb-12'>
-      <h1 class='text-3xl font-bold text-gray-900 dark:text-white mb-4'>Get in Touch</h1>
+      <h1 class='text-3xl font-bold text-gray-900 dark:text-white mb-4'>
+        {contactPage?.data.title || 'Get in Touch'}
+      </h1>
       <p class='text-gray-600 dark:text-gray-400 text-lg'>
-        I'd love to hear from you. Feel free to reach out!
+        {contactPage?.data.subtitle || "I'd love to hear from you. Feel free to reach out!"}
       </p>
     </header>
 
@@ -44,7 +60,7 @@ const siteConfig = await getSiteConfig();
 
       <!-- Social Links -->
       {
-        siteConfig.social.map(link => (
+        socialLinks.map(link => (
           <a
             href={link.url}
             target='_blank'
@@ -65,12 +81,14 @@ const siteConfig = await getSiteConfig();
 
     <!-- Message -->
     <div
-      class='text-center p-8 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-100 dark:border-blue-800/50'
+      class='text-center p-8 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-100 dark:border-blue-800/50 prose prose-gray dark:prose-invert max-w-none'
     >
-      <p class='text-gray-700 dark:text-gray-300'>
-        For academic collaboration or research discussions, please include a brief introduction
-        about yourself and your research interests.
-      </p>
+      {Content ? <Content /> : (
+        <p class='text-gray-700 dark:text-gray-300'>
+          For academic collaboration or research discussions, please include a brief introduction
+          about yourself and your research interests.
+        </p>
+      )}
     </div>
   </div>
 </BaseLayout>
