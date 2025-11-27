@@ -1,6 +1,6 @@
 ---
 title: 'Building a Personal Blog with Astro: A Complete Guide'
-description: 'Learn how to create a modern, fast, and SEO-friendly personal blog using Astro, featuring MDX support, dark mode, and internationalization.'
+description: 'Learn how to create a modern, fast, and SEO-friendly personal blog using Astro, featuring Markdown support, dark mode, and internationalization.'
 pubDate: 2024-03-15T10:00:00
 updatedDate: 2024-11-18T14:30:00
 image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6'
@@ -17,13 +17,12 @@ toc: true
 comments: true
 ---
 
-import Callout from '@components/mdx/Callout.astro';
-
 ## Why Astro?
 
 Astro is a modern static site generator that offers the best of both worlds: the developer experience of component-based frameworks and the performance of static HTML.
 
-<Callout type='tip'>Astro ships zero JavaScript by default, making your site blazing fast!</Callout>
+> [!TIP]
+> Astro ships zero JavaScript by default, making your site blazing fast!
 
 ### Key Features
 
@@ -98,27 +97,15 @@ const posts = await getCollection('blog');
 const featuredPosts = posts.filter(post => post.data.featured);
 ```
 
-## Adding MDX Support
+## Adding Markdown Support
 
-MDX allows you to use JSX components in your Markdown files.
+Astro has built-in Markdown support with powerful remark/rehype plugin ecosystem.
 
-### Installation
+### Key Plugins
 
-```bash
-bun add @astrojs/mdx
-```
-
-### Configuration
-
-```javascript
-// astro.config.mjs
-import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
-
-export default defineConfig({
-  integrations: [mdx()],
-});
-```
+- `remark-math` + `rehype-katex` - Math equations
+- `rehype-slug` - Heading anchors
+- `rehype-autolink-headings` - Clickable headings
 
 ## Dark Mode with Tailwind
 
@@ -167,7 +154,8 @@ export default defineConfig({
 
 ## Performance Optimization
 
-<Callout type='warning'>Always test your site's performance before and after optimization!</Callout>
+> [!WARNING]
+> Always test your site's performance before and after optimization!
 
 ### Image Optimization
 

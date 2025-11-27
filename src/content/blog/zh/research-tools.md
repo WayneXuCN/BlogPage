@@ -15,15 +15,14 @@ toc: true
 comments: true
 ---
 
-import Callout from '@components/mdx/Callout.astro';
-
 ## 前言
 
 工欲善其事，必先利其器。合适的工具能够大大提升科研效率。以下是我在日常工作中经常使用的工具清单。
 
 ## 1. 文献管理 - Zotero
 
-<Callout type='info'>Zotero 是我目前主力使用的文献管理工具，开源免费且功能强大。</Callout>
+> [!NOTE]
+> Zotero 是我目前主力使用的文献管理工具，开源免费且功能强大。
 
 **优点：**
 

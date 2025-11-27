@@ -15,15 +15,12 @@ toc: true
 comments: true
 ---
 
-import Callout from '@components/mdx/Callout.astro';
-
 ## Introduction
 
 Welcome to my academic blog! I'm Wenjie Xu, currently a Ph.D. candidate at the Institutes of Science and Development, Chinese Academy of Sciences.
 
-<Callout type='info'>
-  This is my new blog built with Astro, featuring MDX support, math formulas, and code highlighting.
-</Callout>
+> [!NOTE]
+> This is my new blog built with Astro, featuring Markdown support, math formulas, and code highlighting.
 
 ## About My Research
 

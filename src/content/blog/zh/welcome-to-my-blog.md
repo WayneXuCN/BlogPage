@@ -17,14 +17,12 @@ comments: true
 math: true
 ---
 
-import Callout from '@components/mdx/Callout.astro';
-import Figure from '@components/mdx/Figure.astro';
-
 ## 前言
 
 欢迎来到我的学术博客！我是徐文杰，目前是中国科学院科技战略咨询研究院的博士研究生。
 
-<Callout type='info'>这是我使用 Astro 搭建的新博客，支持 MDX、数学公式、代码高亮等功能。</Callout>
+> [!NOTE]
+> 这是我使用 Astro 搭建的新博客，支持 Markdown、数学公式、代码高亮等功能。
 
 ## 关于我的研究
 

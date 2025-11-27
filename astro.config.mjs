@@ -4,7 +4,10 @@ import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
+import remarkGithubAdmonitions from 'remark-github-beta-blockquote-admonitions';
 import rehypeKatex from 'rehype-katex';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
 // https://astro.build/config
 export default defineConfig({
@@ -83,9 +86,23 @@ export default defineConfig({
 
   // Markdown 配置
   markdown: {
-    // 数学公式支持
-    remarkPlugins: [remarkMath],
+    // remark 插件（Markdown AST 处理）
+    remarkPlugins: [
+      remarkMath,
+      remarkGithubAdmonitions,
+    ],
+    // rehype 插件（HTML AST 处理）
     rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: 'wrap',
+          properties: {
+            class: 'heading-anchor',
+          },
+        },
+      ],
       [
         rehypeKatex,
         {

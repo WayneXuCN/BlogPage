@@ -1,10 +1,12 @@
+import typography from '@tailwindcss/typography';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    './src/pages/**/*.{astro,js,ts,jsx,tsx,mdx}',
-    './src/layouts/**/*.{astro,js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{astro,js,ts,jsx,tsx,mdx}',
-    './src/content/**/*.{mdx,md}',
+    './src/pages/**/*.{astro,js,ts,jsx,tsx,md,mdx}',
+    './src/layouts/**/*.{astro,js,ts,jsx,tsx,md,mdx}',
+    './src/components/**/*.{astro,js,ts,jsx,tsx,md,mdx}',
+    './src/content/**/*.{md,mdx}',
   ],
   darkMode: 'class',
   theme: {
@@ -80,5 +82,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [typography],
 };

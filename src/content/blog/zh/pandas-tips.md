@@ -16,13 +16,12 @@ toc: true
 comments: true
 ---
 
-import Callout from '@components/mdx/Callout.astro';
-
 ## 引言
 
 Pandas 是 Python 数据分析的核心库，本文分享一些实用的高级技巧。
 
-<Callout type='tip'>本文示例代码基于 Pandas 2.0+ 版本，部分新特性可能在旧版本中不可用。</Callout>
+> [!TIP]
+> 本文示例代码基于 Pandas 2.0+ 版本，部分新特性可能在旧版本中不可用。
 
 ## 1. 链式调用与 pipe()
 
