@@ -1,0 +1,194 @@
+# =============================================================================
+# 站点配置文件
+# Site Configuration
+# =============================================================================
+
+url = "https://blog.wenjiexu.site"
+
+[title]
+zh = "徐文杰的博客"
+en = "Wenjie Xu's Blog"
+
+[description]
+zh = "分享学术研究、技术教程与生活感悟"
+en = "Sharing academic research, tutorials, and life reflections"
+
+[author]
+zh = "徐文杰"
+en = "Wenjie Xu"
+
+# =============================================================================
+# 作者详细信息
+# Author Information
+# =============================================================================
+
+[authorInfo]
+name = "徐文杰"
+email = "wenjie.xu.cn@outlook.com"
+avatar = "/assets/img/prof_pic.png"
+
+[authorInfo.bio]
+zh = "中国科学院博士研究生，研究方向为复杂系统风险管理与韧性评估"
+en = "PhD candidate at Chinese Academy of Sciences, focusing on complex system risk management and resilience assessment"
+
+# =============================================================================
+# 首页配置
+# Home Page Configuration
+# =============================================================================
+
+[home]
+layout = "classic"          # classic | grid | magazine
+postsPerPage = 10
+showFeatured = true
+featuredCount = 5
+carouselAutoPlay = true
+carouselInterval = 5000
+
+# =============================================================================
+# 布局配置
+# Layout Configuration
+# =============================================================================
+
+[layouts.classic]
+showExcerpt = true
+excerptLength = 200
+
+[layouts.grid]
+columns = 3
+showTags = true
+
+[layouts.magazine]
+heroPost = true
+sidebarPosts = 4
+categorySections = false
+postsPerCategory = 4
+
+# =============================================================================
+# 功能开关
+# Feature Toggles
+# =============================================================================
+
+[features]
+comments = true
+search = true
+rss = true
+toc = true
+relatedPosts = true
+readingTime = true
+seriesNav = true
+darkMode = true
+readingProgress = true
+socialShare = true
+
+# =============================================================================
+# Giscus 评论配置
+# Giscus Comments Configuration
+# =============================================================================
+
+[giscus]
+repo = "WayneXuCN/blog-comments"
+repoId = "R_kgDOxxxxxx"
+category = "Announcements"
+categoryId = "DIC_kwDOxxxxxx"
+mapping = "pathname"
+lang = "zh-CN"
+
+# =============================================================================
+# 导航配置
+# Navigation Configuration
+# =============================================================================
+
+[[nav]]
+key = "home"
+href = "/blog/"
+icon = "home"
+
+[[nav]]
+key = "categories"
+href = "/blog/categories/"
+icon = "folder"
+
+[[nav]]
+key = "archive"
+href = "/blog/archive/"
+icon = "archive"
+
+[[nav]]
+key = "about"
+href = "/about/"
+icon = "user"
+
+# =============================================================================
+# 社交链接
+# Social Links
+# =============================================================================
+
+[[social]]
+platform = "GitHub"
+url = "https://github.com/WayneXuCN"
+icon = "fab fa-github"
+
+[[social]]
+platform = "Google Scholar"
+url = "https://scholar.google.com/citations?user=eWTidmsAAAAJ"
+icon = "fas fa-graduation-cap"
+
+[[social]]
+platform = "Email"
+url = "mailto:wenjie.xu.cn@outlook.com"
+icon = "fas fa-envelope"
+
+# =============================================================================
+# 分类配置
+# Categories Configuration
+# =============================================================================
+
+[categories.research]
+icon = "🔬"
+color = "blue"
+[categories.research.name]
+zh = "学术研究"
+en = "Research"
+[categories.research.description]
+zh = "学术论文、研究进展与科研心得"
+en = "Academic papers, research progress and insights"
+
+[categories.tutorial]
+icon = "📚"
+color = "green"
+[categories.tutorial.name]
+zh = "技术教程"
+en = "Tutorial"
+[categories.tutorial.description]
+zh = "编程技巧、工具使用与实践指南"
+en = "Programming tips, tools and practical guides"
+
+[categories.thoughts]
+icon = "💭"
+color = "purple"
+[categories.thoughts.name]
+zh = "随想杂谈"
+en = "Thoughts"
+[categories.thoughts.description]
+zh = "思考感悟与观点分享"
+en = "Reflections and perspectives"
+
+[categories.tools]
+icon = "🛠️"
+color = "orange"
+[categories.tools.name]
+zh = "工具推荐"
+en = "Tools"
+[categories.tools.description]
+zh = "好用的软件、服务与资源推荐"
+en = "Useful software, services and resources"
+
+[categories.life]
+icon = "🌱"
+color = "pink"
+[categories.life.name]
+zh = "生活记录"
+en = "Life"
+[categories.life.description]
+zh = "日常生活、旅行与随笔"
+en = "Daily life, travel and essays"

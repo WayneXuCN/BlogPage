@@ -2,10 +2,11 @@ import { getEntry } from 'astro:content';
 
 /**
  * 获取站点配置
+ * 配置文件现在是 src/content/config.toml，entry id 为 'config'
  */
 export async function getSiteConfig() {
   try {
-    const configEntry = await getEntry('config', 'site');
+    const configEntry = await getEntry('config', 'config');
     return configEntry?.data;
   } catch (error) {
     console.error('Failed to load site config:', error);

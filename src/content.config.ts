@@ -379,11 +379,11 @@ const blog = defineCollection({
 
 /**
  * 作者集合
- * 文件结构：src/content/authors/[id].json
+ * 文件结构：src/content/authors/[id].yaml
  */
 const authors = defineCollection({
   loader: glob({
-    pattern: '**/*.json',
+    pattern: '**/*.yaml',
     base: './src/content/authors',
   }),
   schema: authorSchema,
@@ -391,11 +391,11 @@ const authors = defineCollection({
 
 /**
  * 系列文章元数据集合
- * 文件结构：src/content/series/[id].json
+ * 文件结构：src/content/series/[id].yaml
  */
 const series = defineCollection({
   loader: glob({
-    pattern: '**/*.json',
+    pattern: '**/*.yaml',
     base: './src/content/series',
   }),
   schema: seriesSchema,
@@ -403,11 +403,11 @@ const series = defineCollection({
 
 /**
  * i18n 翻译集合
- * 文件结构：src/content/i18n/[lang].json
+ * 文件结构：src/content/i18n/[lang].yaml
  */
 const i18n = defineCollection({
   loader: glob({
-    pattern: '**/*.json',
+    pattern: '**/*.yaml',
     base: './src/content/i18n',
   }),
   schema: i18nSchema,
@@ -415,12 +415,12 @@ const i18n = defineCollection({
 
 /**
  * 站点配置集合
- * 文件结构：src/content/config/site.json
+ * 文件结构：src/content/config.toml
  */
 const config = defineCollection({
   loader: glob({
-    pattern: '**/*.json',
-    base: './src/content/config',
+    pattern: '*.toml',
+    base: './src/content',
   }),
   schema: configSchema,
 });
