@@ -1,0 +1,107 @@
+---
+title: "PhotoGallery 相册组件使用指南"
+description: "学习如何使用 PhotoGallery 组件创建带灯箱效果的图片画廊"
+pubDate: "2025-01-16"
+tags: [PhotoGallery, 相册, 灯箱, 教程]
+category: tutorial
+toc: true
+lang: zh
+---
+
+import { PhotoGallery, Callout } from '@/components/mdx';
+
+本文介绍如何在博客中使用 PhotoGallery 组件创建精美的图片画廊。
+
+<Callout type="info" title="关于 PhotoGallery">
+PhotoGallery 基于 PhotoSwipe 构建，支持点击放大、手势操作、键盘导航和分享功能。
+</Callout>
+
+## 三列画廊
+
+<PhotoGallery
+  images={[
+    {
+      src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop",
+      thumb: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop",
+      alt: "山峰风景",
+      title: "阿尔卑斯山"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&h=800&fit=crop",
+      thumb: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop",
+      alt: "森林风景",
+      title: "神秘森林"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&h=800&fit=crop",
+      thumb: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400&h=300&fit=crop",
+      alt: "湖泊风景",
+      title: "静谧湖泊"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&h=800&fit=crop",
+      thumb: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=300&fit=crop",
+      alt: "草原风光",
+      title: "广袤草原"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1200&h=800&fit=crop",
+      thumb: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&h=300&fit=crop",
+      alt: "瀑布风景",
+      title: "飞瀑流泉"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1518173946687-a4c829df9721?w=1200&h=800&fit=crop",
+      thumb: "https://images.unsplash.com/photo-1518173946687-a4c829df9721?w=400&h=300&fit=crop",
+      alt: "海滩风景",
+      title: "金色沙滩"
+    }
+  ]}
+  columns={3}
+/>
+
+## 两列画廊
+
+<PhotoGallery
+  images={[
+    {
+      src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=800&fit=crop",
+      thumb: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop",
+      alt: "数据分析",
+      title: "数据可视化"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop",
+      thumb: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
+      alt: "商业图表",
+      title: "商业分析"
+    }
+  ]}
+  columns={2}
+/>
+
+## 使用方式
+
+```jsx
+import { PhotoGallery } from '@/components/mdx';
+
+<PhotoGallery
+  images={[
+    {
+      src: "完整图片URL",
+      thumb: "缩略图URL",
+      alt: "图片描述",
+      title: "图片标题"
+    },
+    // 更多图片...
+  ]}
+  columns={3}
+/>
+```
+
+## 参数说明
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| images | ImageItem[] | 必填 | 图片数组 |
+| columns | 2 \| 3 \| 4 | 3 | 每行显示的列数 |

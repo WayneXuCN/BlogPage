@@ -1,0 +1,100 @@
+---
+title: "Typograms ASCII 图表组件使用指南"
+description: "学习如何使用 Typograms 组件将 ASCII 艺术转换为 SVG 图形"
+pubDate: "2025-01-16"
+tags: [Typograms, ASCII, SVG, 图表, 教程]
+category: tutorial
+toc: true
+lang: zh
+---
+
+import { Typograms, Callout } from '@/components/mdx';
+
+本文介绍如何在博客中使用 Typograms 组件创建 ASCII 艺术图表。
+
+<Callout type="info" title="关于 Typograms">
+Typograms 将纯文本 ASCII 图形渲染为高质量的 SVG，非常适合创建简单的流程图和示意图。
+</Callout>
+
+## 流程图
+
+<Typograms>
+{`
++--------+     +--------+     +--------+
+| 开始   | --> | 处理   | --> | 结束   |
++--------+     +--------+     +--------+
+`}
+</Typograms>
+
+## 分支流程
+
+<Typograms>
+{`
+        +-------+
+        | 输入  |
+        +---+---+
+            |
+            v
+        +---+---+
+        | 判断  |
+        +---+---+
+           /|\\
+          / | \\
+         /  |  \\
+        v   v   v
+     +--++--++--+
+     |是||否||其|
+     +--++--++他|
+                +
+`}
+</Typograms>
+
+## 简单框图
+
+<Typograms>
+{`
++----------------+
+|    Header      |
++----+------+----+
+|    |      |    |
+|Side| Main |Side|
+|bar | Area |bar |
+|    |      |    |
++----+------+----+
+|    Footer      |
++----------------+
+`}
+</Typograms>
+
+## 箭头示意
+
+<Typograms>
+{`
+    A -----> B
+    ^        |
+    |        v
+    D <----- C
+`}
+</Typograms>
+
+## 使用方式
+
+```jsx
+import { Typograms } from '@/components/mdx';
+
+<Typograms>
+{`
++--------+     +--------+
+| 开始   | --> | 结束   |
++--------+     +--------+
+`}
+</Typograms>
+```
+
+## 绘图语法
+
+- `+` 角落连接点
+- `-` 水平线
+- `|` 垂直线
+- `>`, `<`, `^`, `v` 箭头方向
+- 文字直接写在框内

@@ -1,0 +1,218 @@
+---
+/**
+ * PhotoGallery.astro
+ * 图片画廊组件，支持多种灯箱库
+ *
+ * 用法：
+ * <PhotoGallery
+ *   images={[
+ *     { src: '/img/1.jpg', thumbnail: '/img/1-thumb.jpg', alt: '图片1' },
+ *     { src: '/img/2.jpg', alt: '图片2' },
+ *   ]}
+ *   columns={3}
+ *   lightbox="photoswipe"
+ *   caption="图片画廊"
+ * />
+ */
+interface ImageItem {
+  /** 原图路径 */
+  src: string;
+  /** 缩略图路径（可选，默认使用原图） */
+  thumbnail?: string;
+  /** 图片描述 */
+  alt?: string;
+  /** 图片宽度（用于灯箱） */
+  width?: number;
+  /** 图片高度（用于灯箱） */
+  height?: number;
+}
+
+interface Props {
+  /** 图片列表 */
+  images: ImageItem[];
+  /** 列数 */
+  columns?: 2 | 3 | 4;
+  /** 灯箱库类型 */
+  lightbox?: 'photoswipe' | 'lightbox2' | 'none';
+  /** 间距大小 */
+  gap?: 'sm' | 'md' | 'lg';
+  /** 画廊说明 */
+  caption?: string;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const {
+  images,
+  columns = 3,
+  lightbox = 'photoswipe',
+  gap = 'md',
+  caption,
+  class: className = '',
+} = Astro.props;
+
+// 生成唯一ID
+const galleryId = `gallery-${Math.random().toString(36).slice(2, 9)}`;
+
+// 间距类映射
+const gapClasses = {
+  sm: 'gap-2',
+  md: 'gap-4',
+  lg: 'gap-6',
+};
+
+// 列数类映射
+const columnClasses = {
+  2: 'grid-cols-2',
+  3: 'grid-cols-2 md:grid-cols-3',
+  4: 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
+};
+---
+
+<figure class:list={['photo-gallery-container my-8', className]}>
+  <div
+    id={galleryId}
+    class:list={[
+      'photo-gallery grid',
+      columnClasses[columns],
+      gapClasses[gap],
+    ]}
+    data-lightbox={lightbox}
+  >
+    {images.map((image, index) => (
+      <a
+        href={image.src}
+        class="gallery-item group relative block overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800 aspect-square"
+        data-pswp-width={image.width || 1200}
+        data-pswp-height={image.height || 800}
+        data-lightbox={lightbox === 'lightbox2' ? galleryId : undefined}
+        target="_blank"
+      >
+        <img
+          src={image.thumbnail || image.src}
+          alt={image.alt || `图片 ${index + 1}`}
+          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <svg class="w-10 h-10 text-white drop-shadow-lg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+          </svg>
+        </div>
+      </a>
+    ))}
+  </div>
+  
+  {caption && (
+    <figcaption class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+      {caption}
+    </figcaption>
+  )}
+</figure>
+
+<script>
+  // PhotoSwipe 初始化
+  async function initPhotoSwipe(gallery: HTMLElement) {
+    const PhotoSwipeLightbox = (await import('photoswipe/lightbox')).default;
+    await import('photoswipe/style.css');
+
+    const lightbox = new PhotoSwipeLightbox({
+      gallery,
+      children: 'a.gallery-item',
+      pswpModule: () => import('photoswipe'),
+      
+      // 配置选项
+      bgOpacity: 0.9,
+      showHideAnimationType: 'zoom',
+      
+      // UI 配置
+      imageClickAction: 'zoom',
+      tapAction: 'toggle-controls',
+      
+      // 缩放配置
+      initialZoomLevel: 'fit',
+      secondaryZoomLevel: 2,
+      maxZoomLevel: 4,
+    });
+
+    lightbox.init();
+  }
+
+  // Lightbox2 初始化
+  async function initLightbox2() {
+    // 动态加载 lightbox2
+    if (!(window as any).lightbox) {
+      await new Promise<void>((resolve) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/css/lightbox.min.css';
+        document.head.appendChild(link);
+
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/js/lightbox.min.js';
+        script.onload = () => {
+          // 配置 lightbox2
+          (window as any).lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'albumLabel': '图片 %1 / %2',
+          });
+          resolve();
+        };
+        document.head.appendChild(script);
+      });
+    }
+  }
+
+  // 初始化画廊
+  function initGallery(gallery: HTMLElement) {
+    const lightboxType = gallery.dataset.lightbox;
+
+    if (lightboxType === 'photoswipe') {
+      initPhotoSwipe(gallery);
+    } else if (lightboxType === 'lightbox2') {
+      initLightbox2();
+    }
+  }
+
+  // 初始化所有画廊
+  function initAllGalleries() {
+    document.querySelectorAll<HTMLElement>('.photo-gallery[data-lightbox]').forEach(initGallery);
+  }
+
+  // 页面加载后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllGalleries);
+  } else {
+    initAllGalleries();
+  }
+
+  // 支持 View Transitions
+  document.addEventListener('astro:page-load', initAllGalleries);
+</script>
+
+<style>
+  .gallery-item {
+    cursor: zoom-in;
+  }
+
+  /* PhotoSwipe 自定义样式 */
+  :global(.pswp) {
+    --pswp-bg: rgba(0, 0, 0, 0.9);
+  }
+
+  :global(.pswp__button) {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+  }
+
+  :global(.pswp__button:hover) {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  :global(.pswp__counter) {
+    font-family: inherit;
+    font-size: 14px;
+  }
+</style>

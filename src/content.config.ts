@@ -60,10 +60,14 @@ const blogSchema = ({ image }: { image: () => z.ZodType<unknown> }) =>
     // 作者 - 支持字符串或引用
     author: z.string().optional(),
 
-    // 自定义字段
+    // 显示控制
     math: z.boolean().default(false), // 是否包含数学公式
     toc: z.boolean().default(true), // 是否显示目录
     comments: z.boolean().default(true), // 是否启用评论
+
+    // 文章样式（可覆盖全局配置）
+    style: z.enum(['academic', 'minimal', 'magazine', 'distill']).optional(),
+    tocPosition: z.enum(['left', 'right', 'none']).optional(),
   });
 
 /**
@@ -250,6 +254,16 @@ const configSchema = z.object({
       zh: z.string(),
       en: z.string(),
     }),
+  }),
+
+  // 文章样式配置
+  post: z.object({
+    style: z.enum(['academic', 'minimal', 'magazine', 'distill']).default('academic'),
+    tocPosition: z.enum(['left', 'right', 'none']).default('right'),
+    showCoverImage: z.boolean().default(true),
+    showAuthor: z.boolean().default(true),
+    showUpdatedDate: z.boolean().default(true),
+    codeTheme: z.enum(['github', 'oneDark', 'dracula', 'nord']).default('github'),
   }),
 
   // 首页配置

@@ -1,7 +1,7 @@
 ---
 /**
  * PostLayout.astro
- * 博客文章详情页布局 - 包含阅读进度条和更新时间
+ * 博客文章详情页布局 - 支持多种排版风格
  */
 import { Image } from 'astro:assets';
 import BaseLayout from './BaseLayout.astro';
@@ -10,6 +10,7 @@ import PostMeta from '../components/blog/PostMeta.astro';
 import SeriesNav from '../components/blog/SeriesNav.astro';
 import RelatedPosts from '../components/blog/RelatedPosts.astro';
 import Comments from '../components/blog/Comments';
+import CategoryIcon from '../components/blog/CategoryIcon.astro';
 import {
   getSiteConfig,
   formatDate,
@@ -19,6 +20,7 @@ import {
 } from '../utils/config';
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
+import '../styles/prose-themes.css';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -42,6 +44,8 @@ const {
   toc = true,
   comments = true,
   author,
+  style: postStyle,
+  tocPosition: postTocPosition,
 } = post.data;
 
 // 类型安全的语言
@@ -49,6 +53,11 @@ const currentLang = lang as 'zh' | 'en';
 
 // 获取配置
 const siteConfig = await getSiteConfig();
+
+// 文章样式配置（frontmatter 优先，否则使用全局配置）
+const articleStyle = postStyle || siteConfig.post?.style || 'academic';
+const tocPosition = postTocPosition || siteConfig.post?.tocPosition || 'right';
+const showToc = toc && siteConfig.features.toc && headings.length > 0 && tocPosition !== 'none';
 
 // 计算阅读时间
 const readingTime = calculateReadingTime(content);
@@ -70,6 +79,20 @@ const relatedPosts = allPosts
   .filter((p: CollectionEntry<'blog'>) => p.id !== post.id)
   .filter((p: CollectionEntry<'blog'>) => p.data.category === category || p.data.tags?.some((t: string) => tags?.includes(t)))
   .slice(0, 4);
+
+// 根据样式和目录位置决定布局类
+const getLayoutClass = () => {
+  if (!showToc) return '';
+  if (tocPosition === 'left') return 'lg:grid lg:grid-cols-[220px_1fr] lg:gap-12';
+  return 'lg:grid lg:grid-cols-[1fr_220px] lg:gap-12';
+};
+
+// 根据样式获取 prose 类
+const getProseClass = () => {
+  const baseClasses = 'prose prose-lg dark:prose-invert max-w-none prose-headings:scroll-mt-24';
+  const styleClass = `prose-${articleStyle}`;
+  return `${baseClasses} ${styleClass}`;
+};
 
 // 多语言文案
 const i18n = {
@@ -134,7 +157,7 @@ const t = i18n[currentLang];
           href={getCategoryUrl(category, currentLang)}
           class='inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors'
         >
-          <span>{categoryConfig?.icon}</span>
+          <CategoryIcon icon={categoryConfig?.icon} class='w-4 h-4' />
           {categoryLabel}
         </a>
       </div>
@@ -214,18 +237,29 @@ const t = i18n[currentLang];
     }
 
     <!-- 主体内容区 -->
-    <div class='lg:grid lg:grid-cols-[1fr_220px] lg:gap-12'>
+    <div class={getLayoutClass()}>
+      <!-- 左侧目录（如果配置为左侧） -->
+      {
+        showToc && tocPosition === 'left' && (
+          <aside class='hidden lg:block'>
+            <div class='sticky top-24'>
+              <TableOfContents headings={headings} lang={lang} />
+            </div>
+          </aside>
+        )
+      }
+
       <!-- 文章内容 -->
       <div
-        class="prose prose-lg dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-code:before:content-none prose-code:after:content-none prose-code:px-1.5 prose-code:py-0.5 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:rounded prose-code:text-red-600 dark:prose-code:text-red-400 prose-pre:bg-gray-50 dark:prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-700 prose-img:rounded-xl prose-img:shadow-lg prose-blockquote:border-l-blue-500 prose-blockquote:bg-blue-50/50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-table:overflow-x-auto prose-hr:border-gray-200 dark:prose-hr:border-gray-800"
+        class={getProseClass()}
         data-pagefind-body
       >
         <slot />
       </div>
 
-      <!-- 侧边栏（目录） -->
+      <!-- 右侧目录（如果配置为右侧） -->
       {
-        toc && headings.length > 0 && (
+        showToc && tocPosition === 'right' && (
           <aside class='hidden lg:block'>
             <div class='sticky top-24'>
               <TableOfContents headings={headings} lang={lang} />

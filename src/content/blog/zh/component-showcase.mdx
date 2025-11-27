@@ -1,0 +1,446 @@
+---
+title: "MDX 组件功能展示"
+description: "展示博客中所有可用的 MDX 组件和功能模块"
+pubDate: "2025-01-15"
+tags: [demo, components, showcase]
+category: tutorial
+featured: true
+toc: true
+lang: zh
+math: true
+---
+
+import {
+  Callout,
+  Theorem,
+  Definition,
+  Proof,
+  Figure,
+  PhotoGrid,
+  Video,
+  Audio,
+  ImageSlider,
+  ImageComparison,
+  PhotoGallery,
+  Chart,
+  ECharts,
+  VegaLite,
+  Plotly,
+  Mermaid,
+  TikZ,
+  Typograms,
+  GeoMap,
+  CodeDiff,
+  Pseudocode,
+  Tabs,
+  Details
+} from '@/components/mdx';
+
+本文展示了博客中所有可用的 MDX 组件，方便参考和使用。
+
+## 提示框 (Callout)
+
+<Callout type="info" title="信息提示">
+  这是一个信息提示框，用于显示一般性信息。
+</Callout>
+
+<Callout type="warning" title="警告提示">
+  这是一个警告提示框，用于提醒用户注意事项。
+</Callout>
+
+<Callout type="danger" title="危险提示">
+  这是一个危险提示框，用于警告严重问题。
+</Callout>
+
+<Callout type="tip" title="小贴士">
+  这是一个技巧提示框，用于分享有用的技巧。
+</Callout>
+
+## 学术环境组件
+
+### 定义 (Definition)
+
+<Definition name="极限">
+  设函数 $f(x)$ 在点 $x_0$ 的某个去心邻域内有定义，如果存在常数 $L$，对于任意给定的正数 $\epsilon$（不论它多么小），总存在正数 $\delta$，使得当 $0 < |x - x_0| < \delta$ 时，对应的函数值 $f(x)$ 都满足不等式 $|f(x) - L| < \epsilon$，那么常数 $L$ 就叫做函数 $f(x)$ 当 $x \to x_0$ 时的极限。
+</Definition>
+
+### 定理 (Theorem)
+
+<Theorem name="费马大定理">
+  当整数 $n > 2$ 时，关于 $x$, $y$, $z$ 的方程 $x^n + y^n = z^n$ 没有正整数解。
+</Theorem>
+
+### 证明 (Proof)
+
+<Proof>
+  证明过于复杂，此处略去。该定理由安德鲁·怀尔斯于 1995 年证明。
+</Proof>
+
+## 数学公式
+
+### 行内公式
+
+爱因斯坦的质能方程 $E = mc^2$ 揭示了质量和能量的等价关系。
+
+### 块级公式
+
+麦克斯韦方程组（微分形式）：
+
+$$
+\begin{aligned}
+\nabla \cdot \mathbf{E} &= \frac{\rho}{\epsilon_0} \\
+\nabla \cdot \mathbf{B} &= 0 \\
+\nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t} \\
+\nabla \times \mathbf{B} &= \mu_0 \mathbf{J} + \mu_0 \epsilon_0 \frac{\partial \mathbf{E}}{\partial t}
+\end{aligned}
+$$
+
+## 代码高亮
+
+### 基础代码块
+
+```python
+def fibonacci(n: int) -> int:
+    """计算斐波那契数列的第 n 项"""
+    if n <= 1:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+# 测试
+for i in range(10):
+    print(f"F({i}) = {fibonacci(i)}")
+```
+
+### 带行号和高亮的代码块
+
+```typescript {3-5} showLineNumbers
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  createdAt: Date;
+}
+
+function createUser(name: string, email: string): User {
+  return {
+    id: Math.random(),
+    name,
+    email,
+    createdAt: new Date()
+  };
+}
+```
+
+## 代码差异对比 (CodeDiff)
+
+<CodeDiff
+  language="javascript"
+  oldCode={`function greet(name) {
+  console.log('Hello, ' + name);
+}
+
+greet('World');`}
+  newCode={`function greet(name: string): void {
+  console.log(\`Hello, \${name}!\`);
+}
+
+greet('World');`}
+  oldTitle="旧版本"
+  newTitle="新版本"
+/>
+
+## 伪代码 (Pseudocode)
+
+<Pseudocode title="快速排序算法">
+{`\\begin{algorithm}
+\\caption{QuickSort}
+\\begin{algorithmic}
+\\PROCEDURE{QuickSort}{$A, lo, hi$}
+    \\IF{$lo < hi$}
+        \\STATE $p \\gets$ \\CALL{Partition}{$A, lo, hi$}
+        \\STATE \\CALL{QuickSort}{$A, lo, p - 1$}
+        \\STATE \\CALL{QuickSort}{$A, p + 1, hi$}
+    \\ENDIF
+\\ENDPROCEDURE
+\\PROCEDURE{Partition}{$A, lo, hi$}
+    \\STATE $pivot \\gets A[hi]$
+    \\STATE $i \\gets lo - 1$
+    \\FOR{$j \\gets lo$ \\TO $hi - 1$}
+        \\IF{$A[j] \\leq pivot$}
+            \\STATE $i \\gets i + 1$
+            \\STATE swap $A[i]$ with $A[j]$
+        \\ENDIF
+    \\ENDFOR
+    \\STATE swap $A[i + 1]$ with $A[hi]$
+    \\RETURN $i + 1$
+\\ENDPROCEDURE
+\\end{algorithmic}
+\\end{algorithm}`}
+</Pseudocode>
+
+## 选项卡 (Tabs)
+
+<Tabs labels={["JavaScript", "Python", "Go"]}>
+  <div>
+```javascript
+// JavaScript 示例
+const sum = (a, b) => a + b;
+console.log(sum(1, 2)); // 3
+```
+  </div>
+  <div>
+```python
+# Python 示例
+def sum(a, b):
+    return a + b
+print(sum(1, 2))  # 3
+```
+  </div>
+  <div>
+```go
+// Go 示例
+func sum(a, b int) int {
+    return a + b
+}
+fmt.Println(sum(1, 2)) // 3
+```
+  </div>
+</Tabs>
+
+## 可折叠内容 (Details)
+
+<Details title="点击展开查看更多内容">
+  这里是隐藏的详细内容。可以包含任何 Markdown 内容，包括代码块、列表等。
+
+  - 列表项 1
+  - 列表项 2
+  - 列表项 3
+
+  ```javascript
+  console.log('隐藏的代码');
+  ```
+</Details>
+
+<Details title="这是一个默认展开的折叠块" open>
+  这个折叠块默认是展开的。
+</Details>
+
+## 图表组件
+
+### Chart.js 图表
+
+<Chart
+  client:load
+  type="line"
+  data={{
+    labels: ['一月', '二月', '三月', '四月', '五月', '六月'],
+    datasets: [{
+      label: '销售额',
+      data: [12, 19, 3, 5, 2, 3],
+      borderColor: 'rgb(75, 192, 192)',
+      tension: 0.1
+    }]
+  }}
+/>
+
+### ECharts 图表
+
+<ECharts
+  option={{
+    title: { text: '网站访问量' },
+    tooltip: { trigger: 'axis' },
+    xAxis: {
+      type: 'category',
+      data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+    },
+    yAxis: { type: 'value' },
+    series: [{
+      name: '访问量',
+      type: 'bar',
+      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      itemStyle: { color: '#5470c6' }
+    }]
+  }}
+  height="350px"
+/>
+
+### Vega-Lite 图表
+
+<VegaLite
+  spec={{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "A simple bar chart",
+    "data": {
+      "values": [
+        {"category": "A", "value": 28},
+        {"category": "B", "value": 55},
+        {"category": "C", "value": 43},
+        {"category": "D", "value": 91}
+      ]
+    },
+    "mark": "bar",
+    "encoding": {
+      "x": {"field": "category", "type": "nominal", "axis": {"labelAngle": 0}},
+      "y": {"field": "value", "type": "quantitative"}
+    }
+  }}
+  height="300px"
+/>
+
+### Plotly 图表
+
+<Plotly
+  data={[
+    {
+      type: 'scatter3d',
+      mode: 'markers',
+      x: [1, 2, 3, 4, 5],
+      y: [1, 4, 9, 16, 25],
+      z: [1, 8, 27, 64, 125],
+      marker: {
+        size: 8,
+        color: [1, 2, 3, 4, 5],
+        colorscale: 'Viridis'
+      }
+    }
+  ]}
+  layout={{
+    title: '3D 散点图',
+    scene: {
+      xaxis: { title: 'X' },
+      yaxis: { title: 'Y' },
+      zaxis: { title: 'Z' }
+    }
+  }}
+  height="400px"
+/>
+
+## 图表组件
+
+### Mermaid 图
+
+<Mermaid code={`
+graph TD
+    A[开始] --> B{条件判断}
+    B -->|是| C[执行操作1]
+    B -->|否| D[执行操作2]
+    C --> E[结束]
+    D --> E
+`} />
+
+### 时序图
+
+<Mermaid code={`
+sequenceDiagram
+    participant 用户
+    participant 前端
+    participant 后端
+    participant 数据库
+    用户->>前端: 发起请求
+    前端->>后端: API 调用
+    后端->>数据库: 查询数据
+    数据库-->>后端: 返回结果
+    后端-->>前端: 响应数据
+    前端-->>用户: 显示结果
+`} />
+
+### Typograms (ASCII 图表)
+
+<Typograms>
+{`+-------------------+
+|   Application     |
++--------+----------+
+         |
+         v
++--------+----------+
+|    Framework      |
++--------+----------+
+         |
+         v
++--------+----------+
+|    Operating      |
+|     System        |
++-------------------+`}
+</Typograms>
+
+## 地图 (GeoMap)
+
+<GeoMap
+  center={[39.9042, 116.4074]}
+  zoom={12}
+  markers={[
+    { lat: 39.9042, lng: 116.4074, popup: "北京市中心" }
+  ]}
+  height="400px"
+/>
+
+## 媒体组件
+
+### 图片
+
+<Figure 
+  src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800" 
+  alt="山脉风景"
+  caption="壮丽的山脉风景"
+/>
+
+### 照片网格
+
+<PhotoGrid 
+  images={[
+    { src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400", alt: "自然风光 1" },
+    { src: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400", alt: "自然风光 2" },
+    { src: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400", alt: "自然风光 3" },
+    { src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400", alt: "自然风光 4" }
+  ]}
+  columns={2}
+/>
+
+### 视频
+
+<Video 
+  src="https://www.w3schools.com/html/mov_bbb.mp4"
+  poster="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg"
+  caption="Big Buck Bunny 示例视频"
+/>
+
+### 音频
+
+<Audio 
+  src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+  title="示例音频"
+/>
+
+## 表格
+
+### 基础表格
+
+| 语言 | 类型系统 | 主要用途 |
+|------|----------|----------|
+| TypeScript | 静态 | Web 前端/后端 |
+| Python | 动态 | 数据科学/脚本 |
+| Rust | 静态 | 系统编程 |
+| Go | 静态 | 后端服务 |
+
+## 引用
+
+> 简单是终极的复杂。
+>
+> — 达芬奇
+
+## 脚注
+
+这是一个带脚注的句子[^1]。
+
+[^1]: 这是脚注的内容。
+
+## 任务列表
+
+- [x] 创建组件
+- [x] 编写文档
+- [ ] 添加测试
+- [ ] 部署上线
+
+## 总结
+
+以上展示了博客中所有可用的 MDX 组件。你可以根据需要在自己的文章中使用这些组件来丰富内容展示。

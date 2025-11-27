@@ -1,0 +1,109 @@
+---
+title: "Vega-Lite 可视化组件使用指南"
+description: "学习如何使用 Vega-Lite 组件创建声明式数据可视化图表"
+pubDate: "2025-01-16"
+tags: [Vega-Lite, 可视化, 数据分析, 教程]
+category: tutorial
+toc: true
+lang: zh
+---
+
+import { VegaLite, Callout } from '@/components/mdx';
+
+本文介绍如何在博客中使用 Vega-Lite 组件创建声明式数据可视化。
+
+<Callout type="info" title="关于 Vega-Lite">
+Vega-Lite 是一种高级声明式可视化语法，通过简洁的 JSON 规范即可创建丰富的图表。
+</Callout>
+
+## 基础柱状图
+
+<VegaLite
+  spec={{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "简单柱状图",
+    "data": {
+      "values": [
+        {"category": "A", "value": 28},
+        {"category": "B", "value": 55},
+        {"category": "C", "value": 43},
+        {"category": "D", "value": 91},
+        {"category": "E", "value": 81}
+      ]
+    },
+    "mark": "bar",
+    "encoding": {
+      "x": {"field": "category", "type": "nominal"},
+      "y": {"field": "value", "type": "quantitative"}
+    }
+  }}
+  height={300}
+/>
+
+## 散点图
+
+<VegaLite
+  spec={{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "散点图示例",
+    "data": {
+      "values": [
+        {"x": 1, "y": 2, "category": "A"},
+        {"x": 2, "y": 4, "category": "A"},
+        {"x": 3, "y": 3, "category": "B"},
+        {"x": 4, "y": 8, "category": "B"},
+        {"x": 5, "y": 5, "category": "A"},
+        {"x": 6, "y": 9, "category": "B"},
+        {"x": 7, "y": 7, "category": "A"}
+      ]
+    },
+    "mark": "point",
+    "encoding": {
+      "x": {"field": "x", "type": "quantitative"},
+      "y": {"field": "y", "type": "quantitative"},
+      "color": {"field": "category", "type": "nominal"}
+    }
+  }}
+  height={300}
+/>
+
+## 折线图
+
+<VegaLite
+  spec={{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "折线图",
+    "data": {
+      "values": [
+        {"month": "Jan", "value": 30},
+        {"month": "Feb", "value": 45},
+        {"month": "Mar", "value": 55},
+        {"month": "Apr", "value": 40},
+        {"month": "May", "value": 65},
+        {"month": "Jun", "value": 80}
+      ]
+    },
+    "mark": {"type": "line", "point": true},
+    "encoding": {
+      "x": {"field": "month", "type": "ordinal"},
+      "y": {"field": "value", "type": "quantitative"}
+    }
+  }}
+  height={300}
+/>
+
+## 使用方式
+
+```jsx
+import { VegaLite } from '@/components/mdx';
+
+<VegaLite
+  spec={{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": { "values": [...] },
+    "mark": "bar",
+    "encoding": {...}
+  }}
+  height={300}
+/>
+```

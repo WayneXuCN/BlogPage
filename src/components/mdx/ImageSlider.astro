@@ -1,0 +1,216 @@
+---
+/**
+ * ImageSlider.astro
+ * 图片轮播组件，使用 Swiper
+ *
+ * 用法：
+ * <ImageSlider
+ *   images={[
+ *     { src: '/img/1.jpg', alt: '图片1' },
+ *     { src: '/img/2.jpg', alt: '图片2' },
+ *   ]}
+ *   autoplay={true}
+ *   caption="图片轮播"
+ * />
+ */
+interface ImageItem {
+  src: string;
+  alt?: string;
+  caption?: string;
+}
+
+interface Props {
+  /** 图片列表 */
+  images: ImageItem[];
+  /** 是否自动播放 */
+  autoplay?: boolean;
+  /** 自动播放间隔（毫秒） */
+  interval?: number;
+  /** 是否显示分页器 */
+  pagination?: boolean;
+  /** 是否显示导航按钮 */
+  navigation?: boolean;
+  /** 是否循环播放 */
+  loop?: boolean;
+  /** 轮播说明 */
+  caption?: string;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const {
+  images,
+  autoplay = false,
+  interval = 5000,
+  pagination = true,
+  navigation = true,
+  loop = true,
+  caption,
+  class: className = '',
+} = Astro.props;
+
+// 生成唯一ID
+const id = `slider-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<figure class:list={['image-slider-container my-8', className]}>
+  <div
+    id={id}
+    class="swiper-container rounded-lg overflow-hidden shadow-lg"
+    data-autoplay={autoplay}
+    data-interval={interval}
+    data-pagination={pagination}
+    data-navigation={navigation}
+    data-loop={loop}
+  >
+    <div class="swiper-wrapper">
+      {images.map((image, index) => (
+        <div class="swiper-slide">
+          <img
+            src={image.src}
+            alt={image.alt || `幻灯片 ${index + 1}`}
+            class="w-full h-auto object-cover"
+            loading={index === 0 ? 'eager' : 'lazy'}
+          />
+          {image.caption && (
+            <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-sm p-3">
+              {image.caption}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+    
+    <!-- 分页器 -->
+    {pagination && <div class="swiper-pagination"></div>}
+    
+    <!-- 导航按钮 -->
+    {navigation && (
+      <>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+      </>
+    )}
+  </div>
+  
+  {caption && (
+    <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+      {caption}
+    </figcaption>
+  )}
+</figure>
+
+<script>
+  import Swiper from 'swiper';
+  import { Navigation, Pagination, Autoplay, Keyboard } from 'swiper/modules';
+  import 'swiper/css';
+  import 'swiper/css/navigation';
+  import 'swiper/css/pagination';
+
+  // 存储 Swiper 实例
+  const swiperInstances = new Map<string, Swiper>();
+
+  function initSlider(container: HTMLElement) {
+    const autoplay = container.dataset.autoplay === 'true';
+    const interval = parseInt(container.dataset.interval || '5000', 10);
+    const pagination = container.dataset.pagination === 'true';
+    const navigation = container.dataset.navigation === 'true';
+    const loop = container.dataset.loop === 'true';
+
+    // 销毁已有实例
+    const existingSwiper = swiperInstances.get(container.id);
+    if (existingSwiper) {
+      existingSwiper.destroy(true, true);
+    }
+
+    // 创建新实例
+    const swiper = new Swiper(container, {
+      modules: [Navigation, Pagination, Autoplay, Keyboard],
+      loop,
+      keyboard: {
+        enabled: true,
+      },
+      autoplay: autoplay ? {
+        delay: interval,
+        disableOnInteraction: false,
+      } : false,
+      pagination: pagination ? {
+        el: '.swiper-pagination',
+        clickable: true,
+        dynamicBullets: true,
+      } : false,
+      navigation: navigation ? {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      } : false,
+    });
+
+    swiperInstances.set(container.id, swiper);
+  }
+
+  // 初始化所有轮播
+  function initAllSliders() {
+    document.querySelectorAll<HTMLElement>('.swiper-container[data-autoplay]').forEach(initSlider);
+  }
+
+  // 页面加载后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllSliders);
+  } else {
+    initAllSliders();
+  }
+
+  // 支持 View Transitions
+  document.addEventListener('astro:page-load', initAllSliders);
+</script>
+
+<style is:global>
+  /* Swiper 自定义样式 */
+  .image-slider-container .swiper-container {
+    --swiper-theme-color: #3b82f6;
+    --swiper-navigation-size: 24px;
+  }
+
+  .image-slider-container .swiper-slide {
+    position: relative;
+  }
+
+  .image-slider-container .swiper-button-prev,
+  .image-slider-container .swiper-button-next {
+    background: rgba(255, 255, 255, 0.9);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s;
+  }
+
+  .image-slider-container .swiper-button-prev:hover,
+  .image-slider-container .swiper-button-next:hover {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .dark .image-slider-container .swiper-button-prev,
+  .dark .image-slider-container .swiper-button-next {
+    background: rgba(55, 65, 81, 0.9);
+    color: white;
+  }
+
+  .dark .image-slider-container .swiper-button-prev:hover,
+  .dark .image-slider-container .swiper-button-next:hover {
+    background: #374151;
+  }
+
+  .image-slider-container .swiper-pagination-bullet {
+    background: white;
+    opacity: 0.7;
+    width: 10px;
+    height: 10px;
+  }
+
+  .image-slider-container .swiper-pagination-bullet-active {
+    opacity: 1;
+    background: var(--swiper-theme-color);
+  }
+</style>

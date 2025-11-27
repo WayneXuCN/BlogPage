@@ -1,0 +1,251 @@
+---
+/**
+ * Plotly.astro
+ * Plotly.js 图表组件
+ *
+ * 用法：
+ * <Plotly
+ *   data={[
+ *     { x: [1, 2, 3], y: [2, 4, 6], type: 'scatter' }
+ *   ]}
+ *   layout={{ title: '图表标题' }}
+ *   caption="图表说明"
+ * />
+ */
+interface Props {
+  /** Plotly 数据数组 */
+  data: Record<string, unknown>[];
+  /** Plotly 布局配置 */
+  layout?: Record<string, unknown>;
+  /** Plotly 配置选项 */
+  config?: Record<string, unknown>;
+  /** 图表高度 */
+  height?: number;
+  /** 图表说明 */
+  caption?: string;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const {
+  data,
+  layout = {},
+  config = {},
+  height = 400,
+  caption,
+  class: className = '',
+} = Astro.props;
+
+// 生成唯一ID
+const id = `plotly-${Math.random().toString(36).slice(2, 9)}`;
+
+// 默认配置
+const defaultConfig = {
+  responsive: true,
+  displayModeBar: true,
+  modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+  displaylogo: false,
+  ...config,
+};
+
+// 默认布局
+const defaultLayout = {
+  autosize: true,
+  margin: { l: 50, r: 50, t: 50, b: 50 },
+  font: { family: "'Noto Sans SC', sans-serif" },
+  ...layout,
+};
+---
+
+<figure class:list={['plotly-container my-8', className]}>
+  <div
+    id={id}
+    class="plotly-chart w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+    style={`height: ${height}px;`}
+    data-plotly-data={JSON.stringify(data)}
+    data-plotly-layout={JSON.stringify(defaultLayout)}
+    data-plotly-config={JSON.stringify(defaultConfig)}
+  >
+    <!-- 加载占位 -->
+    <div class="plotly-loading flex items-center justify-center h-full text-gray-400">
+      <svg class="animate-spin h-8 w-8" viewBox="0 0 24 24">
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+          fill="none"></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+    </div>
+  </div>
+  {
+    caption && (
+      <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+        {caption}
+      </figcaption>
+    )
+  }
+</figure>
+
+<script>
+  import Plotly from 'plotly.js-dist-min';
+
+  function initChart(container: HTMLElement) {
+    const dataStr = container.dataset.plotlyData;
+    const layoutStr = container.dataset.plotlyLayout;
+    const configStr = container.dataset.plotlyConfig;
+
+    if (!dataStr) return;
+
+    try {
+      const data = JSON.parse(dataStr);
+      const layout = layoutStr ? JSON.parse(layoutStr) : {};
+      const config = configStr ? JSON.parse(configStr) : {};
+
+      // 移除加载占位
+      const loading = container.querySelector('.plotly-loading');
+      if (loading) loading.remove();
+
+      // 判断当前主题
+      const isDark = document.documentElement.classList.contains('dark');
+
+      // 应用主题
+      const themedLayout = {
+        ...layout,
+        paper_bgcolor: isDark ? '#1f2937' : 'white',
+        plot_bgcolor: isDark ? '#1f2937' : 'white',
+        font: {
+          ...layout.font,
+          color: isDark ? '#e5e7eb' : '#374151',
+        },
+        xaxis: {
+          ...layout.xaxis,
+          gridcolor: isDark ? '#374151' : '#e5e7eb',
+          linecolor: isDark ? '#4b5563' : '#d1d5db',
+        },
+        yaxis: {
+          ...layout.yaxis,
+          gridcolor: isDark ? '#374151' : '#e5e7eb',
+          linecolor: isDark ? '#4b5563' : '#d1d5db',
+        },
+      };
+
+      // 创建图表
+      Plotly.newPlot(container, data, themedLayout, config);
+
+      // 响应式调整
+      const resizeObserver = new ResizeObserver(() => {
+        Plotly.Plots.resize(container);
+      });
+      resizeObserver.observe(container);
+
+    } catch (error) {
+      console.error('Plotly render error:', error);
+      container.innerHTML = `<div class="flex items-center justify-center h-full text-red-500 text-sm">图表渲染失败</div>`;
+    }
+  }
+
+  // 主题切换时重新渲染
+  function handleThemeChange() {
+    document.querySelectorAll<HTMLElement>('.plotly-chart[data-plotly-data]').forEach(container => {
+      const dataStr = container.dataset.plotlyData;
+      const layoutStr = container.dataset.plotlyLayout;
+      const configStr = container.dataset.plotlyConfig;
+
+      if (!dataStr) return;
+
+      try {
+        const data = JSON.parse(dataStr);
+        const layout = layoutStr ? JSON.parse(layoutStr) : {};
+        const config = configStr ? JSON.parse(configStr) : {};
+
+        const isDark = document.documentElement.classList.contains('dark');
+
+        const themedLayout = {
+          ...layout,
+          paper_bgcolor: isDark ? '#1f2937' : 'white',
+          plot_bgcolor: isDark ? '#1f2937' : 'white',
+          font: {
+            ...layout.font,
+            color: isDark ? '#e5e7eb' : '#374151',
+          },
+          xaxis: {
+            ...layout.xaxis,
+            gridcolor: isDark ? '#374151' : '#e5e7eb',
+            linecolor: isDark ? '#4b5563' : '#d1d5db',
+          },
+          yaxis: {
+            ...layout.yaxis,
+            gridcolor: isDark ? '#374151' : '#e5e7eb',
+            linecolor: isDark ? '#4b5563' : '#d1d5db',
+          },
+        };
+
+        Plotly.react(container, data, themedLayout, config);
+      } catch (error) {
+        console.error('Plotly theme update error:', error);
+      }
+    });
+  }
+
+  // 初始化所有图表
+  function initAllCharts() {
+    document.querySelectorAll<HTMLElement>('.plotly-chart[data-plotly-data]').forEach(initChart);
+  }
+
+  // 监听主题变化
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      if (mutation.attributeName === 'class') {
+        handleThemeChange();
+      }
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+
+  // 页面加载后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllCharts);
+  } else {
+    initAllCharts();
+  }
+
+  // 支持 View Transitions
+  document.addEventListener('astro:page-load', initAllCharts);
+</script>
+
+<style is:global>
+  /* Plotly 自定义样式 */
+  .plotly-chart .modebar {
+    right: 10px !important;
+    top: 10px !important;
+  }
+
+  .plotly-chart .modebar-btn {
+    font-size: 16px !important;
+  }
+
+  .dark .plotly-chart .modebar-btn path {
+    fill: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  .dark .plotly-chart .modebar-btn:hover path {
+    fill: rgba(255, 255, 255, 1) !important;
+  }
+
+  /* 隐藏 Plotly logo */
+  .plotly-chart .js-plotly-plot .plotly .modebar-group:last-child {
+    display: none;
+  }
+</style>

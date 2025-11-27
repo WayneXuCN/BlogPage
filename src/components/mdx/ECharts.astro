@@ -1,0 +1,160 @@
+---
+/**
+ * ECharts.astro
+ * Apache ECharts 图表组件
+ *
+ * 用法：
+ * <ECharts
+ *   config={{
+ *     title: { text: '图表标题' },
+ *     xAxis: { data: ['A', 'B', 'C'] },
+ *     yAxis: {},
+ *     series: [{ type: 'bar', data: [10, 20, 30] }]
+ *   }}
+ *   caption="图表说明"
+ * />
+ */
+interface Props {
+  /** ECharts 配置对象 */
+  config: Record<string, unknown>;
+  /** 图表说明 */
+  caption?: string;
+  /** 图表高度 */
+  height?: number;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const { config, caption, height = 400, class: className = '' } = Astro.props;
+
+// 生成唯一ID
+const id = `echarts-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<figure class:list={['echarts-container my-8', className]}>
+  <div
+    id={id}
+    class="echarts-chart w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+    style={`height: ${height}px;`}
+    data-config={JSON.stringify(config)}
+  >
+    <!-- 加载占位 -->
+    <div class="echarts-loading flex items-center justify-center h-full text-gray-400">
+      <svg class="animate-spin h-8 w-8" viewBox="0 0 24 24">
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+          fill="none"></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+    </div>
+  </div>
+  {
+    caption && (
+      <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+        {caption}
+      </figcaption>
+    )
+  }
+</figure>
+
+<script>
+  import * as echarts from 'echarts';
+
+  // 存储图表实例
+  const chartInstances = new Map<string, echarts.ECharts>();
+
+  function initChart(container: HTMLElement) {
+    const configStr = container.dataset.config;
+    if (!configStr) return;
+
+    try {
+      const config = JSON.parse(configStr);
+      
+      // 移除加载占位
+      const loading = container.querySelector('.echarts-loading');
+      if (loading) loading.remove();
+
+      // 判断当前主题
+      const isDark = document.documentElement.classList.contains('dark');
+      
+      // 销毁已有实例
+      const existingChart = chartInstances.get(container.id);
+      if (existingChart) {
+        existingChart.dispose();
+      }
+
+      // 创建图表实例
+      const chart = echarts.init(container, isDark ? 'dark' : undefined);
+      chartInstances.set(container.id, chart);
+
+      // 设置配置
+      chart.setOption(config);
+
+      // 响应式调整
+      const resizeObserver = new ResizeObserver(() => {
+        chart.resize();
+      });
+      resizeObserver.observe(container);
+
+    } catch (error) {
+      console.error('ECharts render error:', error);
+      container.innerHTML = `<div class="flex items-center justify-center h-full text-red-500 text-sm">图表渲染失败</div>`;
+    }
+  }
+
+  // 主题切换时重新渲染
+  function handleThemeChange() {
+    document.querySelectorAll<HTMLElement>('.echarts-chart[data-config]').forEach(container => {
+      const chart = chartInstances.get(container.id);
+      if (chart) {
+        const configStr = container.dataset.config;
+        if (configStr) {
+          const config = JSON.parse(configStr);
+          const isDark = document.documentElement.classList.contains('dark');
+          chart.dispose();
+          const newChart = echarts.init(container, isDark ? 'dark' : undefined);
+          chartInstances.set(container.id, newChart);
+          newChart.setOption(config);
+        }
+      }
+    });
+  }
+
+  // 初始化所有图表
+  function initAllCharts() {
+    document.querySelectorAll<HTMLElement>('.echarts-chart[data-config]').forEach(initChart);
+  }
+
+  // 监听主题变化
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      if (mutation.attributeName === 'class') {
+        handleThemeChange();
+      }
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+
+  // 页面加载后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllCharts);
+  } else {
+    initAllCharts();
+  }
+
+  // 支持 View Transitions
+  document.addEventListener('astro:page-load', initAllCharts);
+</script>

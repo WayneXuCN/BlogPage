@@ -1,0 +1,219 @@
+---
+/**
+ * CodeDiff.astro
+ * 代码差异展示组件，使用 diff2html
+ *
+ * 用法：
+ * <CodeDiff
+ *   diff={`diff --git a/file.js b/file.js
+ *   ...
+ *   `}
+ *   outputFormat="side-by-side"
+ *   caption="代码变更说明"
+ * />
+ */
+interface Props {
+  /** Git diff 格式的差异内容 */
+  diff: string;
+  /** 输出格式：并排或行内 */
+  outputFormat?: 'side-by-side' | 'line-by-line';
+  /** 是否显示文件列表 */
+  showFiles?: boolean;
+  /** 是否高亮语法 */
+  highlight?: boolean;
+  /** 差异说明 */
+  caption?: string;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const {
+  diff,
+  outputFormat = 'line-by-line',
+  showFiles = true,
+  highlight = true,
+  caption,
+  class: className = '',
+} = Astro.props;
+
+// 生成唯一ID
+const id = `diff-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<figure class:list={['codediff-container my-8', className]}>
+  <div
+    id={id}
+    class="codediff-wrapper bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
+    data-diff={diff}
+    data-output-format={outputFormat}
+    data-show-files={showFiles}
+    data-highlight={highlight}
+  >
+    <!-- 加载占位 -->
+    <div class="codediff-loading flex items-center justify-center py-12 text-gray-400">
+      <svg class="animate-spin h-8 w-8" viewBox="0 0 24 24">
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+          fill="none"></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+    </div>
+  </div>
+  {
+    caption && (
+      <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+        {caption}
+      </figcaption>
+    )
+  }
+</figure>
+
+<script>
+  import { html, parse } from 'diff2html';
+  import 'diff2html/bundles/css/diff2html.min.css';
+
+  function initDiff(container: HTMLElement) {
+    const diffStr = container.dataset.diff;
+    const outputFormat = (container.dataset.outputFormat as 'side-by-side' | 'line-by-line') || 'line-by-line';
+    const showFiles = container.dataset.showFiles === 'true';
+    const highlight = container.dataset.highlight === 'true';
+
+    if (!diffStr) return;
+
+    try {
+      // 移除加载占位
+      const loading = container.querySelector('.codediff-loading');
+      if (loading) loading.remove();
+
+      // 解析并渲染 diff
+      const diffJson = parse(diffStr);
+      const diffHtml = html(diffJson, {
+        drawFileList: showFiles,
+        outputFormat,
+        matching: 'lines',
+        highlight,
+        renderNothingWhenEmpty: false,
+      });
+
+      container.innerHTML = diffHtml;
+
+    } catch (error) {
+      console.error('CodeDiff render error:', error);
+      container.innerHTML = `<div class="flex items-center justify-center py-12 text-red-500 text-sm">差异渲染失败</div>`;
+    }
+  }
+
+  // 初始化所有 diff
+  function initAllDiffs() {
+    document.querySelectorAll<HTMLElement>('.codediff-wrapper[data-diff]').forEach(initDiff);
+  }
+
+  // 页面加载后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllDiffs);
+  } else {
+    initAllDiffs();
+  }
+
+  // 支持 View Transitions
+  document.addEventListener('astro:page-load', initAllDiffs);
+</script>
+
+<style is:global>
+  /* Diff2Html 自定义样式 */
+  .codediff-wrapper .d2h-wrapper {
+    border: none;
+  }
+
+  .codediff-wrapper .d2h-file-header {
+    background: #f6f8fa;
+    border-bottom: 1px solid #e1e4e8;
+  }
+
+  .dark .codediff-wrapper .d2h-file-header {
+    background: #21262d;
+    border-bottom-color: #30363d;
+  }
+
+  .dark .codediff-wrapper .d2h-file-header .d2h-file-name {
+    color: #c9d1d9;
+  }
+
+  .codediff-wrapper .d2h-code-line-ctn {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 13px;
+  }
+
+  .dark .codediff-wrapper .d2h-code-side-linenumber,
+  .dark .codediff-wrapper .d2h-code-linenumber {
+    background: #161b22;
+    color: #484f58;
+    border-color: #30363d;
+  }
+
+  .dark .codediff-wrapper .d2h-code-side-line,
+  .dark .codediff-wrapper .d2h-code-line {
+    background: #0d1117;
+    color: #c9d1d9;
+  }
+
+  .dark .codediff-wrapper .d2h-del {
+    background: #3c1f1e;
+    border-color: #7c2c2c;
+  }
+
+  .dark .codediff-wrapper .d2h-del .d2h-code-side-line,
+  .dark .codediff-wrapper .d2h-del .d2h-code-line {
+    background: #3c1f1e;
+  }
+
+  .dark .codediff-wrapper .d2h-ins {
+    background: #1e3c1e;
+    border-color: #2c7c2c;
+  }
+
+  .dark .codediff-wrapper .d2h-ins .d2h-code-side-line,
+  .dark .codediff-wrapper .d2h-ins .d2h-code-line {
+    background: #1e3c1e;
+  }
+
+  .dark .codediff-wrapper .d2h-file-list-wrapper {
+    background: #161b22;
+    border-color: #30363d;
+  }
+
+  .dark .codediff-wrapper .d2h-file-list-line {
+    border-color: #30363d;
+  }
+
+  .dark .codediff-wrapper .d2h-file-list-line a {
+    color: #58a6ff;
+  }
+
+  .dark .codediff-wrapper .d2h-emptyplaceholder {
+    background: #161b22;
+    border-color: #30363d;
+  }
+
+  .dark .codediff-wrapper .d2h-info {
+    background: #161b22;
+    color: #8b949e;
+    border-color: #30363d;
+  }
+
+  /* 响应式 */
+  @media (max-width: 768px) {
+    .codediff-wrapper .d2h-file-side-diff {
+      width: 100%;
+    }
+  }
+</style>

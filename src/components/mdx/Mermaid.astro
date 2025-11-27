@@ -13,14 +13,25 @@
  *   `}
  *   caption="流程图示例"
  * />
+ *
+ * 或：
+ * <Mermaid code={`graph TD ...`} />
  */
 interface Props {
-  chart: string;
+  /** 图表代码 */
+  chart?: string;
+  /** 图表代码（别名） */
+  code?: string;
+  /** 说明文字 */
   caption?: string;
+  /** 自定义类名 */
   class?: string;
 }
 
-const { chart, caption, class: className = '' } = Astro.props;
+const { chart: chartProp, code: codeProp, caption, class: className = '' } = Astro.props;
+
+// 支持 chart 或 code 属性
+const chart = chartProp || codeProp || '';
 
 // 生成唯一ID
 const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
@@ -30,7 +41,7 @@ const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
   <div
     id={id}
     class='mermaid-chart flex justify-center items-center min-h-[100px] bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 overflow-x-auto'
-    data-chart={chart.trim()}
+    data-chart={chart}
   >
     <!-- 加载占位 -->
     <div class='mermaid-loading text-gray-400'>

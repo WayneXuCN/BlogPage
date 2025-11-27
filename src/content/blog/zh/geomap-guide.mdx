@@ -1,0 +1,62 @@
+---
+title: "地图组件使用指南"
+description: "学习如何使用 GeoMap 组件在博客中展示交互式地图"
+pubDate: "2025-01-17"
+tags: [地图, Leaflet, GeoJSON, 可视化]
+category: tutorial
+toc: true
+lang: zh
+---
+
+import { GeoMap, Callout } from '@/components/mdx';
+
+本文介绍如何使用 GeoMap 组件在博客中展示地图。
+
+<Callout type="info" title="关于 Leaflet">
+GeoMap 组件基于 Leaflet 库，支持标记点、GeoJSON 数据展示等功能。
+</Callout>
+
+## 基础地图
+
+展示一个简单的地图，标记北京的位置：
+
+<GeoMap
+  center={[39.9042, 116.4074]}
+  zoom={11}
+  markers={[
+    { lat: 39.9042, lng: 116.4074, popup: "北京市中心" },
+    { lat: 39.9087, lng: 116.3975, popup: "故宫博物院" },
+    { lat: 40.0020, lng: 116.3958, popup: "鸟巢" }
+  ]}
+  height="400px"
+/>
+
+## 世界地图视图
+
+<GeoMap
+  center={[20, 0]}
+  zoom={2}
+  markers={[
+    { lat: 51.505, lng: -0.09, popup: "伦敦" },
+    { lat: 48.8566, lng: 2.3522, popup: "巴黎" },
+    { lat: 40.7128, lng: -74.006, popup: "纽约" },
+    { lat: 35.6762, lng: 139.6503, popup: "东京" },
+    { lat: 31.2304, lng: 121.4737, popup: "上海" }
+  ]}
+  height="400px"
+/>
+
+## 使用方式
+
+```jsx
+import { GeoMap } from '@/components/mdx';
+
+<GeoMap
+  center={[纬度, 经度]}
+  zoom={缩放级别}
+  markers={[
+    { lat: 纬度, lng: 经度, popup: "标记说明" }
+  ]}
+  height="400px"
+/>
+```

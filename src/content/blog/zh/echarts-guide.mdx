@@ -1,0 +1,96 @@
+---
+title: "ECharts 图表组件使用指南"
+description: "学习如何使用 ECharts 组件创建丰富的交互式图表"
+pubDate: "2025-01-16"
+tags: [ECharts, 图表, 可视化, 教程]
+category: tutorial
+toc: true
+lang: zh
+---
+
+import { ECharts, Callout } from '@/components/mdx';
+
+本文介绍如何在博客中使用 ECharts 组件创建各种交互式图表。
+
+<Callout type="info" title="关于 ECharts">
+ECharts 是百度开源的强大图表库，支持丰富的图表类型和交互功能。
+</Callout>
+
+## 基础柱状图
+
+<ECharts
+  option={{
+    title: { text: '销售数据' },
+    tooltip: { trigger: 'axis' },
+    xAxis: {
+      type: 'category',
+      data: ['一月', '二月', '三月', '四月', '五月', '六月']
+    },
+    yAxis: { type: 'value' },
+    series: [{
+      name: '销售额',
+      type: 'bar',
+      data: [820, 932, 901, 934, 1290, 1330],
+      itemStyle: { color: '#5470c6' }
+    }]
+  }}
+  height="350px"
+/>
+
+## 折线图
+
+<ECharts
+  option={{
+    title: { text: '温度变化' },
+    tooltip: { trigger: 'axis' },
+    xAxis: {
+      type: 'category',
+      data: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00']
+    },
+    yAxis: { type: 'value', name: '温度 (°C)' },
+    series: [{
+      name: '温度',
+      type: 'line',
+      smooth: true,
+      data: [15, 12, 18, 25, 28, 22],
+      areaStyle: { opacity: 0.3 }
+    }]
+  }}
+  height="350px"
+/>
+
+## 饼图
+
+<ECharts
+  option={{
+    title: { text: '访问来源', left: 'center' },
+    tooltip: { trigger: 'item' },
+    legend: { orient: 'vertical', left: 'left' },
+    series: [{
+      name: '访问来源',
+      type: 'pie',
+      radius: '50%',
+      data: [
+        { value: 1048, name: '搜索引擎' },
+        { value: 735, name: '直接访问' },
+        { value: 580, name: '邮件营销' },
+        { value: 484, name: '联盟广告' },
+        { value: 300, name: '视频广告' }
+      ]
+    }]
+  }}
+  height="400px"
+/>
+
+## 使用方式
+
+```jsx
+import { ECharts } from '@/components/mdx';
+
+<ECharts
+  option={{
+    // ECharts 配置对象
+  }}
+  height="400px"
+/>
+```

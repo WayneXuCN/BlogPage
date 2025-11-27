@@ -1,0 +1,92 @@
+---
+title: "Tabs 标签页组件使用指南"
+description: "学习如何使用 Tabs 组件创建多标签页内容切换"
+pubDate: "2025-01-16"
+tags: [Tabs, 标签页, UI组件, 教程]
+category: tutorial
+toc: true
+lang: zh
+---
+
+import { Tabs, Callout } from '@/components/mdx';
+
+本文介绍如何在博客中使用 Tabs 组件创建标签页切换。
+
+<Callout type="info" title="关于 Tabs">
+Tabs 组件支持任意数量的标签页，支持键盘导航，自动适配明暗主题。
+</Callout>
+
+## 基础用法
+
+<Tabs labels={["JavaScript", "Python", "Go"]}>
+  <div>
+```javascript
+function hello(name) {
+  return `Hello, ${name}!`;
+}
+console.log(hello('World'));
+```
+  </div>
+  <div>
+```python
+def hello(name):
+    return f"Hello, {name}!"
+print(hello("World"))
+```
+  </div>
+  <div>
+```go
+package main
+import "fmt"
+func hello(name string) string {
+    return fmt.Sprintf("Hello, %s!", name)
+}
+func main() {
+    fmt.Println(hello("World"))
+}
+```
+  </div>
+</Tabs>
+
+## 两个标签
+
+<Tabs labels={["客户端", "服务端"]}>
+  <div>
+    <h3>客户端渲染</h3>
+    <p>客户端渲染是在浏览器中使用 JavaScript 动态生成页面内容。</p>
+    <ul>
+      <li>初次加载较慢</li>
+      <li>交互性强</li>
+      <li>SEO 不友好</li>
+    </ul>
+  </div>
+  <div>
+    <h3>服务端渲染</h3>
+    <p>服务端渲染是在服务器上生成完整的 HTML 页面发送到客户端。</p>
+    <ul>
+      <li>初次加载快</li>
+      <li>SEO 友好</li>
+      <li>服务器压力大</li>
+    </ul>
+  </div>
+</Tabs>
+
+## 使用方式
+
+```jsx
+import { Tabs } from '@/components/mdx';
+
+<Tabs labels={["标签1", "标签2", "标签3"]}>
+  <div>第一个标签页内容</div>
+  <div>第二个标签页内容</div>
+  <div>第三个标签页内容</div>
+</Tabs>
+```
+
+## 参数说明
+
+| 参数 | 类型 | 说明 |
+|------|------|------|
+| labels | string[] | 标签名称数组 |
+| defaultTab | number | 默认激活的标签页索引（从0开始） |
+| groupId | string | 选项卡组标识，相同 groupId 的选项卡会同步切换 |

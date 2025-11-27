@@ -1,0 +1,72 @@
+---
+title: "Details 折叠内容组件使用指南"
+description: "学习如何使用 Details 组件创建可折叠的内容区块"
+pubDate: "2025-01-16"
+tags: [Details, 折叠, UI组件, 教程]
+category: tutorial
+toc: true
+lang: zh
+---
+
+import { Details, Callout } from '@/components/mdx';
+
+本文介绍如何在博客中使用 Details 组件创建可折叠的内容。
+
+<Callout type="info" title="关于 Details">
+Details 组件可以将较长或次要的内容折叠起来，让读者选择性地展开查看。
+</Callout>
+
+## 基础用法
+
+<Details title="点击展开查看更多">
+这里是隐藏的内容。点击标题可以展开或收起这段内容。
+
+可以包含任意内容：
+- 列表项 1
+- 列表项 2
+- 列表项 3
+</Details>
+
+## 默认展开
+
+<Details title="这是默认展开的内容" open>
+通过设置 `open` 属性为 `true`，可以让内容默认展开。
+
+用户仍然可以点击标题来收起内容。
+</Details>
+
+## 嵌套使用
+
+<Details title="常见问题">
+<Details title="问题1：如何安装？">
+运行以下命令：
+```bash
+bun install
+```
+</Details>
+
+<Details title="问题2：如何使用？">
+在 MDX 文件中导入组件即可使用。
+</Details>
+</Details>
+
+## 使用方式
+
+```jsx
+import { Details } from '@/components/mdx';
+
+<Details title="点击展开">
+  这里是折叠的内容...
+</Details>
+
+<Details title="默认展开" open>
+  这是默认展开的内容...
+</Details>
+```
+
+## 参数说明
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| title | string | 必填 | 折叠块标题 |
+| open | boolean | false | 是否默认展开 |

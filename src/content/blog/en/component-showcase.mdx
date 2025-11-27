@@ -1,0 +1,446 @@
+---
+title: "MDX Component Showcase"
+description: "Demonstrating all available MDX components and features in the blog"
+pubDate: "2025-01-15"
+tags: [demo, components, showcase]
+category: tutorial
+featured: true
+toc: true
+lang: en
+math: true
+---
+
+import {
+  Callout,
+  Theorem,
+  Definition,
+  Proof,
+  Figure,
+  PhotoGrid,
+  Video,
+  Audio,
+  ImageSlider,
+  ImageComparison,
+  PhotoGallery,
+  Chart,
+  ECharts,
+  VegaLite,
+  Plotly,
+  Mermaid,
+  TikZ,
+  Typograms,
+  GeoMap,
+  CodeDiff,
+  Pseudocode,
+  Tabs,
+  Details
+} from '@/components/mdx';
+
+This post demonstrates all available MDX components in the blog for easy reference.
+
+## Callout Boxes
+
+<Callout type="info" title="Information">
+  This is an info callout for displaying general information.
+</Callout>
+
+<Callout type="warning" title="Warning">
+  This is a warning callout to alert users about important considerations.
+</Callout>
+
+<Callout type="danger" title="Danger">
+  This is a danger callout for critical warnings.
+</Callout>
+
+<Callout type="tip" title="Tip">
+  This is a tip callout for sharing useful tips and tricks.
+</Callout>
+
+## Academic Components
+
+### Definition
+
+<Definition name="Limit">
+  Let $f(x)$ be defined on some open interval containing $a$, except possibly at $a$ itself. Then we say that the limit of $f(x)$ as $x$ approaches $a$ is $L$, and write $\lim_{x \to a} f(x) = L$, if for every number $\epsilon > 0$ there is a number $\delta > 0$ such that if $0 < |x - a| < \delta$ then $|f(x) - L| < \epsilon$.
+</Definition>
+
+### Theorem
+
+<Theorem name="Fermat's Last Theorem">
+  No three positive integers $a$, $b$, and $c$ satisfy the equation $a^n + b^n = c^n$ for any integer value of $n$ greater than 2.
+</Theorem>
+
+### Proof
+
+<Proof>
+  The proof is too complex to include here. This theorem was proven by Andrew Wiles in 1995.
+</Proof>
+
+## Mathematics
+
+### Inline Math
+
+Einstein's mass-energy equivalence $E = mc^2$ reveals the relationship between mass and energy.
+
+### Block Math
+
+Maxwell's equations (differential form):
+
+$$
+\begin{aligned}
+\nabla \cdot \mathbf{E} &= \frac{\rho}{\epsilon_0} \\
+\nabla \cdot \mathbf{B} &= 0 \\
+\nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t} \\
+\nabla \times \mathbf{B} &= \mu_0 \mathbf{J} + \mu_0 \epsilon_0 \frac{\partial \mathbf{E}}{\partial t}
+\end{aligned}
+$$
+
+## Code Highlighting
+
+### Basic Code Block
+
+```python
+def fibonacci(n: int) -> int:
+    """Calculate the nth Fibonacci number"""
+    if n <= 1:
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+# Test
+for i in range(10):
+    print(f"F({i}) = {fibonacci(i)}")
+```
+
+### Code Block with Line Numbers
+
+```typescript {3-5} showLineNumbers
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  createdAt: Date;
+}
+
+function createUser(name: string, email: string): User {
+  return {
+    id: Math.random(),
+    name,
+    email,
+    createdAt: new Date()
+  };
+}
+```
+
+## Code Diff
+
+<CodeDiff
+  language="javascript"
+  oldCode={`function greet(name) {
+  console.log('Hello, ' + name);
+}
+
+greet('World');`}
+  newCode={`function greet(name: string): void {
+  console.log(\`Hello, \${name}!\`);
+}
+
+greet('World');`}
+  oldTitle="Old Version"
+  newTitle="New Version"
+/>
+
+## Pseudocode
+
+<Pseudocode title="QuickSort Algorithm">
+{`\\begin{algorithm}
+\\caption{QuickSort}
+\\begin{algorithmic}
+\\PROCEDURE{QuickSort}{$A, lo, hi$}
+    \\IF{$lo < hi$}
+        \\STATE $p \\gets$ \\CALL{Partition}{$A, lo, hi$}
+        \\STATE \\CALL{QuickSort}{$A, lo, p - 1$}
+        \\STATE \\CALL{QuickSort}{$A, p + 1, hi$}
+    \\ENDIF
+\\ENDPROCEDURE
+\\PROCEDURE{Partition}{$A, lo, hi$}
+    \\STATE $pivot \\gets A[hi]$
+    \\STATE $i \\gets lo - 1$
+    \\FOR{$j \\gets lo$ \\TO $hi - 1$}
+        \\IF{$A[j] \\leq pivot$}
+            \\STATE $i \\gets i + 1$
+            \\STATE swap $A[i]$ with $A[j]$
+        \\ENDIF
+    \\ENDFOR
+    \\STATE swap $A[i + 1]$ with $A[hi]$
+    \\RETURN $i + 1$
+\\ENDPROCEDURE
+\\end{algorithmic}
+\\end{algorithm}`}
+</Pseudocode>
+
+## Tabs
+
+<Tabs labels={["JavaScript", "Python", "Go"]}>
+  <div>
+```javascript
+// JavaScript example
+const sum = (a, b) => a + b;
+console.log(sum(1, 2)); // 3
+```
+  </div>
+  <div>
+```python
+# Python example
+def sum(a, b):
+    return a + b
+print(sum(1, 2))  # 3
+```
+  </div>
+  <div>
+```go
+// Go example
+func sum(a, b int) int {
+    return a + b
+}
+fmt.Println(sum(1, 2)) // 3
+```
+  </div>
+</Tabs>
+
+## Collapsible Content (Details)
+
+<Details title="Click to expand for more content">
+  This is hidden detailed content. It can contain any Markdown content, including code blocks, lists, etc.
+
+  - Item 1
+  - Item 2
+  - Item 3
+
+  ```javascript
+  console.log('Hidden code');
+  ```
+</Details>
+
+<Details title="This is expanded by default" open>
+  This collapsible block is expanded by default.
+</Details>
+
+## Chart Components
+
+### Chart.js
+
+<Chart
+  client:load
+  type="line"
+  data={{
+    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+    datasets: [{
+      label: 'Sales',
+      data: [12, 19, 3, 5, 2, 3],
+      borderColor: 'rgb(75, 192, 192)',
+      tension: 0.1
+    }]
+  }}
+/>
+
+### ECharts
+
+<ECharts
+  option={{
+    title: { text: 'Website Traffic' },
+    tooltip: { trigger: 'axis' },
+    xAxis: {
+      type: 'category',
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: { type: 'value' },
+    series: [{
+      name: 'Visits',
+      type: 'bar',
+      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      itemStyle: { color: '#5470c6' }
+    }]
+  }}
+  height="350px"
+/>
+
+### Vega-Lite
+
+<VegaLite
+  spec={{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "A simple bar chart",
+    "data": {
+      "values": [
+        {"category": "A", "value": 28},
+        {"category": "B", "value": 55},
+        {"category": "C", "value": 43},
+        {"category": "D", "value": 91}
+      ]
+    },
+    "mark": "bar",
+    "encoding": {
+      "x": {"field": "category", "type": "nominal", "axis": {"labelAngle": 0}},
+      "y": {"field": "value", "type": "quantitative"}
+    }
+  }}
+  height="300px"
+/>
+
+### Plotly
+
+<Plotly
+  data={[
+    {
+      type: 'scatter3d',
+      mode: 'markers',
+      x: [1, 2, 3, 4, 5],
+      y: [1, 4, 9, 16, 25],
+      z: [1, 8, 27, 64, 125],
+      marker: {
+        size: 8,
+        color: [1, 2, 3, 4, 5],
+        colorscale: 'Viridis'
+      }
+    }
+  ]}
+  layout={{
+    title: '3D Scatter Plot',
+    scene: {
+      xaxis: { title: 'X' },
+      yaxis: { title: 'Y' },
+      zaxis: { title: 'Z' }
+    }
+  }}
+  height="400px"
+/>
+
+## Diagrams
+
+### Mermaid Flowchart
+
+<Mermaid code={`
+graph TD
+    A[Start] --> B{Condition}
+    B -->|Yes| C[Action 1]
+    B -->|No| D[Action 2]
+    C --> E[End]
+    D --> E
+`} />
+
+### Sequence Diagram
+
+<Mermaid code={`
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant Backend
+    participant Database
+    User->>Frontend: Make Request
+    Frontend->>Backend: API Call
+    Backend->>Database: Query Data
+    Database-->>Backend: Return Results
+    Backend-->>Frontend: Response
+    Frontend-->>User: Display Results
+`} />
+
+### Typograms (ASCII Diagrams)
+
+<Typograms>
+{`+-------------------+
+|   Application     |
++--------+----------+
+         |
+         v
++--------+----------+
+|    Framework      |
++--------+----------+
+         |
+         v
++--------+----------+
+|    Operating      |
+|     System        |
++-------------------+`}
+</Typograms>
+
+## Maps (GeoMap)
+
+<GeoMap
+  center={[51.505, -0.09]}
+  zoom={13}
+  markers={[
+    { lat: 51.505, lng: -0.09, popup: "London City Center" }
+  ]}
+  height="400px"
+/>
+
+## Media Components
+
+### Figure
+
+<Figure 
+  src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800" 
+  alt="Mountain landscape"
+  caption="Majestic mountain scenery"
+/>
+
+### Photo Grid
+
+<PhotoGrid 
+  images={[
+    { src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400", alt: "Nature 1" },
+    { src: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=400", alt: "Nature 2" },
+    { src: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400", alt: "Nature 3" },
+    { src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400", alt: "Nature 4" }
+  ]}
+  columns={2}
+/>
+
+### Video
+
+<Video 
+  src="https://www.w3schools.com/html/mov_bbb.mp4"
+  poster="https://peach.blender.org/wp-content/uploads/title_anouncement.jpg"
+  caption="Big Buck Bunny sample video"
+/>
+
+### Audio
+
+<Audio 
+  src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+  title="Sample Audio"
+/>
+
+## Tables
+
+### Basic Table
+
+| Language | Type System | Primary Use |
+|----------|-------------|-------------|
+| TypeScript | Static | Web Frontend/Backend |
+| Python | Dynamic | Data Science/Scripting |
+| Rust | Static | Systems Programming |
+| Go | Static | Backend Services |
+
+## Blockquote
+
+> Simplicity is the ultimate sophistication.
+>
+> — Leonardo da Vinci
+
+## Footnotes
+
+This is a sentence with a footnote[^1].
+
+[^1]: This is the footnote content.
+
+## Task List
+
+- [x] Create components
+- [x] Write documentation
+- [ ] Add tests
+- [ ] Deploy
+
+## Summary
+
+This post showcased all available MDX components in the blog. You can use these components in your own articles to enrich your content presentation.

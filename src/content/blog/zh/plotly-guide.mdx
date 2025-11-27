@@ -1,0 +1,102 @@
+---
+title: "Plotly 交互图表组件使用指南"
+description: "学习如何使用 Plotly 组件创建专业级交互式数据可视化"
+pubDate: "2025-01-16"
+tags: [Plotly, 可视化, 交互图表, 教程]
+category: tutorial
+toc: true
+lang: zh
+---
+
+import { Plotly, Callout } from '@/components/mdx';
+
+本文介绍如何在博客中使用 Plotly 组件创建专业级交互式图表。
+
+<Callout type="info" title="关于 Plotly">
+Plotly.js 是一个功能强大的图表库，支持 40 多种图表类型，包括 3D 图表、地图和统计图。
+</Callout>
+
+## 基础折线图
+
+<Plotly
+  data={[
+    {
+      x: [1, 2, 3, 4, 5],
+      y: [10, 15, 13, 17, 22],
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: '数据系列1',
+      marker: { color: '#3b82f6' }
+    },
+    {
+      x: [1, 2, 3, 4, 5],
+      y: [8, 12, 16, 14, 20],
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: '数据系列2',
+      marker: { color: '#10b981' }
+    }
+  ]}
+  layout={{
+    title: '折线图示例',
+    xaxis: { title: 'X 轴' },
+    yaxis: { title: 'Y 轴' }
+  }}
+  height="400px"
+/>
+
+## 柱状图
+
+<Plotly
+  data={[
+    {
+      x: ['苹果', '香蕉', '橙子', '葡萄', '芒果'],
+      y: [20, 14, 23, 25, 18],
+      type: 'bar',
+      marker: {
+        color: ['#ef4444', '#f59e0b', '#f97316', '#8b5cf6', '#f59e0b']
+      }
+    }
+  ]}
+  layout={{
+    title: '水果销量统计'
+  }}
+  height="400px"
+/>
+
+## 饼图
+
+<Plotly
+  data={[
+    {
+      values: [35, 25, 20, 12, 8],
+      labels: ['Chrome', 'Firefox', 'Safari', 'Edge', '其他'],
+      type: 'pie',
+      hole: 0.4
+    }
+  ]}
+  layout={{
+    title: '浏览器市场份额'
+  }}
+  height="400px"
+/>
+
+## 使用方式
+
+```jsx
+import { Plotly } from '@/components/mdx';
+
+<Plotly
+  data={[
+    {
+      x: [1, 2, 3],
+      y: [10, 20, 30],
+      type: 'scatter'
+    }
+  ]}
+  layout={{
+    title: '图表标题'
+  }}
+  height="400px"
+/>
+```

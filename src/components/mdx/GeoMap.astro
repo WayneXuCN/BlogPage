@@ -1,0 +1,233 @@
+---
+/**
+ * GeoMap.astro
+ * Leaflet 地图组件，支持 GeoJSON 数据
+ *
+ * 用法：
+ * <GeoMap
+ *   geojson={{
+ *     "type": "FeatureCollection",
+ *     "features": [...]
+ *   }}
+ *   center={[51.505, -0.09]}
+ *   zoom={13}
+ *   caption="地图说明"
+ * />
+ */
+interface Props {
+  /** GeoJSON 数据 */
+  geojson?: Record<string, unknown>;
+  /** 地图中心点 [lat, lng] */
+  center?: [number, number];
+  /** 缩放级别 */
+  zoom?: number;
+  /** 地图高度 */
+  height?: number;
+  /** 图层样式 */
+  style?: Record<string, unknown>;
+  /** 地图说明 */
+  caption?: string;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const {
+  geojson,
+  center,
+  zoom = 10,
+  height = 400,
+  style = { color: '#3388ff', weight: 2, fillOpacity: 0.3 },
+  caption,
+  class: className = '',
+} = Astro.props;
+
+// 生成唯一ID
+const id = `map-${Math.random().toString(36).slice(2, 9)}`;
+
+// 如果有 GeoJSON 但没有指定中心点，尝试计算中心
+let defaultCenter = center;
+if (!defaultCenter && geojson) {
+  // 使用默认中心点，实际中心会在客户端计算
+  defaultCenter = [0, 0];
+}
+---
+
+<figure class:list={['geomap-container my-8', className]}>
+  <div
+    id={id}
+    class="geomap-chart w-full rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
+    style={`height: ${height}px;`}
+    data-geojson={geojson ? JSON.stringify(geojson) : undefined}
+    data-center={defaultCenter ? JSON.stringify(defaultCenter) : undefined}
+    data-zoom={zoom}
+    data-style={JSON.stringify(style)}
+  >
+    <!-- 加载占位 -->
+    <div class="geomap-loading flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800 text-gray-400">
+      <svg class="animate-spin h-8 w-8" viewBox="0 0 24 24">
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+          fill="none"></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+    </div>
+  </div>
+  {
+    caption && (
+      <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+        {caption}
+      </figcaption>
+    )
+  }
+</figure>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  // 存储地图实例
+  const mapInstances = new Map<string, L.Map>();
+
+  function initMap(container: HTMLElement) {
+    const geojsonStr = container.dataset.geojson;
+    const centerStr = container.dataset.center;
+    const zoom = parseInt(container.dataset.zoom || '10', 10);
+    const styleStr = container.dataset.style;
+
+    try {
+      // 移除加载占位
+      const loading = container.querySelector('.geomap-loading');
+      if (loading) loading.remove();
+
+      // 销毁已有实例
+      const existingMap = mapInstances.get(container.id);
+      if (existingMap) {
+        existingMap.remove();
+      }
+
+      // 解析配置
+      let center: [number, number] = [0, 0];
+      if (centerStr) {
+        center = JSON.parse(centerStr);
+      }
+
+      const style = styleStr ? JSON.parse(styleStr) : { color: '#3388ff', weight: 2, fillOpacity: 0.3 };
+
+      // 创建地图
+      const map = L.map(container).setView(center, zoom);
+      mapInstances.set(container.id, map);
+
+      // 添加底图
+      const isDark = document.documentElement.classList.contains('dark');
+      const tileUrl = isDark
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      
+      const attribution = isDark
+        ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+      L.tileLayer(tileUrl, { attribution }).addTo(map);
+
+      // 添加 GeoJSON 图层
+      if (geojsonStr) {
+        const geojson = JSON.parse(geojsonStr);
+        const geoLayer = L.geoJSON(geojson, {
+          style: () => style,
+          onEachFeature: (feature, layer) => {
+            if (feature.properties) {
+              const popupContent = feature.properties.popupContent || feature.properties.name;
+              if (popupContent) {
+                layer.bindPopup(popupContent);
+              }
+            }
+          },
+        }).addTo(map);
+
+        // 自动适应边界
+        if (!centerStr || (center[0] === 0 && center[1] === 0)) {
+          map.fitBounds(geoLayer.getBounds(), { padding: [20, 20] });
+        }
+      }
+
+    } catch (error) {
+      console.error('GeoMap render error:', error);
+      container.innerHTML = `<div class="flex items-center justify-center h-full bg-gray-100 dark:bg-gray-800 text-red-500 text-sm">地图渲染失败</div>`;
+    }
+  }
+
+  // 主题切换时重新渲染
+  function handleThemeChange() {
+    document.querySelectorAll<HTMLElement>('.geomap-chart').forEach(container => {
+      initMap(container);
+    });
+  }
+
+  // 初始化所有地图
+  function initAllMaps() {
+    document.querySelectorAll<HTMLElement>('.geomap-chart').forEach(initMap);
+  }
+
+  // 监听主题变化
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      if (mutation.attributeName === 'class') {
+        handleThemeChange();
+      }
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+
+  // 页面加载后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllMaps);
+  } else {
+    initAllMaps();
+  }
+
+  // 支持 View Transitions
+  document.addEventListener('astro:page-load', initAllMaps);
+</script>
+
+<style is:global>
+  /* Leaflet 样式修复 */
+  .leaflet-container {
+    font-family: inherit;
+  }
+  
+  .leaflet-control-attribution {
+    font-size: 10px;
+  }
+  
+  .dark .leaflet-control-attribution {
+    background: rgba(0, 0, 0, 0.7);
+    color: #ccc;
+  }
+  
+  .dark .leaflet-control-attribution a {
+    color: #8ab4f8;
+  }
+  
+  .leaflet-popup-content-wrapper {
+    border-radius: 8px;
+  }
+  
+  .dark .leaflet-popup-content-wrapper,
+  .dark .leaflet-popup-tip {
+    background: #374151;
+    color: #e5e7eb;
+  }
+</style>

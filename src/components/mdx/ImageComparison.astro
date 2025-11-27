@@ -1,0 +1,250 @@
+---
+/**
+ * ImageComparison.astro
+ * 图片对比滑块组件
+ *
+ * 用法：
+ * <ImageComparison
+ *   beforeImage="/img/before.jpg"
+ *   afterImage="/img/after.jpg"
+ *   beforeLabel="处理前"
+ *   afterLabel="处理后"
+ *   caption="图片对比"
+ * />
+ */
+interface Props {
+  /** 前图片（左侧/滑块前） */
+  beforeImage: string;
+  /** 后图片（右侧/滑块后） */
+  afterImage: string;
+  /** 前图片标签 */
+  beforeLabel?: string;
+  /** 后图片标签 */
+  afterLabel?: string;
+  /** 前图片 alt 文本 */
+  beforeAlt?: string;
+  /** 后图片 alt 文本 */
+  afterAlt?: string;
+  /** 初始滑块位置（0-100） */
+  initialPosition?: number;
+  /** 对比说明 */
+  caption?: string;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const {
+  beforeImage,
+  afterImage,
+  beforeLabel = 'Before',
+  afterLabel = 'After',
+  beforeAlt = '对比前',
+  afterAlt = '对比后',
+  initialPosition = 50,
+  caption,
+  class: className = '',
+} = Astro.props;
+
+// 生成唯一ID
+const id = `compare-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<figure class:list={['image-comparison-container my-8', className]}>
+  <div
+    id={id}
+    class="comparison-slider relative select-none rounded-lg overflow-hidden shadow-lg"
+    data-initial={initialPosition}
+  >
+    <!-- 后图片（底层） -->
+    <div class="comparison-after">
+      <img
+        src={afterImage}
+        alt={afterAlt}
+        class="w-full h-auto block"
+        loading="lazy"
+      />
+      {afterLabel && (
+        <span class="comparison-label absolute top-4 right-4 bg-black/70 text-white text-xs px-2 py-1 rounded">
+          {afterLabel}
+        </span>
+      )}
+    </div>
+    
+    <!-- 前图片（上层，裁剪） -->
+    <div
+      class="comparison-before absolute inset-0 overflow-hidden"
+      style={`width: ${initialPosition}%;`}
+    >
+      <img
+        src={beforeImage}
+        alt={beforeAlt}
+        class="h-full object-cover object-left"
+        style="width: auto; min-width: 100%;"
+        loading="lazy"
+      />
+      {beforeLabel && (
+        <span class="comparison-label absolute top-4 left-4 bg-black/70 text-white text-xs px-2 py-1 rounded">
+          {beforeLabel}
+        </span>
+      )}
+    </div>
+    
+    <!-- 滑块手柄 -->
+    <div
+      class="comparison-handle absolute top-0 bottom-0 w-1 bg-white shadow-lg cursor-ew-resize"
+      style={`left: ${initialPosition}%;`}
+    >
+      <div class="handle-button absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center">
+        <svg class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+        </svg>
+      </div>
+    </div>
+  </div>
+  
+  {caption && (
+    <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+      {caption}
+    </figcaption>
+  )}
+</figure>
+
+<script>
+  function initComparison(container: HTMLElement) {
+    const before = container.querySelector<HTMLElement>('.comparison-before');
+    const handle = container.querySelector<HTMLElement>('.comparison-handle');
+    
+    if (!before || !handle) return;
+
+    let isDragging = false;
+
+    function updatePosition(clientX: number) {
+      const rect = container.getBoundingClientRect();
+      let position = ((clientX - rect.left) / rect.width) * 100;
+      position = Math.max(0, Math.min(100, position));
+      
+      before.style.width = `${position}%`;
+      handle.style.left = `${position}%`;
+    }
+
+    function onPointerDown(e: PointerEvent) {
+      isDragging = true;
+      handle.setPointerCapture(e.pointerId);
+      updatePosition(e.clientX);
+    }
+
+    function onPointerMove(e: PointerEvent) {
+      if (!isDragging) return;
+      e.preventDefault();
+      updatePosition(e.clientX);
+    }
+
+    function onPointerUp() {
+      isDragging = false;
+    }
+
+    // 绑定事件
+    handle.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerup', onPointerUp);
+
+    // 支持点击容器任意位置
+    container.addEventListener('click', (e) => {
+      if (e.target === handle || handle.contains(e.target as Node)) return;
+      updatePosition(e.clientX);
+    });
+
+    // 键盘支持
+    handle.setAttribute('tabindex', '0');
+    handle.setAttribute('role', 'slider');
+    handle.setAttribute('aria-label', '图片对比滑块');
+    handle.setAttribute('aria-valuemin', '0');
+    handle.setAttribute('aria-valuemax', '100');
+
+    handle.addEventListener('keydown', (e) => {
+      const currentLeft = parseFloat(handle.style.left) || 50;
+      let newPosition = currentLeft;
+
+      switch (e.key) {
+        case 'ArrowLeft':
+          newPosition = Math.max(0, currentLeft - 5);
+          break;
+        case 'ArrowRight':
+          newPosition = Math.min(100, currentLeft + 5);
+          break;
+        case 'Home':
+          newPosition = 0;
+          break;
+        case 'End':
+          newPosition = 100;
+          break;
+        default:
+          return;
+      }
+
+      e.preventDefault();
+      before.style.width = `${newPosition}%`;
+      handle.style.left = `${newPosition}%`;
+      handle.setAttribute('aria-valuenow', String(Math.round(newPosition)));
+    });
+  }
+
+  // 初始化所有对比组件
+  function initAllComparisons() {
+    document.querySelectorAll<HTMLElement>('.comparison-slider').forEach(initComparison);
+  }
+
+  // 页面加载后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllComparisons);
+  } else {
+    initAllComparisons();
+  }
+
+  // 支持 View Transitions
+  document.addEventListener('astro:page-load', initAllComparisons);
+</script>
+
+<style>
+  .comparison-slider {
+    touch-action: pan-y;
+  }
+
+  .comparison-handle {
+    z-index: 10;
+    transform: translateX(-50%);
+  }
+
+  .comparison-handle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background: white;
+    transform: translateX(-50%);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .handle-button {
+    transition: transform 0.15s ease;
+  }
+
+  .comparison-handle:hover .handle-button,
+  .comparison-handle:focus .handle-button {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .comparison-handle:active .handle-button {
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+
+  .comparison-before {
+    z-index: 1;
+  }
+
+  .comparison-label {
+    z-index: 5;
+  }
+</style>

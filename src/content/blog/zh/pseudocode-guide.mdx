@@ -1,0 +1,109 @@
+---
+title: "Pseudocode 伪代码组件使用指南"
+description: "学习如何使用 Pseudocode 组件创建格式优美的算法伪代码"
+pubDate: "2025-01-16"
+tags: [Pseudocode, 算法, 伪代码, 教程]
+category: tutorial
+toc: true
+lang: zh
+math: true
+---
+
+import { Pseudocode, Callout } from '@/components/mdx';
+
+本文介绍如何在博客中使用 Pseudocode 组件展示算法伪代码。
+
+<Callout type="info" title="关于 Pseudocode">
+Pseudocode 组件基于 pseudocode.js 和 KaTeX，支持 LaTeX 风格的算法排版。
+</Callout>
+
+## 快速排序
+
+<Pseudocode title="快速排序">
+{String.raw`\begin{algorithm}
+\caption{QuickSort}
+\begin{algorithmic}
+\PROCEDURE{QuickSort}{$A, lo, hi$}
+    \IF{$lo < hi$}
+        \STATE $p \gets$ \CALL{Partition}{$A, lo, hi$}
+        \STATE \CALL{QuickSort}{$A, lo, p - 1$}
+        \STATE \CALL{QuickSort}{$A, p + 1, hi$}
+    \ENDIF
+\ENDPROCEDURE
+\end{algorithmic}
+\end{algorithm}`}
+</Pseudocode>
+
+## 二分查找
+
+<Pseudocode title="二分查找">
+{String.raw`\begin{algorithm}
+\caption{Binary Search}
+\begin{algorithmic}
+\PROCEDURE{BinarySearch}{$A, target$}
+    \STATE $left \gets 0$
+    \STATE $right \gets |A| - 1$
+    \WHILE{$left \le right$}
+        \STATE $mid \gets \lfloor(left + right) / 2\rfloor$
+        \IF{$A[mid] = target$}
+            \RETURN $mid$
+        \ELSIF{$A[mid] < target$}
+            \STATE $left \gets mid + 1$
+        \ELSE
+            \STATE $right \gets mid - 1$
+        \ENDIF
+    \ENDWHILE
+    \RETURN $-1$
+\ENDPROCEDURE
+\end{algorithmic}
+\end{algorithm}`}
+</Pseudocode>
+
+## 欧几里得算法
+
+<Pseudocode title="欧几里得算法">
+{String.raw`\begin{algorithm}
+\caption{GCD 最大公约数}
+\begin{algorithmic}
+\PROCEDURE{GCD}{$a, b$}
+    \WHILE{$b \ne 0$}
+        \STATE $t \gets b$
+        \STATE $b \gets a \mod b$
+        \STATE $a \gets t$
+    \ENDWHILE
+    \RETURN $a$
+\ENDPROCEDURE
+\end{algorithmic}
+\end{algorithm}`}
+</Pseudocode>
+
+## 使用方式
+
+```jsx
+import { Pseudocode } from '@/components/mdx';
+
+<Pseudocode title="算法名称">
+{String.raw`\begin{algorithm}
+\caption{算法标题}
+\begin{algorithmic}
+\PROCEDURE{过程名}{$参数$}
+    \STATE 语句
+    \IF{$条件$}
+        \STATE 操作
+    \ENDIF
+\ENDPROCEDURE
+\end{algorithmic}
+\end{algorithm}`}
+</Pseudocode>
+```
+
+## 常用命令
+
+| 命令 | 说明 |
+|------|------|
+| `\PROCEDURE{名称}{参数}` | 定义过程 |
+| `\STATE` | 语句 |
+| `\IF{条件}...\ENDIF` | 条件语句 |
+| `\WHILE{条件}...\ENDWHILE` | 循环语句 |
+| `\RETURN` | 返回值 |
+| `\CALL{过程}{参数}` | 调用过程 |

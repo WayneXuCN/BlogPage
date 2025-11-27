@@ -1,0 +1,224 @@
+---
+/**
+ * Tabs.astro
+ * 选项卡组件
+ *
+ * 用法：
+ * <Tabs labels={['Tab 1', 'Tab 2', 'Tab 3']}>
+ *   <div>内容 1</div>
+ *   <div>内容 2</div>
+ *   <div>内容 3</div>
+ * </Tabs>
+ */
+interface Props {
+  /** 选项卡标签列表 */
+  labels: string[];
+  /** 默认激活的选项卡索引 */
+  defaultTab?: number;
+  /** 选项卡组标识（用于同步） */
+  groupId?: string;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const { labels, defaultTab = 0, groupId, class: className = '' } = Astro.props;
+
+// 生成唯一ID
+const tabsId = `tabs-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<div
+  class:list={['tabs-container my-6', className]}
+  data-tabs-id={tabsId}
+  data-group-id={groupId}
+  data-default-tab={defaultTab}
+  data-tab-count={labels.length}
+>
+  <!-- 选项卡头部 -->
+  <div
+    class="tabs-header flex flex-wrap gap-1 border-b border-gray-200 dark:border-gray-700 mb-4"
+    role="tablist"
+  >
+    {labels.map((label, index) => (
+      <button
+        type="button"
+        role="tab"
+        class:list={[
+          'tab-button px-4 py-2 text-sm font-medium rounded-t-lg transition-colors',
+          'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200',
+          'hover:bg-gray-100 dark:hover:bg-gray-800',
+          'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900',
+          { 'tab-active': index === defaultTab }
+        ]}
+        data-tab-index={index}
+        aria-selected={index === defaultTab}
+        aria-controls={`${tabsId}-panel-${index}`}
+        id={`${tabsId}-tab-${index}`}
+      >
+        {label}
+      </button>
+    ))}
+  </div>
+
+  <!-- 选项卡内容面板 -->
+  <div class="tabs-panels">
+    <slot />
+  </div>
+</div>
+
+<script>
+  interface TabsState {
+    [groupId: string]: number;
+  }
+
+  // 全局状态存储（用于同步选项卡）
+  const tabsState: TabsState = {};
+
+  function initTabs(container: HTMLElement) {
+    const tabsId = container.dataset.tabsId;
+    const groupId = container.dataset.groupId;
+    const defaultTab = parseInt(container.dataset.defaultTab || '0', 10);
+    const tabCount = parseInt(container.dataset.tabCount || '0', 10);
+
+    const buttons = container.querySelectorAll<HTMLButtonElement>('.tab-button');
+    const panelsContainer = container.querySelector('.tabs-panels');
+    
+    if (!panelsContainer) return;
+
+    // 获取所有直接子元素作为面板
+    const panels = Array.from(panelsContainer.children) as HTMLElement[];
+    
+    // 为面板添加必要的属性
+    panels.forEach((panel, index) => {
+      panel.setAttribute('role', 'tabpanel');
+      panel.setAttribute('id', `${tabsId}-panel-${index}`);
+      panel.setAttribute('aria-labelledby', `${tabsId}-tab-${index}`);
+      panel.classList.add('tab-panel');
+      if (index !== defaultTab) {
+        panel.classList.add('hidden');
+      }
+    });
+
+    // 获取初始选项卡
+    let activeIndex = defaultTab;
+    if (groupId && tabsState[groupId] !== undefined) {
+      activeIndex = tabsState[groupId];
+    }
+
+    // 激活选项卡
+    function activateTab(index: number, sync = true) {
+      buttons.forEach((btn, i) => {
+        const isActive = i === index;
+        btn.classList.toggle('tab-active', isActive);
+        btn.setAttribute('aria-selected', String(isActive));
+      });
+
+      panels.forEach((panel, i) => {
+        panel.classList.toggle('hidden', i !== index);
+      });
+
+      // 同步相同 groupId 的选项卡
+      if (sync && groupId) {
+        tabsState[groupId] = index;
+        document.querySelectorAll<HTMLElement>(`[data-group-id="${groupId}"]`).forEach(otherContainer => {
+          if (otherContainer !== container) {
+            const otherButtons = otherContainer.querySelectorAll<HTMLButtonElement>('.tab-button');
+            const otherPanelsContainer = otherContainer.querySelector('.tabs-panels');
+            if (!otherPanelsContainer) return;
+            
+            const otherPanels = Array.from(otherPanelsContainer.children) as HTMLElement[];
+            
+            otherButtons.forEach((btn, i) => {
+              const isActive = i === index;
+              btn.classList.toggle('tab-active', isActive);
+              btn.setAttribute('aria-selected', String(isActive));
+            });
+
+            otherPanels.forEach((panel, i) => {
+              panel.classList.toggle('hidden', i !== index);
+            });
+          }
+        });
+      }
+    }
+
+    // 绑定点击事件
+    buttons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        activateTab(index);
+      });
+    });
+
+    // 键盘导航
+    container.addEventListener('keydown', (e) => {
+      const target = e.target as HTMLElement;
+      if (!target.classList.contains('tab-button')) return;
+
+      const currentIndex = parseInt(target.dataset.tabIndex || '0', 10);
+      let newIndex = currentIndex;
+
+      switch (e.key) {
+        case 'ArrowLeft':
+          newIndex = currentIndex > 0 ? currentIndex - 1 : buttons.length - 1;
+          break;
+        case 'ArrowRight':
+          newIndex = currentIndex < buttons.length - 1 ? currentIndex + 1 : 0;
+          break;
+        case 'Home':
+          newIndex = 0;
+          break;
+        case 'End':
+          newIndex = buttons.length - 1;
+          break;
+        default:
+          return;
+      }
+
+      e.preventDefault();
+      buttons[newIndex].focus();
+      activateTab(newIndex);
+    });
+
+    // 初始化激活状态
+    activateTab(activeIndex, false);
+  }
+
+  // 初始化所有选项卡
+  function initAllTabs() {
+    document.querySelectorAll<HTMLElement>('.tabs-container[data-tabs-id]').forEach(initTabs);
+  }
+
+  // 页面加载后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllTabs);
+  } else {
+    initAllTabs();
+  }
+
+  // 支持 View Transitions
+  document.addEventListener('astro:page-load', initAllTabs);
+</script>
+
+<style>
+  .tab-button.tab-active {
+    @apply text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400 -mb-px bg-transparent;
+  }
+
+  .tab-panel {
+    animation: fadeIn 0.2s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* 选项卡内的代码块样式 */
+  .tab-panel :global(pre) {
+    @apply mt-0 rounded-t-none;
+  }
+</style>

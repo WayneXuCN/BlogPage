@@ -1,0 +1,533 @@
+/**
+ * Prose Themes - 多种文章排版风格
+ * 
+ * 可用主题:
+ * - prose-academic: 经典学术风格
+ * - prose-minimal: 简约现代风格  
+ * - prose-magazine: 杂志风格
+ * - prose-distill: Distill.pub 学术期刊风格
+ */
+
+/* =============================================================================
+ * 基础 Prose 重置
+ * ============================================================================= */
+
+.prose {
+  --tw-prose-body: theme('colors.gray.700');
+  --tw-prose-headings: theme('colors.gray.900');
+  --tw-prose-links: theme('colors.blue.600');
+  --tw-prose-code: theme('colors.gray.900');
+  --tw-prose-quotes: theme('colors.gray.600');
+}
+
+.dark .prose {
+  --tw-prose-body: theme('colors.gray.300');
+  --tw-prose-headings: theme('colors.gray.100');
+  --tw-prose-links: theme('colors.blue.400');
+  --tw-prose-code: theme('colors.gray.100');
+  --tw-prose-quotes: theme('colors.gray.400');
+}
+
+/* =============================================================================
+ * Academic Style - 经典学术风格
+ * 特点: 衬线字体、舒适行距、传统排版
+ * ============================================================================= */
+
+.prose-academic {
+  font-family: 'Noto Serif SC', 'Georgia', 'Times New Roman', serif;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+}
+
+.prose-academic h1,
+.prose-academic h2,
+.prose-academic h3,
+.prose-academic h4 {
+  font-family: 'Noto Sans SC', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+}
+
+.prose-academic h1 {
+  font-size: 2rem;
+  border-bottom: 1px solid theme('colors.gray.200');
+  padding-bottom: 0.5em;
+}
+
+.prose-academic h2 {
+  font-size: 1.5rem;
+  border-bottom: 1px solid theme('colors.gray.100');
+  padding-bottom: 0.3em;
+}
+
+.prose-academic h3 {
+  font-size: 1.25rem;
+}
+
+.prose-academic p {
+  margin-bottom: 1.25em;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.prose-academic blockquote {
+  font-style: italic;
+  border-left: 3px solid theme('colors.gray.300');
+  padding-left: 1.5em;
+  margin: 1.5em 0;
+  color: theme('colors.gray.600');
+}
+
+.prose-academic code:not(pre code) {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.875em;
+  background: theme('colors.gray.100');
+  padding: 0.2em 0.4em;
+  border-radius: 0.25em;
+}
+
+.prose-academic figure {
+  margin: 2em 0;
+}
+
+.prose-academic figcaption {
+  font-size: 0.875rem;
+  color: theme('colors.gray.500');
+  text-align: center;
+  margin-top: 0.75em;
+}
+
+.prose-academic table {
+  font-size: 0.9375rem;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.prose-academic th {
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 2px solid theme('colors.gray.300');
+  padding: 0.75em 1em;
+}
+
+.prose-academic td {
+  border-bottom: 1px solid theme('colors.gray.200');
+  padding: 0.75em 1em;
+}
+
+.dark .prose-academic h1,
+.dark .prose-academic h2 {
+  border-color: theme('colors.gray.700');
+}
+
+.dark .prose-academic blockquote {
+  border-color: theme('colors.gray.600');
+  color: theme('colors.gray.400');
+}
+
+.dark .prose-academic code:not(pre code) {
+  background: theme('colors.gray.800');
+}
+
+.dark .prose-academic th {
+  border-color: theme('colors.gray.600');
+}
+
+.dark .prose-academic td {
+  border-color: theme('colors.gray.700');
+}
+
+/* =============================================================================
+ * Minimal Style - 简约现代风格
+ * 特点: 无衬线字体、大量留白、现代感
+ * ============================================================================= */
+
+.prose-minimal {
+  font-family: 'Inter', 'Noto Sans SC', system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.75;
+  letter-spacing: 0;
+}
+
+.prose-minimal h1,
+.prose-minimal h2,
+.prose-minimal h3,
+.prose-minimal h4 {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-top: 2.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose-minimal h1 {
+  font-size: 2.25rem;
+}
+
+.prose-minimal h2 {
+  font-size: 1.75rem;
+}
+
+.prose-minimal h3 {
+  font-size: 1.25rem;
+}
+
+.prose-minimal p {
+  margin-bottom: 1.5em;
+}
+
+.prose-minimal blockquote {
+  font-style: normal;
+  font-weight: 500;
+  border-left: 4px solid theme('colors.blue.500');
+  padding-left: 1.25em;
+  margin: 2em 0;
+}
+
+.prose-minimal code:not(pre code) {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.875em;
+  background: theme('colors.gray.100');
+  padding: 0.15em 0.4em;
+  border-radius: 0.375em;
+  font-weight: 500;
+}
+
+.prose-minimal a {
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition: border-color 0.2s;
+}
+
+.prose-minimal a:hover {
+  border-color: transparent;
+}
+
+.prose-minimal hr {
+  border: none;
+  height: 1px;
+  background: theme('colors.gray.200');
+  margin: 3em 0;
+}
+
+.dark .prose-minimal code:not(pre code) {
+  background: theme('colors.gray.800');
+}
+
+.dark .prose-minimal hr {
+  background: theme('colors.gray.700');
+}
+
+/* =============================================================================
+ * Magazine Style - 杂志风格
+ * 特点: 大标题、视觉冲击力、首字下沉
+ * ============================================================================= */
+
+.prose-magazine {
+  font-family: 'Noto Sans SC', system-ui, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+
+.prose-magazine h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 0.5em;
+}
+
+.prose-magazine h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+
+.prose-magazine h3 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  margin-top: 1.5em;
+}
+
+/* 首段首字下沉 */
+.prose-magazine > p:first-of-type::first-letter {
+  float: left;
+  font-size: 4em;
+  line-height: 0.8;
+  font-weight: 700;
+  margin-right: 0.1em;
+  margin-top: 0.1em;
+  color: theme('colors.gray.900');
+}
+
+.prose-magazine p {
+  margin-bottom: 1.25em;
+}
+
+.prose-magazine blockquote {
+  font-size: 1.375rem;
+  font-weight: 500;
+  font-style: italic;
+  border: none;
+  padding: 1em 0;
+  margin: 2em 0;
+  text-align: center;
+  color: theme('colors.gray.700');
+}
+
+.prose-magazine blockquote::before {
+  content: '"';
+  display: block;
+  font-size: 4rem;
+  line-height: 1;
+  color: theme('colors.gray.300');
+}
+
+.prose-magazine figure {
+  margin: 2.5em -2em;
+}
+
+.prose-magazine img {
+  width: 100%;
+}
+
+.prose-magazine figcaption {
+  font-size: 0.875rem;
+  color: theme('colors.gray.500');
+  padding: 0 2em;
+  margin-top: 0.75em;
+}
+
+.dark .prose-magazine > p:first-of-type::first-letter {
+  color: theme('colors.gray.100');
+}
+
+.dark .prose-magazine blockquote {
+  color: theme('colors.gray.300');
+}
+
+.dark .prose-magazine blockquote::before {
+  color: theme('colors.gray.600');
+}
+
+/* =============================================================================
+ * Distill Style - Distill.pub 学术期刊风格
+ * 特点: 侧边注释、脚注、学术排版
+ * ============================================================================= */
+
+.prose-distill {
+  font-family: 'Source Serif Pro', 'Noto Serif SC', Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  max-width: 65ch;
+}
+
+.prose-distill h1,
+.prose-distill h2,
+.prose-distill h3 {
+  font-family: 'Source Sans Pro', 'Noto Sans SC', system-ui, sans-serif;
+  font-weight: 600;
+}
+
+.prose-distill h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+  letter-spacing: -0.02em;
+}
+
+.prose-distill h2 {
+  font-size: 1.5rem;
+  margin-top: 2.5em;
+  margin-bottom: 0.75em;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid theme('colors.gray.200');
+}
+
+.prose-distill h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-top: 1.5em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: theme('colors.gray.600');
+}
+
+.prose-distill p {
+  margin-bottom: 1.25em;
+}
+
+/* 侧边注释容器 */
+.prose-distill .sidenote,
+.prose-distill .marginnote {
+  float: right;
+  clear: right;
+  margin-right: -40%;
+  width: 35%;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: theme('colors.gray.600');
+  padding-left: 1em;
+  border-left: 2px solid theme('colors.gray.200');
+}
+
+.prose-distill .sidenote-number {
+  font-size: 0.75em;
+  vertical-align: super;
+  color: theme('colors.blue.600');
+  font-weight: 600;
+}
+
+/* 定义、定理、引理样式 */
+.prose-distill .definition,
+.prose-distill .theorem,
+.prose-distill .lemma {
+  margin: 1.5em 0;
+  padding: 1em 1.25em;
+  border-radius: 0.25em;
+}
+
+.prose-distill .definition {
+  background: theme('colors.blue.50');
+  border-left: 3px solid theme('colors.blue.500');
+}
+
+.prose-distill .theorem {
+  background: theme('colors.green.50');
+  border-left: 3px solid theme('colors.green.500');
+}
+
+.prose-distill .lemma {
+  background: theme('colors.yellow.50');
+  border-left: 3px solid theme('colors.yellow.500');
+}
+
+.prose-distill .definition-title,
+.prose-distill .theorem-title,
+.prose-distill .lemma-title {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5em;
+}
+
+.prose-distill blockquote {
+  font-style: normal;
+  border-left: 3px solid theme('colors.gray.300');
+  padding-left: 1em;
+  margin: 1.5em 0;
+  color: theme('colors.gray.600');
+}
+
+.prose-distill figure {
+  margin: 2em 0;
+}
+
+.prose-distill figcaption {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 0.875rem;
+  color: theme('colors.gray.500');
+  margin-top: 0.5em;
+}
+
+.prose-distill figcaption strong {
+  color: theme('colors.gray.700');
+}
+
+/* 引用样式 */
+.prose-distill .citation {
+  font-size: 0.875em;
+  color: theme('colors.blue.600');
+  cursor: pointer;
+}
+
+.prose-distill .citation:hover {
+  text-decoration: underline;
+}
+
+/* 参考文献列表 */
+.prose-distill .references {
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.prose-distill .references li {
+  margin-bottom: 0.75em;
+  padding-left: 1.5em;
+  text-indent: -1.5em;
+}
+
+.dark .prose-distill h2 {
+  border-color: theme('colors.gray.700');
+}
+
+.dark .prose-distill h3 {
+  color: theme('colors.gray.400');
+}
+
+.dark .prose-distill .sidenote,
+.dark .prose-distill .marginnote {
+  color: theme('colors.gray.400');
+  border-color: theme('colors.gray.700');
+}
+
+.dark .prose-distill .definition {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.dark .prose-distill .theorem {
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.dark .prose-distill .lemma {
+  background: rgba(234, 179, 8, 0.1);
+}
+
+/* =============================================================================
+ * 响应式调整
+ * ============================================================================= */
+
+@media (max-width: 1024px) {
+  .prose-distill .sidenote,
+  .prose-distill .marginnote {
+    float: none;
+    display: block;
+    margin: 1em 0;
+    width: 100%;
+    padding: 0.75em 1em;
+    background: theme('colors.gray.50');
+    border-radius: 0.25em;
+    border-left: 3px solid theme('colors.gray.300');
+  }
+
+  .dark .prose-distill .sidenote,
+  .dark .prose-distill .marginnote {
+    background: theme('colors.gray.800');
+    border-color: theme('colors.gray.600');
+  }
+}
+
+@media (max-width: 640px) {
+  .prose-academic {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .prose-magazine h1 {
+    font-size: 2rem;
+  }
+
+  .prose-magazine > p:first-of-type::first-letter {
+    font-size: 3em;
+  }
+
+  .prose-distill {
+    font-size: 1rem;
+  }
+}

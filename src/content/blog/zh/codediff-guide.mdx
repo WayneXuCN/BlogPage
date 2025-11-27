@@ -1,0 +1,77 @@
+---
+title: "代码差异对比组件使用指南"
+description: "学习如何使用 CodeDiff 组件展示代码变更"
+pubDate: "2025-01-18"
+tags: [代码, Diff, 版本对比, 教程]
+category: tutorial
+toc: true
+lang: zh
+---
+
+import { CodeDiff, Callout, Tabs } from '@/components/mdx';
+
+本文介绍如何使用 CodeDiff 组件展示代码差异。
+
+<Callout type="info" title="关于 CodeDiff">
+CodeDiff 组件基于 Diff2Html 库，提供清晰的代码变更可视化。
+</Callout>
+
+## JavaScript 代码重构示例
+
+<CodeDiff
+  language="javascript"
+  oldCode={`function greet(name) {
+  console.log('Hello, ' + name);
+}
+
+function sum(a, b) {
+  return a + b;
+}
+
+greet('World');`}
+  newCode={`function greet(name: string): void {
+  console.log(\`Hello, \${name}!\`);
+}
+
+const sum = (a: number, b: number): number => a + b;
+
+greet('World');`}
+  oldTitle="ES5 版本"
+  newTitle="TypeScript 版本"
+/>
+
+## Python 代码优化示例
+
+<CodeDiff
+  language="python"
+  oldCode={`def get_even_numbers(numbers):
+    result = []
+    for num in numbers:
+        if num % 2 == 0:
+            result.append(num)
+    return result
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+evens = get_even_numbers(numbers)`}
+  newCode={`def get_even_numbers(numbers: list[int]) -> list[int]:
+    return [num for num in numbers if num % 2 == 0]
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+evens = get_even_numbers(numbers)`}
+  oldTitle="传统写法"
+  newTitle="列表推导式"
+/>
+
+## 使用方式
+
+```jsx
+import { CodeDiff } from '@/components/mdx';
+
+<CodeDiff
+  language="javascript"
+  oldCode={`旧代码`}
+  newCode={`新代码`}
+  oldTitle="旧版本"
+  newTitle="新版本"
+/>
+```

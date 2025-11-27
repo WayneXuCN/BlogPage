@@ -1,0 +1,177 @@
+---
+/**
+ * VegaLite.astro
+ * Vega-Lite 图表组件
+ *
+ * 用法：
+ * <VegaLite
+ *   spec={{
+ *     "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+ *     "data": { "values": [...] },
+ *     "mark": "bar",
+ *     "encoding": { ... }
+ *   }}
+ *   caption="图表说明"
+ * />
+ */
+interface Props {
+  /** Vega-Lite 规范对象 */
+  spec: Record<string, unknown>;
+  /** 图表说明 */
+  caption?: string;
+  /** 图表宽度 */
+  width?: number | 'container';
+  /** 图表高度 */
+  height?: number;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const { spec, caption, width = 'container', height = 300, class: className = '' } = Astro.props;
+
+// 生成唯一ID
+const id = `vega-${Math.random().toString(36).slice(2, 9)}`;
+
+// 添加响应式配置
+const fullSpec = {
+  ...spec,
+  width: width === 'container' ? 'container' : width,
+  height,
+  autosize: { type: 'fit', contains: 'padding' },
+};
+---
+
+<figure class:list={['vega-container my-8', className]}>
+  <div
+    id={id}
+    class="vega-chart w-full bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 overflow-x-auto"
+    data-spec={JSON.stringify(fullSpec)}
+  >
+    <!-- 加载占位 -->
+    <div class="vega-loading flex items-center justify-center py-12 text-gray-400">
+      <svg class="animate-spin h-8 w-8" viewBox="0 0 24 24">
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+          fill="none"></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+    </div>
+  </div>
+  {
+    caption && (
+      <figcaption class="mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic">
+        {caption}
+      </figcaption>
+    )
+  }
+</figure>
+
+<script>
+  import embed from 'vega-embed';
+
+  // 存储图表视图实例
+  const viewInstances = new Map<string, unknown>();
+
+  async function initChart(container: HTMLElement) {
+    const specStr = container.dataset.spec;
+    if (!specStr) return;
+
+    try {
+      const spec = JSON.parse(specStr);
+      
+      // 移除加载占位
+      const loading = container.querySelector('.vega-loading');
+      if (loading) loading.remove();
+
+      // 判断当前主题
+      const isDark = document.documentElement.classList.contains('dark');
+
+      // 销毁已有实例
+      const existingView = viewInstances.get(container.id);
+      if (existingView && typeof (existingView as any).finalize === 'function') {
+        (existingView as any).finalize();
+      }
+
+      // 清空容器
+      container.innerHTML = '';
+
+      // 创建图表
+      const result = await embed(container, spec, {
+        theme: isDark ? 'dark' : undefined,
+        actions: {
+          export: true,
+          source: false,
+          compiled: false,
+          editor: false,
+        },
+        renderer: 'svg',
+      });
+
+      viewInstances.set(container.id, result.view);
+
+    } catch (error) {
+      console.error('Vega-Lite render error:', error);
+      container.innerHTML = `<div class="flex items-center justify-center py-12 text-red-500 text-sm">图表渲染失败</div>`;
+    }
+  }
+
+  // 主题切换时重新渲染
+  function handleThemeChange() {
+    document.querySelectorAll<HTMLElement>('.vega-chart[data-spec]').forEach(container => {
+      initChart(container);
+    });
+  }
+
+  // 初始化所有图表
+  function initAllCharts() {
+    document.querySelectorAll<HTMLElement>('.vega-chart[data-spec]').forEach(initChart);
+  }
+
+  // 监听主题变化
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+      if (mutation.attributeName === 'class') {
+        handleThemeChange();
+      }
+    });
+  });
+
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  });
+
+  // 页面加载后初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllCharts);
+  } else {
+    initAllCharts();
+  }
+
+  // 支持 View Transitions
+  document.addEventListener('astro:page-load', initAllCharts);
+</script>
+
+<style>
+  .vega-chart :global(.vega-embed) {
+    width: 100%;
+  }
+  
+  .vega-chart :global(.vega-embed summary) {
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  
+  .vega-chart:hover :global(.vega-embed summary) {
+    opacity: 1;
+  }
+</style>

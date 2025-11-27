@@ -1,0 +1,68 @@
+---
+/**
+ * Details.astro
+ * 可折叠详情组件
+ *
+ * 用法：
+ * <Details title="点击展开">
+ *   这里是详细内容...
+ * </Details>
+ */
+interface Props {
+  /** 标题 */
+  title: string;
+  /** 是否默认展开 */
+  open?: boolean;
+  /** 自定义类名 */
+  class?: string;
+}
+
+const { title, open = false, class: className = '' } = Astro.props;
+---
+
+<details
+  class:list={[
+    'details-container my-4 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden',
+    className,
+  ]}
+  open={open}
+>
+  <summary
+    class="flex items-center justify-between gap-2 px-4 py-3 bg-gray-50 dark:bg-gray-800 cursor-pointer select-none hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+  >
+    <span class="font-medium text-gray-900 dark:text-gray-100">{title}</span>
+    <svg
+      class="details-icon w-5 h-5 text-gray-500 transition-transform duration-200"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
+  </summary>
+  <div class="details-content p-4 bg-white dark:bg-gray-900">
+    <slot />
+  </div>
+</details>
+
+<style>
+  details[open] .details-icon {
+    transform: rotate(180deg);
+  }
+
+  details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details summary::marker {
+    display: none;
+  }
+
+  .details-content :global(> :first-child) {
+    margin-top: 0;
+  }
+
+  .details-content :global(> :last-child) {
+    margin-bottom: 0;
+  }
+</style>

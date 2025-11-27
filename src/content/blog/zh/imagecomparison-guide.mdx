@@ -1,0 +1,62 @@
+---
+title: "ImageComparison 图片对比组件使用指南"
+description: "学习如何使用 ImageComparison 组件创建前后对比效果"
+pubDate: "2025-01-16"
+tags: [ImageComparison, 图片, 对比, 教程]
+category: tutorial
+toc: true
+lang: zh
+---
+
+import { ImageComparison, Callout } from '@/components/mdx';
+
+本文介绍如何在博客中使用 ImageComparison 组件创建图片对比效果。
+
+<Callout type="info" title="关于 ImageComparison">
+ImageComparison 组件可以创建拖动式的图片前后对比效果，非常适合展示处理前后的效果。
+</Callout>
+
+## 基础用法
+
+<ImageComparison
+  beforeSrc="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop&sat=-100"
+  afterSrc="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop"
+  beforeLabel="黑白"
+  afterLabel="彩色"
+/>
+
+## 图像处理对比
+
+<ImageComparison
+  beforeSrc="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=400&fit=crop&blur=10"
+  afterSrc="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&h=400&fit=crop"
+  beforeLabel="模糊"
+  afterLabel="清晰"
+/>
+
+## 使用方式
+
+```jsx
+import { ImageComparison } from '@/components/mdx';
+
+<ImageComparison
+  beforeSrc="/images/before.jpg"
+  afterSrc="/images/after.jpg"
+  beforeLabel="处理前"
+  afterLabel="处理后"
+/>
+```
+
+## 参数说明
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| beforeSrc | string | 必填 | 对比前图片 URL |
+| afterSrc | string | 必填 | 对比后图片 URL |
+| beforeLabel | string | "Before" | 对比前标签 |
+| afterLabel | string | "After" | 对比后标签 |
+
+## 交互说明
+
+- **拖动分隔线**：左右拖动中间的分隔线查看对比效果
+- **标签显示**：左右两侧分别显示对比前后的标签
