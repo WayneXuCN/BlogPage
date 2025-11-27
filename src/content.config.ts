@@ -2,7 +2,7 @@
  * Content Collections 配置
  * 博客内容集合定义
  */
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, z, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 // ============================================================================
@@ -11,58 +11,60 @@ import { glob } from 'astro/loaders';
 
 /**
  * 博客文章 Schema
+ * 支持本地图片（相对路径）和远程图片（URL）
  */
-const blogSchema = z.object({
-  // 基础元数据
-  title: z.string().max(200),
-  description: z.string().max(500),
+const blogSchema = ({ image }: { image: () => z.ZodType<unknown> }) =>
+  z.object({
+    // 基础元数据
+    title: z.string().max(200),
+    description: z.string().max(500),
 
-  // 时间
-  pubDate: z.coerce.date(),
-  updatedDate: z.coerce.date().optional(),
+    // 时间
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
 
-  // 分类与标签
-  category: z.enum([
-    'research', // 学术研究
-    'tutorial', // 教程
-    'thoughts', // 随想
-    'tools', // 工具
-    'life', // 生活
-  ]),
-  tags: z.array(z.string()).default([]),
+    // 分类与标签
+    category: z.enum([
+      'research', // 学术研究
+      'tutorial', // 教程
+      'thoughts', // 随想
+      'tools', // 工具
+      'life', // 生活
+    ]),
+    tags: z.array(z.string()).default([]),
 
-  // 媒体
-  image: z.string().optional(),
-  imageAlt: z.string().optional(),
+    // 媒体 - 支持本地图片(image())或远程URL(string)
+    image: z.union([image(), z.string().url()]).optional(),
+    imageAlt: z.string().optional(),
 
-  // 状态控制
-  draft: z.boolean().default(false),
-  featured: z.boolean().default(false),
+    // 状态控制
+    draft: z.boolean().default(false),
+    featured: z.boolean().default(false),
 
-  // 多语言
-  lang: z.enum(['zh', 'en']).default('zh'),
+    // 多语言
+    lang: z.enum(['zh', 'en']).default('zh'),
 
-  // 系列文章
-  series: z.string().optional(),
-  seriesOrder: z.number().optional(),
+    // 系列文章
+    series: z.string().optional(),
+    seriesOrder: z.number().optional(),
 
-  // 学术特有字段
-  doi: z.string().optional(),
-  citation: z.string().optional(),
-  venue: z.string().optional(),
+    // 学术特有字段
+    doi: z.string().optional(),
+    citation: z.string().optional(),
+    venue: z.string().optional(),
 
-  // SEO
-  canonicalUrl: z.string().url().optional(),
-  keywords: z.array(z.string()).optional(),
+    // SEO
+    canonicalUrl: z.string().url().optional(),
+    keywords: z.array(z.string()).optional(),
 
-  // 作者
-  author: z.string().optional(),
+    // 作者 - 支持字符串或引用
+    author: z.string().optional(),
 
-  // 自定义字段
-  math: z.boolean().default(false), // 是否包含数学公式
-  toc: z.boolean().default(true), // 是否显示目录
-  comments: z.boolean().default(true), // 是否启用评论
-});
+    // 自定义字段
+    math: z.boolean().default(false), // 是否包含数学公式
+    toc: z.boolean().default(true), // 是否显示目录
+    comments: z.boolean().default(true), // 是否启用评论
+  });
 
 /**
  * 作者 Schema
@@ -187,6 +189,10 @@ const configSchema = z.object({
     categoryId: z.string(),
     mapping: z.string(),
     lang: z.string(),
+    strict: z.boolean().optional().default(false),
+    reactionsEnabled: z.boolean().optional().default(true),
+    emitMetadata: z.boolean().optional().default(false),
+    inputPosition: z.enum(['top', 'bottom']).optional().default('bottom'),
   }),
 
   // 导航配置
@@ -322,7 +328,8 @@ export const collections = {
 // 类型导出
 // ============================================================================
 
-export type BlogSchema = z.infer<typeof blogSchema>;
+// BlogSchema 使用 ReturnType 获取函数返回的 schema 的推断类型
+export type BlogSchema = z.infer<ReturnType<typeof blogSchema>>;
 export type AuthorSchema = z.infer<typeof authorSchema>;
 export type SeriesSchema = z.infer<typeof seriesSchema>;
 export type I18nSchema = z.infer<typeof i18nSchema>;

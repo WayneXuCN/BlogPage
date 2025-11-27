@@ -8,15 +8,32 @@ import rehypeKatex from 'rehype-katex';
 
 // https://astro.build/config
 export default defineConfig({
-  // 静态站点生成
-  output: 'static',
-  
-  // 尾部斜杠策略 - 使用 ignore 以支持 RSS 等特殊文件
-  trailingSlash: 'ignore',
-  
   // 站点基础配置
   site: 'https://blog.wenjiexu.site', // 在部署时更新为实际域名
-  
+  base: '/', // 根路径，用于多语言站点
+
+  trailingSlash: 'ignore', // 尾部斜杠策略 - 使用 ignore 以支持 RSS 等特殊文件
+
+  // 静态站点生成
+  output: 'static',
+
+  // 图片优化配置
+  image: {
+    // 允许优化的远程图片域名
+    domains: ['images.unsplash.com', 'unsplash.com'],
+    // 远程图片模式匹配
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.cloudinary.com',
+      },
+    ],
+  },
+
   // i18n 国际化配置
   i18n: {
     defaultLocale: 'zh',
@@ -33,13 +50,13 @@ export default defineConfig({
     '/zh/': '/zh/blog/',
     '/blog/': '/zh/blog/',
   },
-  
+
   // Prefetch 预获取配置
   prefetch: {
     defaultStrategy: 'hover',
     prefetchAll: false,
   },
-  
+
   // 集成配置
   integrations: [
     react(),
@@ -60,35 +77,38 @@ export default defineConfig({
         },
       },
       // 过滤草稿和私有页面
-      filter: (page) => !page.includes('/draft/'),
+      filter: page => !page.includes('/draft/'),
     }),
   ],
-  
+
   // Markdown 配置
   markdown: {
     // 数学公式支持
     remarkPlugins: [remarkMath],
     rehypePlugins: [
-      [rehypeKatex, {
-        // KaTeX 配置
-        strict: false,
-        throwOnError: false,
-        trust: true,
-        macros: {
-          // 自定义 LaTeX 宏
-          '\\R': '\\mathbb{R}',
-          '\\N': '\\mathbb{N}',
-          '\\Z': '\\mathbb{Z}',
-          '\\Q': '\\mathbb{Q}',
-          '\\C': '\\mathbb{C}',
-          '\\E': '\\mathbb{E}',
-          '\\P': '\\mathbb{P}',
-          '\\argmax': '\\operatorname*{argmax}',
-          '\\argmin': '\\operatorname*{argmin}',
+      [
+        rehypeKatex,
+        {
+          // KaTeX 配置
+          strict: false,
+          throwOnError: false,
+          trust: true,
+          macros: {
+            // 自定义 LaTeX 宏
+            '\\R': '\\mathbb{R}',
+            '\\N': '\\mathbb{N}',
+            '\\Z': '\\mathbb{Z}',
+            '\\Q': '\\mathbb{Q}',
+            '\\C': '\\mathbb{C}',
+            '\\E': '\\mathbb{E}',
+            '\\P': '\\mathbb{P}',
+            '\\argmax': '\\operatorname*{argmax}',
+            '\\argmin': '\\operatorname*{argmin}',
+          },
         },
-      }],
+      ],
     ],
-    
+
     // Shiki 代码高亮配置（GitHub 风格双主题）
     shikiConfig: {
       themes: {
@@ -97,20 +117,50 @@ export default defineConfig({
       },
       // 支持的语言
       langs: [
-        'javascript', 'typescript', 'python', 'rust', 'go',
-        'java', 'c', 'cpp', 'csharp', 'ruby', 'php',
-        'latex', 'tex', 'bash', 'shell', 'zsh',
-        'json', 'yaml', 'toml', 'xml', 'html', 'css', 'scss',
-        'jsx', 'tsx', 'vue', 'svelte', 'astro',
-        'sql', 'graphql', 'markdown', 'mdx',
-        'docker', 'nginx', 'makefile',
-        'r', 'matlab', 'julia',
+        'javascript',
+        'typescript',
+        'python',
+        'rust',
+        'go',
+        'java',
+        'c',
+        'cpp',
+        'csharp',
+        'ruby',
+        'php',
+        'latex',
+        'tex',
+        'bash',
+        'shell',
+        'zsh',
+        'json',
+        'yaml',
+        'toml',
+        'xml',
+        'html',
+        'css',
+        'scss',
+        'jsx',
+        'tsx',
+        'vue',
+        'svelte',
+        'astro',
+        'sql',
+        'graphql',
+        'markdown',
+        'mdx',
+        'docker',
+        'nginx',
+        'makefile',
+        'r',
+        'matlab',
+        'julia',
       ],
       // 自动换行
       wrap: true,
     },
   },
-  
+
   // Vite 配置
   vite: {
     optimizeDeps: {

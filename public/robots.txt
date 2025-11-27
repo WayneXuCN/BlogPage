@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://wenjiexu.site/sitemap.xml
+# Sitemap - 与 astro.config.mjs 中的 site 配置保持一致
+Sitemap: https://blog.wenjiexu.site/sitemap-index.xml

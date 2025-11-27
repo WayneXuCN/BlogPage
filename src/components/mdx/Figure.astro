@@ -2,30 +2,51 @@
 /**
  * Figure.astro
  * 带标题的图片组件（学术风格）
+ * 支持本地图片（astro:assets）和远程/public图片
  *
  * 用法：
  * <Figure src="/images/chart.png" alt="图表" caption="图 1: 实验结果" />
+ * <Figure src={importedImage} alt="图表" caption="图 1: 实验结果" />
  */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 
 interface Props {
-  src: string;
+  src: string | ImageMetadata;
   alt: string;
   caption?: string;
-  width?: string;
+  width?: number | string;
   class?: string;
 }
 
 const { src, alt, caption, width, class: className = '' } = Astro.props;
+
+// 判断是否为远程URL或public路径（字符串形式）
+const isRemoteOrPublic = typeof src === 'string';
 ---
 
 <figure class={`my-8 ${className}`}>
-  <img
-    src={src}
-    alt={alt}
-    class='mx-auto rounded-lg shadow-lg'
-    style={width ? `max-width: ${width}` : undefined}
-    loading='lazy'
-  />
+  {isRemoteOrPublic ? (
+    <Image
+      src={src}
+      alt={alt}
+      width={typeof width === 'number' ? width : 800}
+      height={typeof width === 'number' ? Math.round(width * 0.6) : 480}
+      class='mx-auto rounded-lg shadow-lg'
+      style={typeof width === 'string' ? `max-width: ${width}` : undefined}
+      loading='lazy'
+      decoding='async'
+    />
+  ) : (
+    <Image
+      src={src}
+      alt={alt}
+      class='mx-auto rounded-lg shadow-lg'
+      style={typeof width === 'string' ? `max-width: ${width}` : undefined}
+      loading='lazy'
+      decoding='async'
+    />
+  )}
   {
     caption && (
       <figcaption class='mt-3 text-center text-sm text-gray-600 dark:text-gray-400 italic'>

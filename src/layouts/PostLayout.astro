@@ -3,6 +3,7 @@
  * PostLayout.astro
  * 博客文章详情页布局 - 包含阅读进度条和更新时间
  */
+import { Image } from 'astro:assets';
 import BaseLayout from './BaseLayout.astro';
 import TableOfContents from '../components/blog/TableOfContents.astro';
 import PostMeta from '../components/blog/PostMeta.astro';
@@ -179,12 +180,25 @@ const t = i18n[lang];
     {
       image && (
         <figure class='mb-12 -mx-4 sm:mx-0'>
-          <img
-            src={image}
-            alt={title}
-            class='w-full rounded-none sm:rounded-2xl object-cover max-h-[500px]'
-            loading='eager'
-          />
+          {typeof image === 'string' ? (
+            <Image
+              src={image}
+              alt={title}
+              width={1200}
+              height={630}
+              class='w-full rounded-none sm:rounded-2xl object-cover max-h-[500px]'
+              loading='eager'
+              decoding='async'
+            />
+          ) : (
+            <Image
+              src={image}
+              alt={title}
+              class='w-full rounded-none sm:rounded-2xl object-cover max-h-[500px]'
+              loading='eager'
+              decoding='async'
+            />
+          )}
         </figure>
       )
     }
