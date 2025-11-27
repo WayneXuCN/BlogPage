@@ -7,6 +7,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import HomeLayout from '../../../components/layouts/HomeLayout.astro';
 import Pagination from '../../../components/blog/Pagination.astro';
 import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import { getSiteConfig } from '../../../utils/config';
 
 export function getStaticPaths() {
@@ -20,13 +21,13 @@ const currentLang = lang as 'zh' | 'en';
 const siteConfig = await getSiteConfig();
 
 // 获取当前语言的所有文章
-const allPosts = await getCollection('blog', ({ data }) => {
+const allPosts = await getCollection('blog', ({ data }: { data: CollectionEntry<'blog'>['data'] }) => {
   return data.lang === currentLang;
 });
 
 // 按发布日期排序
 const sortedPosts = allPosts.sort(
-  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+  (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
 );
 
 // 分页
@@ -36,7 +37,7 @@ const currentPage = 1;
 const paginatedPosts = sortedPosts.slice(0, postsPerPage);
 
 // 精选文章
-const featuredPosts = sortedPosts.filter(post => post.data.featured);
+const featuredPosts = sortedPosts.filter((post: CollectionEntry<'blog'>) => post.data.featured);
 
 // 页面信息
 const siteTitle = currentLang === 'zh' ? siteConfig.title.zh : siteConfig.title.en;

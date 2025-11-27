@@ -5,11 +5,12 @@
  */
 import PostLayout from '../../../../layouts/PostLayout.astro';
 import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
 
-  return posts.map(post => {
+  return posts.map((post: CollectionEntry<'blog'>) => {
     const year = new Date(post.data.pubDate).getFullYear();
     // id 格式: lang/slug-name，需要提取纯 slug
     const idParts = post.id.split('/');
@@ -28,7 +29,7 @@ export async function getStaticPaths() {
 }
 
 interface Props {
-  post: Awaited<ReturnType<typeof getCollection>>[number];
+  post: CollectionEntry<'blog'>;
 }
 
 const { post } = Astro.props;

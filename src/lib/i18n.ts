@@ -1,8 +1,8 @@
 /**
  * i18n 工具函数
- * 使用 Astro Content Collections 和原生 i18n 支持
  */
 import { getEntry, getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 
 // 支持的语言列表
 export const locales = ['zh', 'en'] as const;
@@ -25,12 +25,16 @@ export const localeConfig: Record<Locale, { label: string; name: string; hrefLan
   },
 };
 
+// i18n 数据类型（从 content collection 推断）
+export type I18nData = CollectionEntry<'i18n'>['data'];
+
 /**
  * 从内容集合获取指定语言的翻译数据
+ * 文件名现在应为 zh.json 和 en.json
  * @param locale - 语言代码 ('zh' | 'en')
  * @returns 翻译数据对象
  */
-export async function getI18n(locale: Locale) {
+export async function getI18n(locale: Locale): Promise<I18nData> {
   const entry = await getEntry('i18n', locale);
   if (!entry) {
     // 回退到默认语言
@@ -47,12 +51,11 @@ export async function getI18n(locale: Locale) {
  * 获取所有可用的翻译
  * @returns 所有语言的翻译数据
  */
-export async function getAllI18n() {
+export async function getAllI18n(): Promise<Record<Locale, I18nData>> {
   const collection = await getCollection('i18n');
-  return Object.fromEntries(collection.map(entry => [entry.id, entry.data])) as Record<
-    Locale,
-    Awaited<ReturnType<typeof getI18n>>
-  >;
+  return Object.fromEntries(
+    collection.map((entry: CollectionEntry<'i18n'>) => [entry.id, entry.data])
+  ) as Record<Locale, I18nData>;
 }
 
 /**

@@ -105,9 +105,122 @@ const seriesSchema = z.object({
 });
 
 /**
- * i18n 翻译 Schema（简化版，允许任意结构）
+ * i18n 翻译 Schema
+ * 使用明确的结构而非 z.record(z.any()) 以获得类型安全
  */
-const i18nSchema = z.record(z.any());
+const i18nSchema = z.object({
+  site: z.object({
+    title: z.string(),
+    author: z.string(),
+    description: z.string(),
+    keywords: z.string().optional(),
+  }),
+  nav: z.object({
+    home: z.string(),
+    blog: z.string(),
+    archive: z.string(),
+    tags: z.string(),
+    about: z.string(),
+    search: z.string(),
+  }),
+  blog: z.object({
+    title: z.string(),
+    allPosts: z.string(),
+    featuredPosts: z.string(),
+    recentPosts: z.string(),
+    readMore: z.string(),
+    readingTime: z.string(),
+    publishedOn: z.string(),
+    updatedOn: z.string(),
+    author: z.string(),
+    category: z.string(),
+    tags: z.string(),
+    noPosts: z.string(),
+    searchPlaceholder: z.string(),
+    searchNoResults: z.string(),
+    backToBlog: z.string(),
+  }),
+  archive: z.object({
+    title: z.string(),
+    description: z.string(),
+    postsCount: z.string(),
+  }),
+  tags: z.object({
+    title: z.string(),
+    description: z.string(),
+    tagsCount: z.string(),
+    noTags: z.string(),
+  }),
+  category: z.object({
+    title: z.string(),
+    research: z.string(),
+    tutorial: z.string(),
+    thoughts: z.string(),
+    tools: z.string(),
+    life: z.string(),
+  }),
+  series: z.object({
+    title: z.string(),
+    progress: z.string(),
+    previous: z.string(),
+    next: z.string(),
+    viewAll: z.string(),
+  }),
+  toc: z.object({
+    title: z.string(),
+    backToTop: z.string(),
+  }),
+  comments: z.object({
+    title: z.string(),
+    loading: z.string(),
+  }),
+  share: z.object({
+    title: z.string(),
+    twitter: z.string(),
+    linkedin: z.string(),
+    copyLink: z.string(),
+    copied: z.string(),
+  }),
+  relatedPosts: z.object({
+    title: z.string(),
+    noRelated: z.string(),
+  }),
+  pagination: z.object({
+    previous: z.string(),
+    next: z.string(),
+    page: z.string(),
+  }),
+  footer: z.object({
+    copyright: z.string(),
+    rss: z.string(),
+    sitemap: z.string(),
+    icp: z.object({
+      text: z.string(),
+      url: z.string(),
+    }).optional(),
+    quickLinks: z.string(),
+    social: z.string(),
+  }),
+  theme: z.object({
+    light: z.string(),
+    dark: z.string(),
+    system: z.string(),
+  }),
+  language: z.object({
+    zh: z.string(),
+    en: z.string(),
+    switchTo: z.string(),
+  }),
+  common: z.object({
+    loading: z.string(),
+    error: z.string(),
+    retry: z.string(),
+    close: z.string(),
+    open: z.string(),
+    more: z.string(),
+    less: z.string(),
+  }),
+});
 
 /**
  * 站点配置 Schema

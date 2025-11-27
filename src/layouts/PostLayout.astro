@@ -44,6 +44,9 @@ const {
   author,
 } = post.data;
 
+// 类型安全的语言
+const currentLang = lang as 'zh' | 'en';
+
 // 获取配置
 const siteConfig = await getSiteConfig();
 
@@ -52,20 +55,20 @@ const readingTime = calculateReadingTime(content);
 
 // 分类配置
 const categoryConfig = siteConfig.categories[category];
-const categoryLabel = lang === 'zh' ? categoryConfig?.name?.zh : categoryConfig?.name?.en;
+const categoryLabel = currentLang === 'zh' ? categoryConfig?.name?.zh : categoryConfig?.name?.en;
 
 // 获取系列文章
 let seriesPosts: CollectionEntry<'blog'>[] = [];
 if (series) {
-  const allPosts = await getCollection('blog', ({ data }) => !data.draft && data.series === series);
-  seriesPosts = allPosts.sort((a, b) => (a.data.seriesOrder || 0) - (b.data.seriesOrder || 0));
+  const allPosts = await getCollection('blog', ({ data }: { data: CollectionEntry<'blog'>['data'] }) => !data.draft && data.series === series);
+  seriesPosts = allPosts.sort((a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) => (a.data.seriesOrder || 0) - (b.data.seriesOrder || 0));
 }
 
 // 获取相关文章（同分类或同标签）
-const allPosts = await getCollection('blog', ({ data }) => !data.draft && data.lang === lang);
+const allPosts = await getCollection('blog', ({ data }: { data: CollectionEntry<'blog'>['data'] }) => !data.draft && data.lang === currentLang);
 const relatedPosts = allPosts
-  .filter(p => p.id !== post.id)
-  .filter(p => p.data.category === category || p.data.tags?.some(t => tags?.includes(t)))
+  .filter((p: CollectionEntry<'blog'>) => p.id !== post.id)
+  .filter((p: CollectionEntry<'blog'>) => p.data.category === category || p.data.tags?.some((t: string) => tags?.includes(t)))
   .slice(0, 4);
 
 // 多语言文案
@@ -96,7 +99,7 @@ const i18n = {
   },
 };
 
-const t = i18n[lang];
+const t = i18n[currentLang];
 ---
 
 <BaseLayout
@@ -128,7 +131,7 @@ const t = i18n[lang];
       <!-- 分类标签 -->
       <div class='flex items-center gap-3 mb-4'>
         <a
-          href={getCategoryUrl(category, lang)}
+          href={getCategoryUrl(category, currentLang)}
           class='inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors'
         >
           <span>{categoryConfig?.icon}</span>
@@ -163,9 +166,9 @@ const t = i18n[lang];
       {
         tags && tags.length > 0 && (
           <div class='flex flex-wrap gap-2 mt-6'>
-            {tags.map(tag => (
+            {tags.map((tag: string) => (
               <a
-                href={getTagUrl(tag, lang)}
+                href={getTagUrl(tag, currentLang)}
                 class='inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors'
               >
                 #{tag}
@@ -214,42 +217,8 @@ const t = i18n[lang];
     <div class='lg:grid lg:grid-cols-[1fr_220px] lg:gap-12'>
       <!-- 文章内容 -->
       <div
-        class='prose prose-lg dark:prose-invert max-w-none'
+        class="prose prose-lg dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-code:before:content-none prose-code:after:content-none prose-code:px-1.5 prose-code:py-0.5 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:rounded prose-code:text-red-600 dark:prose-code:text-red-400 prose-pre:bg-gray-50 dark:prose-pre:bg-gray-900 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-700 prose-img:rounded-xl prose-img:shadow-lg prose-blockquote:border-l-blue-500 prose-blockquote:bg-blue-50/50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-table:overflow-x-auto prose-hr:border-gray-200 dark:prose-hr:border-gray-800"
         data-pagefind-body
-        prose-headings:scroll-mt-24
-        prose-a:text-blue-600
-        dark:prose-a:text-blue-400
-        prose-a:no-underline
-        hover:prose-a:underline
-        prose-code:before:content-none
-        prose-code:after:content-none
-        prose-code:px-1.5
-        prose-code:py-0.5
-        prose-code:bg-gray-100
-        dark:prose-code:bg-gray-800
-        prose-code:rounded
-        prose-code:text-red-600
-        dark:prose-code:text-red-400
-        prose-pre:bg-gray-50
-        dark:prose-pre:bg-gray-900
-        prose-pre:border
-        prose-pre:border-gray-200
-        dark:prose-pre:border-gray-700
-        prose-img:rounded-xl
-        prose-img:shadow-lg
-        prose-blockquote:border-l-blue-500
-        prose-blockquote:bg-blue-50
-        50
-        dark:prose-blockquote:bg-blue-900
-        20
-        prose-blockquote:py-1
-        prose-blockquote:px-4
-        prose-blockquote:rounded-r-lg
-        prose-blockquote:not-italic
-        prose-table:overflow-x-auto
-        prose-hr:border-gray-200
-        dark:prose-hr:border-gray-800
-        "
       >
         <slot />
       </div>
@@ -366,7 +335,7 @@ const t = i18n[lang];
         const scrollTop = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        progressBar.style.width = `${Math.min(100, progress)}%`;
+        (progressBar as HTMLElement).style.width = `${Math.min(100, progress)}%`;
       }
 
       window.addEventListener('scroll', updateProgress, { passive: true });
