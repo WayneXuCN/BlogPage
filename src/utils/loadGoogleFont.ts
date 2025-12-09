@@ -11,6 +11,8 @@ async function loadGoogleFont(
         "User-Agent":
           "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; de-at) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1",
       },
+      // Increase timeout to 30 seconds
+      signal: AbortSignal.timeout(30000),
     })
   ).text();
 
@@ -20,7 +22,10 @@ async function loadGoogleFont(
 
   if (!resource) throw new Error("Failed to download dynamic font");
 
-  const res = await fetch(resource[1]);
+  const res = await fetch(resource[1], {
+    // Increase timeout to 30 seconds
+    signal: AbortSignal.timeout(30000),
+  });
 
   if (!res.ok) {
     throw new Error("Failed to download dynamic font. Status: " + res.status);

@@ -2,6 +2,15 @@
   "name": "astro-paper",
   "type": "module",
   "version": "5.5.0",
+  "engines": {
+    "bun": ">=1.0.0",
+    "node": ">=18.0.0"
+  },
+  "trustedDependencies": [
+    "@resvg/resvg-js",
+    "sharp",
+    "satori"
+  ],
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build && pagefind --site dist && cp -r dist/pagefind public/",

@@ -1,0 +1,61 @@
+# Bun 配置文件
+# 更多配置选项请参考: https://bun.sh/docs/runtime/bunfig
+
+[install]
+# 设置 npm 注册表
+registry = "https://registry.npmmirror.com"
+# 使用 Bun 的快速链接器 (可选值: "hoisted", "isolated")
+linker = "hoisted"
+# 安装时自动清理
+auto = "auto"
+
+[install.scopes]
+# 特定作用域的注册表配置
+# "@myorg" = "https://registry.myorg.com/"
+
+[lockfile]
+# 锁文件路径
+print = "bun.lock"
+# 保存锁文件
+save = true
+
+[test]
+# 测试配置
+preload = ["./test/setup.ts"]
+# 测试覆盖率
+coverage = true
+# 覆盖率报告格式 (必须是数组)
+coverageReporter = ["text"]
+# 测试超时时间（毫秒）
+timeout = 10000
+[run]
+# 运行时默认shell
+shell = "system"
+# 默认使用bun运行时
+bun = true
+
+# 环境变量配置
+[define]
+# 定义全局常量
+# "process.env.NODE_ENV" = "\"production\""
+
+# 加载环境变量文件
+[load]
+# ".env.production" = { load = true }
+# ".env.development" = { load = true }
+
+# 服务器配置
+[serve]
+# 静态文件服务器配置
+# static = "./public"
+# port = 3000
+# hostname = "localhost"
+
+# 包管理器配置
+[pm]
+"bunx" = "bunx"
+
+# 日志配置
+[loglevel]
+# 日志级别：debug, info, warn, error
+level = "info"

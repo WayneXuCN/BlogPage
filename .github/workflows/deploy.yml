@@ -1,0 +1,83 @@
+name: 构建与部署
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency: production
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1 # 浅克隆，提高速度
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 安装 Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: 缓存 Bun 依赖
+        uses: actions/cache@v3
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: 安装依赖
+        run: bun install --frozen-lockfile
+
+      - name: 构建项目
+        run: bun run build
+
+      - name: 部署到 gh-pages 分支
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          cname: blog.wenjiexu.site
+          commit_message: "Deploy: ${{ github.event.head_commit.message }}"
+
+      - name: 服务器执行部署命令
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            set -e  # 遇到错误立即退出
+
+            cd /opt/1panel/apps/openresty/openresty/www/sites/blog.wenjiexu.site/BlogPage
+
+            # 设置代理加速
+            git remote set-url origin https://gh.xmly.dev/https://github.com/WayneXuCN/BlogPage
+
+            # 拉取最新代码（gh-pages 分支）
+            git config --global --add safe.directory "$(pwd)"
+            git fetch origin gh-pages --depth=1
+
+            # 清空 index 目录
+            rm -rf /opt/1panel/apps/openresty/openresty/www/sites/blog.wenjiexu.site/index/*
+
+            # 从 gh-pages 分支检出文件到 index 目录
+            git --work-tree=/opt/1panel/apps/openresty/openresty/www/sites/blog.wenjiexu.site/index checkout origin/gh-pages -- .
+
+            # 设置 index 文件权限为 PHP-FPM 用户
+            chown -R 1000:1000 /opt/1panel/apps/openresty/openresty/www/sites/blog.wenjiexu.site/index
+
+            echo "✅ 已从 gh-pages 分支拉取最新构建文件"
+            echo "✅ index 目录文件权限已设置为 1000:1000"
+            echo "🚀 部署完成时间: $(date)"
