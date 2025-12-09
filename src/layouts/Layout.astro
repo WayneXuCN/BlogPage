@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
+import { GoogleAnalytics } from "@astrolib/analytics";
 import { SITE } from "@/config";
 import "@/styles/global.css";
 
@@ -125,6 +126,14 @@ const structuredData = {
           name="google-site-verification"
           content={PUBLIC_GOOGLE_SITE_VERIFICATION}
         />
+      )
+    }
+
+    {
+      // If PUBLIC_GOOGLE_ANALYTICS_ID is set in the environment variable,
+      // include Google Analytics tracking
+      import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID && (
+        <GoogleAnalytics id={import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID} />
       )
     }
 
