@@ -1,27 +1,28 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
-import PostDetails from "@/layouts/PostDetails.astro";
-import getSortedPosts from "@/utils/getSortedPosts";
-import { getPath } from "@/utils/getPath";
-
-export interface Props {
-  post: CollectionEntry<"blog">;
-}
+import { getCollection } from "astro:content";
+import { getCanonicalSlug } from "@/utils/getPath";
+import { getLocalePath } from "@/i18n";
+import { DEFAULT_LOCALE, type LocaleCode } from "@/i18n/config";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => !data.draft);
-  const postResult = posts.map(post => ({
-    params: { slug: getPath(post.id, post.filePath, false) },
-    props: { post },
-  }));
+  const defaultLocale = DEFAULT_LOCALE.code as LocaleCode;
+  const posts = await getCollection(
+    "blog",
+    ({ data }) => !data.draft && data.lang === defaultLocale
+  );
 
-  return postResult;
+  return posts.map(post => ({
+    params: { slug: getCanonicalSlug(post.id, post.filePath, post.data.slug) },
+  }));
 }
 
-const { post } = Astro.props;
+const { slug = "" } = Astro.params;
+const normalizedSlug = Array.isArray(slug) ? slug.join("/") : slug;
+const redirectTarget = `${getLocalePath(DEFAULT_LOCALE.code as LocaleCode)}/posts/${normalizedSlug}`;
 
-const posts = await getCollection("blog");
-const sortedPosts = getSortedPosts(posts);
+if (!redirectTarget) {
+  throw new Error("Failed to build redirect target for post slug");
+}
+
+return Astro.redirect(redirectTarget, 308);
 ---
-
-<PostDetails post={post} posts={sortedPosts} />

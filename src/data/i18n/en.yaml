@@ -1,0 +1,145 @@
+# Navigation
+home: "Home"
+posts: "Posts"
+about: "About"
+archives: "Archives"
+search: "Search"
+tags: "Tags"
+categories: "Categories"
+
+# Post related
+readMore: "Read more"
+publishedOn: "Published on"
+updatedOn: "Updated on"
+tagsLabel: "Tags"
+sharePost: "Share this post"
+editPost: "Edit this post"
+backToTop: "Back to top"
+backToHome: "Back to home"
+translationMissingTitle: "Translation not available"
+translationMissingDescription: "Sorry, this post is not yet available in the selected language."
+translationAvailableIn: "Available languages"
+translationGoToAvailable: "Go to available version"
+
+# Pagination
+nextPage: "Next page"
+prevPage: "Previous page"
+
+# Search
+searchPlaceholder: "Search articles..."
+searchResults: "Search results"
+noResultsFound: "No results found"
+
+# Archives
+allArchives: "All Archives"
+noArchives: "No archives available"
+
+# Tags
+allTags: "All Tags"
+noTags: "No tags available"
+
+# Categories
+allCategories: "All Categories"
+noCategories: "No categories available"
+categoriesTitle: "Categories"
+categoriesDescription: "All the categories used in posts."
+categoryTitle: "Category:"
+categoryDescription: "All the articles with the category"
+categoryLabel: "Category"
+defaultCategory: "General"
+
+# Footer
+themeToggle: "Toggle theme"
+poweredBy: "Powered by"
+
+# Meta
+minutesRead: "min read"
+
+# Index page
+siteTitle: "Mingalaba"
+siteDescription: "AstroPaper is a minimal, responsive, accessible and SEO-friendly Astro blog theme. This theme follows best practices and provides accessibility out of the box. Light and dark mode are supported by default. Moreover, additional color schemes can also be configured."
+readBlogPosts: "Read the blog posts or check"
+forMoreInfo: "for more information"
+socialLinks: "Social Links:"
+featured: "Featured"
+recentPosts: "Recent Posts"
+allPosts: "All Posts"
+
+# About page
+aboutTitle: "About"
+aboutDescription: "AstroPaper is a minimal, accessible and SEO-friendly blog theme built with Astro and Tailwind CSS."
+aboutFeatures: "Features"
+aboutSupport: "Show your support"
+aboutSupportText: "If you like AstroPaper, consider giving it a star ⭐️."
+aboutBugText: "Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an issue, submit a pull request or start a discussion."
+aboutSponsorText: "If you find this theme helpful, you can also sponsor me on GitHub or buy me a coffee to show your support — every penny counts."
+aboutIntro:
+  - "AstroPaper is a minimal, accessible and SEO-friendly blog theme built with Astro and Tailwind CSS."
+  - "AstroPaper provides a solid foundation for blogs, or even portfolios with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box."
+  - "The blog posts in this theme also serve as guides, docs or example articles making AstroPaper a flexible starting point for your next content-driven site."
+aboutFeaturesList:
+  - "SEO-friendly"
+  - "Fast performance"
+  - "Light & dark mode"
+  - "Highly customizable"
+  - "Organizable blog posts"
+  - "Responsive & accessible"
+  - "Static search with PageFind"
+  - "Automatic social image generation"
+aboutSupportList:
+  - "If you like AstroPaper, consider giving it a star ⭐️."
+  - "Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an issue, submit a pull request or start a discussion."
+  - "If you find this theme helpful, you can also sponsor me on GitHub or buy me a coffee to show your support — every penny counts."
+
+# Posts page
+postsTitle: "Posts"
+postsDescription: "All the articles I've posted."
+
+# Tags page
+tagsTitle: "Tags"
+tagsDescription: "All the tags used in posts."
+
+# Tag page
+tagTitle: "Tag:"
+tagDescription: "All the articles with the tag"
+
+# Archives page
+archivesTitle: "Archives"
+archivesDescription: "All the articles I've archived."
+
+# Search page
+searchTitle: "Search"
+searchDescription: "Search any article ..."
+
+# Header
+skipToContent: "Skip to content"
+openMenu: "Open Menu"
+closeMenu: "Close Menu"
+
+# Post details
+previousPost: "Previous Post"
+nextPost: "Next Post"
+sharePostOn: "Share this post on:"
+relatedPosts: "Related posts"
+
+# Footer
+copyright: "Copyright"
+allRightsReserved: "All rights reserved."
+
+# Pagination
+prev: "Prev"
+next: "Next"
+
+# Months
+january: "January"
+february: "February"
+march: "March"
+april: "April"
+may: "May"
+june: "June"
+july: "July"
+august: "August"
+september: "September"
+october: "October"
+november: "November"
+december: "December"

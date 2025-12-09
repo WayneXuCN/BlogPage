@@ -9,11 +9,16 @@ import EditPost from "@/components/EditPost.astro";
 import ShareLinks from "@/components/ShareLinks.astro";
 import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
+import Comments from "@/components/Comments";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
+import getReadingTime from "@/utils/getReadingTime";
+import { DEFAULT_CATEGORY_SLUG } from "@/utils/getUniqueCategories";
+import getSortedPosts from "@/utils/getSortedPosts";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
+import { t, getLangFromUrl } from "@/i18n";
 
 export interface Props {
   post: CollectionEntry<"blog">;
@@ -21,6 +26,8 @@ export interface Props {
 }
 
 const { post, posts } = Astro.props;
+const currentLocale = getLangFromUrl(Astro.url);
+const postLocale = post.data.lang ?? currentLocale;
 
 const {
   title,
@@ -33,9 +40,34 @@ const {
   timezone,
   tags,
   hideEditPost,
+  category,
 } = post.data;
 
 const { Content } = await render(post);
+const readingTime = getReadingTime(post.body || "");
+const displayCategoryName =
+  slugifyStr(category || "") === DEFAULT_CATEGORY_SLUG
+    ? t("defaultCategory", postLocale)
+    : category;
+
+/* ========== Related Posts ========== */
+const relatedCandidates = posts.filter(p => p.id !== post.id);
+const currentTags = new Set(tags.map(tg => tg.toLowerCase()));
+const relatedScored = relatedCandidates
+  .map(p => {
+    const sameCategory =
+      slugifyStr(p.data.category || "") === slugifyStr(category || "");
+    const tagOverlap = (p.data.tags || []).filter(tg =>
+      currentTags.has(tg.toLowerCase())
+    ).length;
+    const score = (sameCategory ? 2 : 0) + tagOverlap;
+    return { post: p, score };
+  })
+  .filter(item => item.score > 0);
+
+const relatedPosts = getSortedPosts(
+  relatedScored.sort((a, b) => b.score - a.score).map(item => item.post)
+).slice(0, 3);
 
 let ogImageUrl: string | undefined;
 
@@ -48,7 +80,13 @@ if (typeof initOgImage === "string") {
 
 // Use dynamic OG image if enabled and no remote|local ogImage
 if (!ogImageUrl && SITE.dynamicOgImage) {
-  ogImageUrl = `${getPath(post.id, post.filePath)}/index.png`;
+  ogImageUrl = `${getPath(
+    post.id,
+    post.filePath,
+    true,
+    postLocale,
+    post.data.slug
+  )}/index.png`;
 }
 
 // Resolve OG image URL (or fallback to SITE.ogImage / default `og.png`)
@@ -69,10 +107,12 @@ const layoutProps = {
 
 /* ========== Prev/Next Posts ========== */
 
-const allPosts = posts.map(({ data: { title }, id, filePath }) => ({
+const allPosts = posts.map(({ data: { title, lang, slug }, id, filePath }) => ({
   id,
   title,
   filePath,
+  lang,
+  slug,
 }));
 
 const currentPostIndex = allPosts.findIndex(a => a.id === post.id);
@@ -109,6 +149,24 @@ const nextPost =
         ]}>|</span
       >
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+      <span aria-hidden="true">|</span>
+      <span class="text-muted-foreground text-sm">
+        {readingTime}
+        {t("minutesRead", postLocale)}
+      </span>
+      {
+        category && (
+          <>
+            <span aria-hidden="true">|</span>
+            <a
+              href={`/${postLocale}/categories/${slugifyStr(category)}/`}
+              class="text-muted-foreground text-sm decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
+            >
+              {t("categoryLabel", postLocale)}: {displayCategoryName}
+            </a>
+          </>
+        )
+      }
     </div>
     <article
       id="article"
@@ -125,9 +183,45 @@ const nextPost =
       {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
     </ul>
 
+    {
+      relatedPosts.length > 0 && (
+        <section class="mb-12 rounded-xl border border-border/60 bg-muted/30 px-5 py-4 shadow-sm backdrop-blur dark:border-border/50">
+          <div class="mb-3 flex items-center gap-3">
+            <h2 class="text-lg font-semibold text-foreground">
+              {t("relatedPosts", postLocale)}
+            </h2>
+            <div class="h-px flex-1 bg-border/70" aria-hidden="true" />
+          </div>
+          <ul class="space-y-2">
+            {relatedPosts.map(data => (
+              <li>
+                <a
+                  href={getPath(
+                    data.id,
+                    data.filePath,
+                    true,
+                    data.data.lang,
+                    data.data.slug
+                  )}
+                  class="group flex items-center gap-2 rounded-lg px-3 py-2 text-base text-foreground transition hover:-translate-y-0.5 hover:bg-background/80 hover:text-accent focus-visible:-translate-y-0.5 focus-visible:bg-background/80"
+                >
+                  <IconChevronRight class="size-4 text-accent transition group-hover:translate-x-0.5 rtl:rotate-180" />
+                  <span class="truncate" title={data.data.title}>
+                    {data.data.title}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
     <BackToTopButton />
 
     <ShareLinks />
+
+    <Comments client:only="react" />
 
     <hr class="my-6 border-dashed" />
 
@@ -136,12 +230,18 @@ const nextPost =
       {
         prevPost && (
           <a
-            href={getPath(prevPost.id, prevPost.filePath)}
+            href={getPath(
+              prevPost.id,
+              prevPost.filePath,
+              true,
+              prevPost.lang ?? currentLocale,
+              prevPost.slug
+            )}
             class="flex w-full gap-1 hover:opacity-75"
           >
             <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
             <div>
-              <span>Previous Post</span>
+              <span>{t("previousPost", currentLocale)}</span>
               <div class="text-sm text-accent/85">{prevPost.title}</div>
             </div>
           </a>
@@ -150,11 +250,17 @@ const nextPost =
       {
         nextPost && (
           <a
-            href={getPath(nextPost.id, nextPost.filePath)}
+            href={getPath(
+              nextPost.id,
+              nextPost.filePath,
+              true,
+              nextPost.lang ?? currentLocale,
+              nextPost.slug
+            )}
             class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
           >
             <div>
-              <span>Next Post</span>
+              <span>{t("nextPost", currentLocale)}</span>
               <div class="text-sm text-accent/85">{nextPost.title}</div>
             </div>
             <IconChevronRight class="inline-block flex-none rtl:rotate-180" />
@@ -238,27 +344,19 @@ const nextPost =
 
     for (const codeBlock of codeBlocks) {
       const wrapper = document.createElement("div");
-      wrapper.style.position = "relative";
-
-      // Check if --file-name-offset custom property exists
-      const computedStyle = getComputedStyle(codeBlock);
-      const hasFileNameOffset =
-        computedStyle.getPropertyValue("--file-name-offset").trim() !== "";
-
-      // Determine the top positioning class
-      const topClass = hasFileNameOffset
-        ? "top-(--file-name-offset)"
-        : "-top-3";
+      wrapper.className = "relative";
 
       const copyButton = document.createElement("button");
-      copyButton.className = `copy-code absolute end-3 ${topClass} rounded bg-muted border border-muted px-2 py-1 text-xs leading-4 text-foreground font-medium`;
+      copyButton.type = "button";
+      copyButton.className =
+        "copy-code absolute right-3 top-3 rounded-md border border-border/70 bg-background/85 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-muted/70 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed";
       copyButton.innerHTML = copyButtonLabel;
       codeBlock.setAttribute("tabindex", "0");
-      codeBlock.appendChild(copyButton);
 
-      // wrap codebock with relative parent element
+      // wrap codeblock with relative parent element to host the button
       codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
       wrapper.appendChild(codeBlock);
+      wrapper.appendChild(copyButton);
 
       copyButton.addEventListener("click", async () => {
         await copyCode(codeBlock, copyButton);

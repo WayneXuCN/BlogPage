@@ -1,0 +1,207 @@
+---
+import { getCollection } from "astro:content";
+import {
+  getLocales,
+  getLocaleName,
+  getRelativeLocaleUrl,
+  getLangFromUrl,
+} from "@/i18n";
+import { stripLocaleFromPath } from "@/i18n/config";
+import { getCanonicalSlug } from "@/utils/getPath";
+
+const { pathname } = Astro.url;
+const currentLocale = getLangFromUrl(Astro.url);
+const locales = getLocales();
+
+// 获取当前页面的路径（不包括语言前缀）
+const { pathWithoutLocale: currentPath } = stripLocaleFromPath(pathname);
+
+const posts = await getCollection("blog", ({ data }) => !data.draft);
+const slugLocaleMap = new Map<string, Set<string>>();
+
+posts.forEach(post => {
+  const slug = getCanonicalSlug(post.id, post.filePath, post.data.slug);
+  const langs = slugLocaleMap.get(slug) || new Set<string>();
+  langs.add(post.data.lang);
+  slugLocaleMap.set(slug, langs);
+});
+
+const postSlugFromPath = (() => {
+  const segments = currentPath.split("/").filter(Boolean);
+  const postsIndex = segments.indexOf("posts");
+  if (postsIndex === -1) return null;
+  return segments.slice(postsIndex + 1).join("/");
+})();
+
+const hasKnownSlug = postSlugFromPath
+  ? slugLocaleMap.has(postSlugFromPath)
+  : false;
+
+// 生成每种语言的链接
+const languageLinks = locales.map(locale => {
+  let url = getRelativeLocaleUrl(currentPath, locale);
+
+  if (postSlugFromPath && hasKnownSlug) {
+    url = `${getRelativeLocaleUrl("/posts/" + postSlugFromPath, locale)}`;
+  }
+
+  return {
+    locale,
+    name: getLocaleName(locale),
+    url,
+    isActive: locale === currentLocale,
+  };
+});
+---
+
+<div class="language-switcher relative">
+  <button
+    id="language-toggle"
+    class="focus-outline flex items-center justify-center p-3 transition-colors sm:p-1 hover:[&>svg]:stroke-accent"
+    aria-label="Select language"
+    aria-expanded="false"
+    aria-haspopup="true"
+    title={getLocaleName(currentLocale)}
+  >
+    <svg
+      class="size-6 sm:size-6"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="2" y1="12" x2="22" y2="12"></line>
+      <path
+        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+      ></path>
+    </svg>
+    <span class="sr-only">{getLocaleName(currentLocale)}</span>
+  </button>
+
+  <ul
+    id="language-menu"
+    class="absolute right-0 z-50 mt-1 hidden min-w-[120px] rounded-md border border-border bg-background shadow-lg"
+    role="menu"
+  >
+    {
+      languageLinks.map(link => (
+        <li role="none">
+          <a
+            href={link.url}
+            class:list={[
+              "block px-3 py-2 text-sm transition-colors",
+              "hover:bg-muted hover:text-accent",
+              link.isActive
+                ? "bg-muted/50 font-medium text-accent"
+                : "text-foreground",
+            ]}
+            role="menuitem"
+            lang={link.locale}
+            hreflang={link.locale}
+          >
+            {link.name}
+            {link.isActive && (
+              <svg
+                class="ml-1 inline-block size-3"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            )}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  function toggleLanguageMenu() {
+    const toggle = document.querySelector(
+      "#language-toggle"
+    ) as HTMLButtonElement;
+    const menu = document.querySelector("#language-menu") as HTMLUListElement;
+
+    if (!toggle || !menu) return;
+
+    toggle.addEventListener("click", () => {
+      const isOpen = !menu.classList.contains("hidden");
+
+      if (isOpen) {
+        menu.classList.add("hidden");
+        toggle.setAttribute("aria-expanded", "false");
+      } else {
+        menu.classList.remove("hidden");
+        toggle.setAttribute("aria-expanded", "true");
+      }
+    });
+
+    // 点击外部关闭菜单
+    document.addEventListener("click", e => {
+      const target = e.target as Node;
+      if (!toggle.contains(target) && !menu.contains(target)) {
+        menu.classList.add("hidden");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    // 键盘导航支持
+    toggle.addEventListener("keydown", e => {
+      const keyboardEvent = e as KeyboardEvent;
+      if (keyboardEvent.key === "Enter" || keyboardEvent.key === " ") {
+        e.preventDefault();
+        toggle.click();
+      } else if (keyboardEvent.key === "Escape") {
+        menu.classList.add("hidden");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
+  toggleLanguageMenu();
+
+  // 在页面导航后重新初始化
+  document.addEventListener("astro:after-swap", toggleLanguageMenu);
+</script>
+
+<style>
+  .language-switcher {
+    /* 确保下拉菜单不被其他元素遮挡 */
+    z-index: 50;
+  }
+
+  #language-menu {
+    /* 添加平滑的显示/隐藏动画 */
+    transform-origin: top right;
+    transition:
+      opacity 0.2s ease-in-out,
+      transform 0.2s ease-in-out;
+  }
+
+  #language-menu:not(.hidden) {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  #language-menu.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+  }
+
+  /* 响应式调整 */
+  @media (max-width: 640px) {
+    #language-menu {
+      right: -8px;
+      min-width: 140px;
+    }
+  }
+</style>

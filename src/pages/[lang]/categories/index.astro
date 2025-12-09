@@ -1,0 +1,49 @@
+---
+import { getCollection } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Category from "@/components/Category.astro";
+import getUniqueCategories from "@/utils/getUniqueCategories";
+import { SITE } from "@/config";
+import { t, getStaticPaths as getI18nStaticPaths } from "@/i18n/utils";
+import { getLocaleConfig } from "@/i18n/config";
+import type { LocaleCode } from "@/i18n/config";
+
+export async function getStaticPaths() {
+  return getI18nStaticPaths();
+}
+
+const { lang } = Astro.params;
+const locale = getLocaleConfig(lang).code as LocaleCode;
+
+const posts = await getCollection("blog", ({ data }) => data.lang === locale);
+const categories = getUniqueCategories(posts, t("defaultCategory", locale));
+---
+
+<Layout title={`${t("categoriesTitle", locale)} | ${SITE.title}`}>
+  <Header />
+  <Main
+    pageTitle={t("categoriesTitle", locale)}
+    pageDesc={t("categoriesDescription", locale)}
+  >
+    {
+      categories.length === 0 ? (
+        <p class="text-muted-foreground italic">{t("noCategories", locale)}</p>
+      ) : (
+        <ul>
+          {categories.map(({ category, categoryName }) => (
+            <Category
+              category={category}
+              categoryName={categoryName}
+              size="lg"
+              lang={locale}
+            />
+          ))}
+        </ul>
+      )
+    }
+  </Main>
+  <Footer />
+</Layout>

@@ -1,26 +1,50 @@
 import { defineConfig, envField } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
+import react from "@astrojs/react";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
   transformerNotationWordHighlight,
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
-import { SITE } from "./src/config";
+import { SITE, LATEX } from "./src/config";
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "./src/i18n/config";
+
+type AstroLocale = { path: string; codes: [string, ...string[]] };
+
+const astroLocales: AstroLocale[] = SUPPORTED_LOCALES.map(locale => ({
+  path: locale.path,
+  codes: [locale.code, ...(locale.aliases ?? [])] as [string, ...string[]],
+}));
+
+const defaultAstroLocale = DEFAULT_LOCALE.code as AstroLocale["codes"][number];
 
 // https://astro.build/config
 export default defineConfig({
   site: SITE.website,
+  i18n: {
+    defaultLocale: defaultAstroLocale,
+    locales: astroLocales,
+    routing: "manual",
+  },
   integrations: [
+    react(),
     sitemap({
       filter: page => SITE.showArchives || !page.endsWith("/archives"),
     }),
   ],
   markdown: {
-    remarkPlugins: [remarkToc, [remarkCollapse, { test: "Table of contents" }]],
+    remarkPlugins: [
+      ...(LATEX.enabled ? [remarkMath] : []),
+      [remarkToc, { heading: "目录|Table of contents" }],
+      [remarkCollapse, { test: "目录|Table of contents" }],
+    ],
+    rehypePlugins: LATEX.enabled ? [rehypeKatex] : [],
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
       themes: { light: "min-light", dark: "night-owl" },
@@ -42,6 +66,23 @@ export default defineConfig({
     plugins: [tailwindcss()],
     optimizeDeps: {
       exclude: ["@resvg/resvg-js"],
+    },
+    build: {
+      rollupOptions: {
+        onwarn(warning, defaultHandler) {
+          const message =
+            typeof warning.message === "string" ? warning.message : "";
+
+          if (
+            warning.code === "UNUSED_EXTERNAL_IMPORT" ||
+            message.includes("@astrojs/internal-helpers/remote")
+          ) {
+            return;
+          }
+
+          defaultHandler(warning);
+        },
+      },
     },
   },
   image: {

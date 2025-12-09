@@ -1,8 +1,10 @@
 ---
 import Hr from "./Hr.astro";
 import Socials from "./Socials.astro";
+import { t, getLangFromUrl } from "@/i18n";
 
 const currentYear = new Date().getFullYear();
+const currentLocale = getLangFromUrl(Astro.url);
 
 export interface Props {
   noMarginTop?: boolean;
@@ -18,9 +20,9 @@ const { noMarginTop = false } = Astro.props;
   >
     <Socials centered />
     <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
-      <span>Copyright &#169; {currentYear}</span>
+      <span>{t("copyright", currentLocale)} &#169; {currentYear}</span>
       <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
-      <span>All rights reserved.</span>
+      <span>{t("allRightsReserved", currentLocale)}</span>
     </div>
   </div>
 </footer>

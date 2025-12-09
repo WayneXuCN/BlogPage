@@ -11,11 +11,18 @@ export async function GET() {
     title: SITE.title,
     description: SITE.desc,
     site: SITE.website,
-    items: sortedPosts.map(({ data, id, filePath }) => ({
-      link: getPath(id, filePath),
-      title: data.title,
-      description: data.description,
-      pubDate: new Date(data.modDatetime ?? data.pubDatetime),
-    })),
+    items: sortedPosts.map(({ data, id, filePath }) => {
+      const authors = Array.isArray(data.author)
+        ? data.author.join(", ")
+        : (data.author ?? SITE.author);
+      return {
+        link: getPath(id, filePath, true, data.lang, data.slug),
+        title: data.title,
+        description: data.description,
+        pubDate: new Date(data.modDatetime ?? data.pubDatetime),
+        author: authors,
+        categories: [data.category].filter(Boolean).concat(data.tags || []),
+      };
+    }),
   });
 }

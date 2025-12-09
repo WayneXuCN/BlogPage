@@ -1,0 +1,85 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Main from "@/layouts/Main.astro";
+import Card from "@/components/Card.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { slugifyStr } from "@/utils/slugify";
+import { SITE } from "@/config";
+import { t } from "@/i18n/utils";
+import { SUPPORTED_LOCALES } from "@/i18n/config";
+import { DEFAULT_CATEGORY_SLUG } from "@/utils/getUniqueCategories";
+import type { LocaleCode } from "@/i18n/config";
+
+interface PathProps {
+  categoryName: string;
+  locale: LocaleCode;
+}
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+
+  const paths = SUPPORTED_LOCALES.flatMap(locale => {
+    const localePosts = posts.filter(post => post.data.lang === locale.code);
+    const categoryMap = new Map<string, string>();
+
+    localePosts.forEach(post => {
+      const slug = slugifyStr(post.data.category || "");
+      if (slug) {
+        categoryMap.set(slug, post.data.category);
+      }
+    });
+
+    return Array.from(categoryMap.entries()).map(
+      ([category, categoryName]) => ({
+        params: { lang: locale.path, category },
+        props: { categoryName, locale: locale.code } satisfies PathProps,
+      })
+    );
+  });
+
+  return paths;
+}
+
+const { categoryName, locale } = Astro.props as PathProps;
+const { category } = Astro.params;
+
+const posts = await getCollection(
+  "blog",
+  ({ data }) =>
+    data.lang === locale &&
+    !data.draft &&
+    slugifyStr(data.category || "") === category
+);
+const sortedPosts = getSortedPosts(posts);
+
+const displayCategoryName =
+  slugifyStr(categoryName || "") === DEFAULT_CATEGORY_SLUG
+    ? t("defaultCategory", locale)
+    : categoryName;
+---
+
+<Layout
+  title={`${displayCategoryName} | ${t("categoryTitle", locale)} | ${SITE.title}`}
+>
+  <Header />
+  <Main
+    pageTitle={`${t("categoryTitle", locale)} ${displayCategoryName}`}
+    pageDesc={t("categoryDescription", locale)}
+  >
+    {
+      sortedPosts.length === 0 ? (
+        <p class="text-muted-foreground italic">{t("noCategories", locale)}</p>
+      ) : (
+        <ul>
+          {sortedPosts.map(data => (
+            <Card variant="h3" {...data} />
+          ))}
+        </ul>
+      )
+    }
+  </Main>
+  <Footer />
+</Layout>

@@ -2,8 +2,6 @@
 # 更多配置选项请参考: https://bun.sh/docs/runtime/bunfig
 
 [install]
-# 设置 npm 注册表
-registry = "https://registry.npmmirror.com"
 # 使用 Bun 的快速链接器 (可选值: "hoisted", "isolated")
 linker = "hoisted"
 # 安装时自动清理

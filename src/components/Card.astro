@@ -3,14 +3,21 @@ import { slugifyStr } from "@/utils/slugify";
 import type { CollectionEntry } from "astro:content";
 import { getPath } from "@/utils/getPath";
 import Datetime from "./Datetime.astro";
+import getReadingTime from "@/utils/getReadingTime";
+import { t } from "@/i18n";
 
 export interface Props extends CollectionEntry<"blog"> {
   variant?: "h2" | "h3";
+  wrapperClass?: string;
 }
 
-const { variant = "h2", data, id, filePath } = Astro.props;
+const { variant = "h2", data, id, filePath, wrapperClass } = Astro.props;
 
 const { title, description, pubDatetime, modDatetime, timezone } = data;
+
+const readingTime = getReadingTime(
+  (Astro.props as CollectionEntry<"blog">).body || ""
+);
 
 const headerProps = {
   style: { viewTransitionName: slugifyStr(title) },
@@ -18,9 +25,9 @@ const headerProps = {
 };
 ---
 
-<li class="my-6">
+<li class:list={["my-6", wrapperClass]}>
   <a
-    href={getPath(id, filePath)}
+    href={getPath(id, filePath, true, data.lang, data.slug)}
     class="inline-block text-lg font-medium text-accent decoration-dashed underline-offset-4 focus-visible:no-underline focus-visible:underline-offset-0"
   >
     {
@@ -31,6 +38,13 @@ const headerProps = {
       )
     }
   </a>
-  <Datetime {pubDatetime} {modDatetime} {timezone} />
+  <div class="text-muted-foreground flex flex-wrap items-center gap-2 text-sm">
+    <Datetime {pubDatetime} {modDatetime} {timezone} />
+    <span aria-hidden="true">•</span>
+    <span>
+      {readingTime}
+      {t("minutesRead", data.lang)}
+    </span>
+  </div>
   <p>{description}</p>
 </li>

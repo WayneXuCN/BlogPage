@@ -1,0 +1,44 @@
+---
+import { getStaticPaths as getI18nStaticPaths } from "@/i18n/utils";
+import { getLocaleConfig } from "@/i18n/config";
+import AboutLayout from "@/layouts/AboutLayout.astro";
+import type { LocaleCode } from "@/i18n/config";
+import type { MarkdownInstance } from "astro";
+
+type AboutEntry = MarkdownInstance<{
+  title: string;
+  description?: string;
+  lang: string;
+}>;
+
+const aboutPages = import.meta.glob("@/data/about/*.md", {
+  eager: true,
+}) as Record<string, AboutEntry>;
+
+export async function getStaticPaths() {
+  return getI18nStaticPaths();
+}
+
+const { lang } = Astro.params;
+const locale = getLocaleConfig(lang).code as LocaleCode;
+
+const matchedEntry = Object.values(aboutPages).find(
+  page => page.frontmatter.lang === locale
+);
+const matched = matchedEntry ?? Object.values(aboutPages)[0];
+
+if (!matched) {
+  throw new Error("No about page content found");
+}
+
+const { Content, frontmatter } = matched;
+
+const pageFrontmatter = {
+  title: frontmatter.title,
+  description: frontmatter.description,
+};
+---
+
+<AboutLayout frontmatter={pageFrontmatter}>
+  <Content />
+</AboutLayout>

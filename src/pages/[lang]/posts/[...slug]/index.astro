@@ -1,0 +1,118 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import PostDetails from "@/layouts/PostDetails.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { getCanonicalSlug } from "@/utils/getPath";
+import { t, getLocaleName, getLocalePath } from "@/i18n";
+import { SUPPORTED_LOCALES, getLocaleConfig } from "@/i18n/config";
+import { SITE } from "@/config";
+import type { LocaleCode } from "@/i18n/config";
+
+export interface Props {
+  post: CollectionEntry<"blog"> | null;
+  lang: string;
+  slug: string;
+  availableLocales?: string[];
+}
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const locales = SUPPORTED_LOCALES;
+
+  const slugMap = new Map<string, Record<string, CollectionEntry<"blog">>>();
+
+  posts.forEach(post => {
+    const canonicalSlug = getCanonicalSlug(
+      post.id,
+      post.filePath,
+      post.data.slug
+    );
+    const existing = slugMap.get(canonicalSlug) || {};
+    slugMap.set(canonicalSlug, { ...existing, [post.data.lang]: post });
+  });
+
+  const paths = Array.from(slugMap.entries()).flatMap(([slug, localePosts]) =>
+    locales.map(locale => ({
+      params: { lang: locale.path, slug },
+      props: {
+        post: localePosts[locale.code] ?? null,
+        lang: locale.code,
+        slug,
+        availableLocales: Object.keys(localePosts),
+      },
+    }))
+  );
+
+  return paths;
+}
+
+const { post, lang, slug, availableLocales = [] } = Astro.props;
+const locale = getLocaleConfig(lang).code as LocaleCode;
+const posts = await getCollection(
+  "blog",
+  ({ data }) => !data.draft && data.lang === locale
+);
+const sortedPosts = getSortedPosts(posts);
+
+const translatedLocales = availableLocales.filter(l => l !== locale);
+---
+
+{
+  post ? (
+    <PostDetails post={post} posts={sortedPosts} />
+  ) : (
+    <Layout
+      title={`${t("translationMissingTitle", locale)} | ${SITE.title}`}
+      description={t("translationMissingDescription", locale)}
+    >
+      <Header />
+      <main id="main-content" class="mx-auto w-full max-w-app px-4 pb-12">
+        <h1 class="text-2xl font-bold text-accent sm:text-3xl">
+          {t("translationMissingTitle", locale)}
+        </h1>
+        <p class="text-muted-foreground mt-4 max-w-3xl text-lg">
+          {t("translationMissingDescription", locale)}
+        </p>
+
+        {translatedLocales.length > 0 && (
+          <div class="mt-6">
+            <h2 class="text-xl font-semibold">
+              {t("translationAvailableIn", locale)}
+            </h2>
+            <ul class="mt-2 space-y-2">
+              {translatedLocales.map(code => (
+                <li>
+                  <a
+                    class="text-accent underline decoration-dashed underline-offset-4 hover:text-accent/80"
+                    href={`${getLocalePath(code as LocaleCode)}/posts/${slug}`}
+                    hreflang={code}
+                  >
+                    {getLocaleName(code as LocaleCode)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <LinkButton href={`${getLocalePath(locale) || "/"}/`}>
+            {t("backToHome", locale)}
+          </LinkButton>
+          {translatedLocales[0] && (
+            <LinkButton
+              href={`${getLocalePath(translatedLocales[0] as LocaleCode)}/posts/${slug}`}
+            >
+              {t("translationGoToAvailable", locale)}
+            </LinkButton>
+          )}
+        </div>
+      </main>
+      <Footer />
+    </Layout>
+  )
+}

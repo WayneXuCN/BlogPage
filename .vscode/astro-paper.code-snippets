@@ -10,6 +10,8 @@
       "title: $4",
       "featured: ${5|false,true|}",
       "draft: ${6|true,false|}",
+      "lang: zh",
+      "category:",
       "tags:",
       "  - $7",
       "description: $8",

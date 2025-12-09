@@ -2,12 +2,14 @@
 import { ClientRouter } from "astro:transitions";
 import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
 import { GoogleAnalytics } from "@astrolib/analytics";
-import { SITE } from "@/config";
+import { SITE, LATEX } from "@/config";
+import { getLangFromUrl, getLocalePath } from "@/i18n";
+import { DEFAULT_LOCALE, getLocaleConfig } from "@/i18n/config";
 import "@/styles/global.css";
 
 export interface Props {
   title?: string;
-  author?: string;
+  author?: string | string[];
   profile?: string;
   description?: string;
   ogImage?: string;
@@ -29,7 +31,14 @@ const {
   scrollSmooth = false,
 } = Astro.props;
 
+const currentLocale = getLangFromUrl(Astro.url);
+const currentLocaleConfig = getLocaleConfig(currentLocale);
+const rssPath = `${getLocalePath(currentLocale) || ""}/rss.xml`;
+
 const socialImageURL = new URL(ogImage, Astro.url);
+
+const authors = Array.isArray(author) ? author : [author];
+const authorMeta = authors.join(", ");
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -38,20 +47,18 @@ const structuredData = {
   image: `${socialImageURL}`,
   datePublished: `${pubDatetime?.toISOString()}`,
   ...(modDatetime && { dateModified: modDatetime.toISOString() }),
-  author: [
-    {
-      "@type": "Person",
-      name: `${author}`,
-      ...(profile && { url: profile }),
-    },
-  ],
+  author: authors.map(name => ({
+    "@type": "Person",
+    name: `${name}`,
+    ...(profile && { url: profile }),
+  })),
 };
 ---
 
 <!doctype html>
 <html
-  dir={SITE.dir}
-  lang=`${SITE.lang ?? "en"}`
+  dir={currentLocaleConfig.dir ?? SITE.dir}
+  lang={currentLocaleConfig.htmlLang || SITE.lang || DEFAULT_LOCALE.htmlLang}
   class={`${scrollSmooth && "scroll-smooth"}`}
 >
   <head>
@@ -65,7 +72,7 @@ const structuredData = {
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
-    <meta name="author" content={author} />
+    <meta name="author" content={authorMeta} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- Open Graph / Facebook -->
@@ -112,10 +119,12 @@ const structuredData = {
       rel="alternate"
       type="application/rss+xml"
       title={SITE.title}
-      href={new URL("rss.xml", Astro.site)}
+      href={new URL(rssPath, Astro.site)}
     />
 
     <meta name="theme-color" content="" />
+
+    {LATEX.enabled && <link rel="stylesheet" href={LATEX.katexCdn} />}
 
     {
       // If PUBLIC_GOOGLE_SITE_VERIFICATION is set in the environment variable,

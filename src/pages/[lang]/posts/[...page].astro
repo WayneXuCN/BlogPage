@@ -1,0 +1,68 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import Pagination from "@/components/Pagination.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { SITE } from "@/config";
+import { t } from "@/i18n/utils";
+import {
+  SUPPORTED_LOCALES,
+  getLocaleConfig,
+  type LocaleCode,
+} from "@/i18n/config";
+
+export async function getStaticPaths({ paginate }: { paginate: Function }) {
+  const posts = await getCollection("blog");
+
+  return SUPPORTED_LOCALES.flatMap(locale =>
+    paginate(
+      getSortedPosts(posts.filter(post => post.data.lang === locale.code)),
+      {
+        pageSize: SITE.postPerPage,
+        params: { lang: locale.path },
+      }
+    )
+  );
+}
+
+const { page } = Astro.props as {
+  page: import("astro").Page<CollectionEntry<"blog">>;
+};
+const { lang } = Astro.params;
+const locale = getLocaleConfig(lang).code as LocaleCode;
+const pagedPosts = page.data as CollectionEntry<"blog">[];
+---
+
+<Layout title={`${t("postsTitle", locale)} | ${SITE.title}`}>
+  <div class="flex min-h-screen flex-col">
+    <Header />
+    <div class="flex flex-1 flex-col">
+      <Main
+        pageTitle={t("postsTitle", locale)}
+        pageDesc={t("postsDescription", locale)}
+      >
+        {
+          pagedPosts.length === 0 ? (
+            <p class="text-foreground/70 italic">{t("noArchives", locale)}</p>
+          ) : (
+            <>
+              <ul>
+                {pagedPosts.map((data: CollectionEntry<"blog">) => (
+                  <Card variant="h3" {...data} />
+                ))}
+              </ul>
+            </>
+          )
+        }
+      </Main>
+      <section class="mx-auto mt-auto w-full max-w-app px-4 pb-10">
+        <Pagination {page} />
+      </section>
+    </div>
+    <Footer />
+  </div>
+</Layout>

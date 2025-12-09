@@ -1,0 +1,145 @@
+# Navigation
+home: "首页"
+posts: "文章"
+about: "关于"
+archives: "归档"
+search: "搜索"
+tags: "标签"
+categories: "分类"
+
+# Post related
+readMore: "阅读更多"
+publishedOn: "发布于"
+updatedOn: "更新于"
+tagsLabel: "标签"
+sharePost: "分享这篇文章"
+editPost: "编辑这篇文章"
+backToTop: "返回顶部"
+backToHome: "返回首页"
+translationMissingTitle: "暂无该语言的文章"
+translationMissingDescription: "抱歉，这篇文章还没有对应语言的翻译。"
+translationAvailableIn: "可用的语言"
+translationGoToAvailable: "前往已有版本"
+
+# Pagination
+nextPage: "下一页"
+prevPage: "上一页"
+
+# Search
+searchPlaceholder: "搜索文章..."
+searchResults: "搜索结果"
+noResultsFound: "未找到结果"
+
+# Archives
+allArchives: "全部归档"
+noArchives: "暂无归档"
+
+# Tags
+allTags: "全部标签"
+noTags: "暂无标签"
+
+# Categories
+allCategories: "全部分类"
+noCategories: "暂无分类"
+categoriesTitle: "分类"
+categoriesDescription: "文章中使用的所有分类。"
+categoryTitle: "分类："
+categoryDescription: "所有属于该分类的文章"
+categoryLabel: "分类"
+defaultCategory: "默认分类"
+
+# Footer
+themeToggle: "切换主题"
+poweredBy: "由"
+
+# Meta
+minutesRead: "分钟阅读"
+
+# Index page
+siteTitle: "明嘎拉巴"
+siteDescription: "AstroPaper 是一个极简、响应式、无障碍且对 SEO 友好的 Astro 博客主题。该主题遵循最佳实践，并提供开箱即用的无障碍功能。默认支持明暗模式。此外，还可以配置额外的颜色方案。"
+readBlogPosts: "阅读博客文章或查看"
+forMoreInfo: "获取更多信息"
+socialLinks: "社交链接："
+featured: "精选"
+recentPosts: "最新文章"
+allPosts: "所有文章"
+
+# About page
+aboutTitle: "关于"
+aboutDescription: "AstroPaper 是一个使用 Astro 和 Tailwind CSS 构建的极简、无障碍且对 SEO 友好的博客主题。"
+aboutFeatures: "特性"
+aboutSupport: "表示支持"
+aboutSupportText: "如果您喜欢 AstroPaper，请考虑给它一个星标 ⭐️。"
+aboutBugText: "发现错误 🐛 或有改进建议 ✨？随时可以提出 issue、提交 pull request 或开始讨论。"
+aboutSponsorText: "如果您觉得这个主题有帮助，也可以在 GitHub 上赞助我或请我喝杯咖啡来表示支持 — 每一分钱都很重要。"
+aboutIntro:
+  - "AstroPaper 是一个使用 Astro 和 Tailwind CSS 构建的极简、无障碍且对 SEO 友好的博客主题。"
+  - "AstroPaper 为博客甚至作品集提供了坚实的基础，具有完整的 Markdown 支持、内置的暗色模式和开箱即用的简洁布局。"
+  - "该主题中的博客文章也可以作为指南、文档或示例文章，使 AstroPaper 成为您下一个内容驱动网站的灵活起点。"
+aboutFeaturesList:
+  - "对 SEO 友好"
+  - "快速性能"
+  - "明暗模式"
+  - "高度可定制"
+  - "可组织的博客文章"
+  - "响应式和无障碍"
+  - "使用 PageFind 的静态搜索"
+  - "自动社交图像生成"
+aboutSupportList:
+  - "如果您喜欢 AstroPaper，请考虑给它一个星标 ⭐️。"
+  - "发现错误 🐛 或有改进建议 ✨？随时可以提出 issue、提交 pull request 或开始讨论。"
+  - "如果您觉得这个主题有帮助，也可以在 GitHub 上赞助我或请我喝杯咖啡来表示支持 — 每一分钱都很重要。"
+
+# Posts page
+postsTitle: "文章"
+postsDescription: "我发布的所有文章。"
+
+# Tags page
+tagsTitle: "标签"
+tagsDescription: "文章中使用的所有标签。"
+
+# Tag page
+tagTitle: "标签："
+tagDescription: "所有带有标签"
+
+# Archives page
+archivesTitle: "归档"
+archivesDescription: "我归档的所有文章。"
+
+# Search page
+searchTitle: "搜索"
+searchDescription: "搜索任何文章..."
+
+# Header
+skipToContent: "跳转到内容"
+openMenu: "打开菜单"
+closeMenu: "关闭菜单"
+
+# Post details
+previousPost: "上一篇"
+nextPost: "下一篇"
+sharePostOn: "分享这篇文章到："
+relatedPosts: "相关文章"
+
+# Footer
+copyright: "版权"
+allRightsReserved: "保留所有权利。"
+
+# Pagination
+prev: "上一页"
+next: "下一页"
+
+# Months
+january: "一月"
+february: "二月"
+march: "三月"
+april: "四月"
+may: "五月"
+june: "六月"
+july: "七月"
+august: "八月"
+september: "九月"
+october: "十月"
+november: "十一月"
+december: "十二月"
