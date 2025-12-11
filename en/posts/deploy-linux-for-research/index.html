@@ -1,0 +1,1013 @@
+<!DOCTYPE html><html dir="ltr" lang="en" class="scroll-smooth" data-astro-cid-sckkx6r4> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="canonical" href="https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/"><meta name="generator" content="Astro v5.16.5"><!-- General Meta Tags --><title>Deploying a Linux Server for Academic Research | Blog</title><meta name="title" content="Deploying a Linux Server for Academic Research | Blog"><meta name="description" content="How to deploy a Linux server"><meta name="author" content="Wenjie Xu"><link rel="sitemap" href="/sitemap-index.xml"><!-- Open Graph / Facebook --><meta property="og:title" content="Deploying a Linux Server for Academic Research | Blog"><meta property="og:description" content="How to deploy a Linux server"><meta property="og:url" content="https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/"><meta property="og:image" content="https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/index.png"><!-- Article Published/Modified time --><meta property="article:published_time" content="2024-08-24T14:34:28.000Z"><meta property="article:modified_time" content="2024-11-01T14:34:28.000Z"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/"><meta property="twitter:title" content="Deploying a Linux Server for Academic Research | Blog"><meta property="twitter:description" content="How to deploy a Linux server"><meta property="twitter:image" content="https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/index.png"><!-- Google JSON-LD Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Deploying a Linux Server for Academic Research | Blog","image":"https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/index.png","datePublished":"2024-08-24T14:34:28.000Z","dateModified":"2024-11-01T14:34:28.000Z","author":[{"@type":"Person","name":"Wenjie Xu","url":"https://wenjiexu.site/"}]}</script><!-- Enable RSS feed auto-discovery  --><!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery --><link rel="alternate" type="application/rss+xml" title="Blog" href="https://blog.wenjiexu.site/en/rss.xml"><meta name="theme-color" content=""><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.QW52Ox2j.js"></script><script src="/toggle-theme.js"></script><link rel="stylesheet" href="/_astro/about.mCTKJIS7.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+:where([data-astro-image]){object-fit:var(--fit);object-position:var(--pos);height:auto}:where([data-astro-image=full-width]){width:100%}:where([data-astro-image=constrained]){max-width:100%}
+</style><style>[data-astro-transition-scope="astro-fam6wyqg-1"] { view-transition-name: deploying-a-linux-server-for-academic-research; }@layer astro { ::view-transition-old(deploying-a-linux-server-for-academic-research) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(deploying-a-linux-server-for-academic-research) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(deploying-a-linux-server-for-academic-research) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(deploying-a-linux-server-for-academic-research) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-fam6wyqg-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-fam6wyqg-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-fam6wyqg-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-fam6wyqg-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-fam6wyqg-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-fam6wyqg-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-fam6wyqg-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-fam6wyqg-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-36ssibgs-2"] { view-transition-name: ubuntu; }@layer astro { ::view-transition-old(ubuntu) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(ubuntu) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(ubuntu) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(ubuntu) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-36ssibgs-3"] { view-transition-name: productivity; }@layer astro { ::view-transition-old(productivity) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(productivity) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(productivity) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(productivity) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-36ssibgs-4"] { view-transition-name: deployment; }@layer astro { ::view-transition-old(deployment) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(deployment) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(deployment) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(deployment) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-4"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-4"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-4"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-4"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-4"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-4"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-4"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-4"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-36ssibgs-5"] { view-transition-name: server; }@layer astro { ::view-transition-old(server) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(server) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(server) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(server) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-5"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-5"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-5"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-5"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-5"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-5"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-5"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-5"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body data-astro-cid-sckkx6r4>  <header> <a id="skip-to-content" href="#main-content" class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"> Skip to content </a> <div id="nav-container" class="mx-auto flex max-w-app flex-col items-center justify-between sm:flex-row"> <div id="top-nav-wrap" class="relative flex w-full items-baseline justify-between bg-background p-4 sm:items-center sm:py-6"> <a href="/en" class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"> Blog </a> <nav id="nav-menu" class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"> <button id="menu-btn" class="focus-outline self-end p-2 sm:hidden" aria-label="Open Menu" aria-expanded="false" aria-controls="menu-items"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden" id="close-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep" id="menu-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 6h16" /><path d="M7 12h13" /><path d="M10 18h10" /></svg> </button> <ul id="menu-items" class="mt-4 grid w-44 grid-cols-2 place-content-center gap-2 [&#38;>li>a]:block [&#38;>li>a]:px-4 [&#38;>li>a]:py-3 [&#38;>li>a]:text-center [&#38;>li>a]:font-medium [&#38;>li>a]:hover:text-accent sm:[&#38;>li>a]:px-2 sm:[&#38;>li>a]:py-1 hidden sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0"> <li class="col-span-2"> <a href="/en/posts" class="active-nav"> Posts </a> </li> <li class="col-span-2"> <a href="/en/tags"> Tags </a> </li> <li class="col-span-2"> <a href="/en/categories"> Categories </a> </li> <li class="col-span-2"> <a href="/en/about"> About </a> </li> <li class="col-span-2"> <a href="/en/archives" class="group inline-block hover:text-accent focus-outline flex justify-center p-3 sm:p-1" aria-label="Archives" title="Archives"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden sm:inline-block"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 4m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" /><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" /><path d="M10 12l4 0" /></svg> <span class="sm:sr-only">Archives</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <a href="/en/search" class="group inline-block hover:text-accent focus-outline flex p-3 sm:p-1" aria-label="Search" title="Search"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg> <span class="sr-only">Search</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <div class="language-switcher relative" data-astro-cid-a2mxz4y6> <button id="language-toggle" class="focus-outline flex items-center justify-center p-3 transition-colors sm:p-1 hover:[&>svg]:stroke-accent" aria-label="Select language" aria-expanded="false" aria-haspopup="true" title="English" data-astro-cid-a2mxz4y6> <svg class="size-6 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <circle cx="12" cy="12" r="10" data-astro-cid-a2mxz4y6></circle> <line x1="2" y1="12" x2="22" y2="12" data-astro-cid-a2mxz4y6></line> <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" data-astro-cid-a2mxz4y6></path> </svg> <span class="sr-only" data-astro-cid-a2mxz4y6>English</span> </button> <ul id="language-menu" class="absolute right-0 z-50 mt-1 hidden min-w-[120px] rounded-md border border-border bg-background shadow-lg" role="menu" data-astro-cid-a2mxz4y6> <li role="none" data-astro-cid-a2mxz4y6> <a href="/en/posts/deploy-linux-for-research" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent bg-muted/50 font-medium text-accent" role="menuitem" lang="en" hreflang="en" data-astro-cid-a2mxz4y6> English <svg class="ml-1 inline-block size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <polyline points="20 6 9 17 4 12" data-astro-cid-a2mxz4y6></polyline> </svg> </a> </li><li role="none" data-astro-cid-a2mxz4y6> <a href="/zh/posts/deploy-linux-for-research" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent text-foreground" role="menuitem" lang="zh" hreflang="zh" data-astro-cid-a2mxz4y6> 中文  </a> </li> </ul> </div> <script type="module">function s(){const e=document.querySelector("#language-toggle"),t=document.querySelector("#language-menu");!e||!t||(e.addEventListener("click",()=>{!t.classList.contains("hidden")?(t.classList.add("hidden"),e.setAttribute("aria-expanded","false")):(t.classList.remove("hidden"),e.setAttribute("aria-expanded","true"))}),document.addEventListener("click",a=>{const n=a.target;!e.contains(n)&&!t.contains(n)&&(t.classList.add("hidden"),e.setAttribute("aria-expanded","false"))}),e.addEventListener("keydown",a=>{const n=a;n.key==="Enter"||n.key===" "?(a.preventDefault(),e.click()):n.key==="Escape"&&(t.classList.add("hidden"),e.setAttribute("aria-expanded","false"))}))}s();document.addEventListener("astro:after-swap",s);</script>  </li> <li class="col-span-1 flex items-center justify-center"> <button id="theme-btn" class="focus-outline relative size-12 p-4 sm:size-8 hover:[&>svg]:stroke-accent" title="Toggle theme" aria-label="auto" aria-live="polite"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" /></svg> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M14.828 14.828a4 4 0 1 0 -5.656 -5.656a4 4 0 0 0 5.656 5.656z" /><path d="M6.343 17.657l-1.414 1.414" /><path d="M6.343 6.343l-1.414 -1.414" /><path d="M17.657 6.343l1.414 -1.414" /><path d="M17.657 17.657l1.414 1.414" /><path d="M4 12h-2" /><path d="M12 4v-2" /><path d="M20 12h2" /><path d="M12 20v2" /></svg> </button> </li> </ul> </nav> </div> </div> <div class="mx-auto max-w-app px-4"> <hr class="border-border" aria-hidden="true"> </div> </header> <script type="module">function s(){const e=document.querySelector("#menu-btn"),t=document.querySelector("#menu-items"),n=document.querySelector("#menu-icon"),o=document.querySelector("#close-icon");!e||!t||!n||!o||e.addEventListener("click",()=>{const c=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",c?"false":"true"),e.setAttribute("aria-label",c?"Close Menu":"Open Menu"),t.classList.toggle("hidden"),n.classList.toggle("hidden"),o.classList.toggle("hidden")})}s();document.addEventListener("astro:after-swap",s);</script> <div class="mx-auto flex w-full max-w-app items-center justify-start px-2"><a id="back-button" href="/en" class="group inline-block hover:text-accent focus-outline mt-8 mb-2 flex hover:text-foreground/75"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 6l-6 6l6 6" /></svg><span>Back to home</span></a></div><script type="module">function o(){const t=document.querySelector("#back-button"),e=sessionStorage.getItem("backUrl");e&&t&&(t.href=e)}document.addEventListener("astro:page-load",o);o();</script> <main id="main-content" class="mx-auto w-full max-w-app px-4 pb-12" data-pagefind-body> <h1 class="inline-block text-2xl font-bold text-accent sm:text-3xl" data-astro-transition-scope="astro-fam6wyqg-1"> Deploying a Linux Server for Academic Research </h1> <div class="my-2 flex items-center gap-2"> <div class="flex items-center gap-x-2 opacity-80"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 min-w-[1.375rem]"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M7 14h.013" /><path d="M10.01 14h.005" /><path d="M13.01 14h.005" /><path d="M16.015 14h.005" /><path d="M13.015 17h.005" /><path d="M7.01 17h.005" /><path d="M10.01 17h.005" /></svg> <span class="text-sm sm:text-base"> Updated on:
+</span> <time class="text-sm sm:text-base" datetime="2024-11-01T14:34:28.000Z">1 Nov, 2024</time> </div> <span aria-hidden="true" class="max-sm:hidden hidden">|</span>  <span aria-hidden="true">|</span> <span class="text-muted-foreground text-sm"> 15 min read </span>  <span aria-hidden="true">|</span> <a href="/en/categories/productivity/" class="text-muted-foreground text-sm decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"> Category: Productivity </a>  </div> <article id="article" class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"> <p>Recently, I converted a MiniPC into a server running the Ubuntu operating system, configuring it to meet potential future research needs.</p>
+<p>Given my limited knowledge of Linux, I spent some time learning and attempting to complete the deployment, and recorded the configuration steps, possible issues, and their corresponding solutions.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<p></p><details><summary>Open Table of Contents</summary><p></p>
+<ul>
+<li><a href="#creating-a-new-user-with-administrator-privileges-on-ubuntu">Creating a New User with Administrator Privileges on Ubuntu</a>
+<ul>
+<li><a href="#1-create-a-new-user-and-specify-home-directory-login-shell">1. Create a new user and specify home directory, login shell</a></li>
+<li><a href="#2-grant-administrator-privileges-to-the-new-user">2. Grant administrator privileges to the new user</a></li>
+<li><a href="#3-set-a-password-for-the-new-user">3. Set a password for the new user</a></li>
+</ul>
+</li>
+<li><a href="#terminal-command-beautification">Terminal Command Beautification</a></li>
+<li><a href="#enabling-remote-access-to-the-server">Enabling Remote Access to the Server</a>
+<ul>
+<li><a href="#1-install-and-configure-ssh-service">1. Install and configure SSH service</a></li>
+<li><a href="#2-configure-ufw-firewall">2. Configure UFW firewall</a></li>
+<li><a href="#3-verify-ssh-connection">3. Verify SSH connection</a></li>
+<li><a href="#4-fix-xauthority-file-permission-issues">4. Fix .Xauthority file permission issues</a></li>
+<li><a href="#5-set-up-fail2ban-recommended">5. Set up Fail2Ban (recommended)</a></li>
+</ul>
+</li>
+<li><a href="#configuring-ssh-connection-between-server-and-github">Configuring SSH Connection Between Server and GitHub</a>
+<ul>
+<li><a href="#1-install-and-verify-git">1. Install and verify Git</a></li>
+<li><a href="#2-configure-git-user-information">2. Configure Git user information</a></li>
+<li><a href="#3-generate-ssh-key-pair">3. Generate SSH key pair</a></li>
+<li><a href="#4-add-ssh-public-key-to-github">4. Add SSH public key to GitHub</a></li>
+<li><a href="#5-test-ssh-connection-with-github">5. Test SSH connection with GitHub</a></li>
+<li><a href="#6-common-issues-and-solutions">6. Common issues and solutions</a></li>
+</ul>
+</li>
+<li><a href="#python-environment-configuration-and-management">Python Environment Configuration and Management</a>
+<ul>
+<li><a href="#miniforge">Miniforge</a>
+<ul>
+<li><a href="#1-install-miniforge">1. Install Miniforge</a></li>
+<li><a href="#2-initialize-mamba-environment">2. Initialize Mamba environment</a></li>
+<li><a href="#3-create-and-manage-environments">3. Create and manage environments</a>
+<ul>
+<li><a href="#create-new-environment">Create new environment</a></li>
+<li><a href="#delete-environment">Delete environment</a></li>
+</ul>
+</li>
+<li><a href="#4-install-common-packages">4. Install common packages</a></li>
+<li><a href="#5-prevent-unauthorized-updates">5. Prevent unauthorized updates</a></li>
+</ul>
+</li>
+<li><a href="#poetry">Poetry</a>
+<ul>
+<li><a href="#1-install-poetry">1. Install Poetry</a></li>
+<li><a href="#2-create-new-project">2. Create new project</a></li>
+<li><a href="#3-manage-project-dependencies">3. Manage project dependencies</a></li>
+<li><a href="#4-manage-virtual-environments">4. Manage virtual environments</a></li>
+<li><a href="#5-manage-dependency-lock-file">5. Manage dependency lock file</a></li>
+<li><a href="#6-run-scripts-and-commands">6. Run scripts and commands</a></li>
+<li><a href="#7-publish-python-packages">7. Publish Python packages</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#configuring-r-environment-on-ubuntu-for-econometric-analysis">Configuring R Environment on Ubuntu for Econometric Analysis</a>
+<ul>
+<li><a href="#1-install-r">1. Install R</a></li>
+<li><a href="#2-install-rstudio">2. Install RStudio</a></li>
+<li><a href="#3-install-econometrics-related-r-packages">3. Install econometrics-related R packages</a></li>
+<li><a href="#4-install-private-packages-using-github-token">4. Install private packages using GitHub token</a></li>
+<li><a href="#5-example-install-and-use-plm-package-for-panel-data-regression">5. Example: Install and use <code>plm</code> package for panel data regression</a></li>
+</ul>
+</li>
+<li><a href="#other-issues">Other Issues</a>
+<ul>
+<li><a href="#1-sync-data">1. Sync data</a></li>
+<li><a href="#2-install-common-fonts">2. Install common fonts</a></li>
+<li><a href="#3-driverlibrary-version-mismatch">3. Driver/library version mismatch</a></li>
+<li><a href="#4-upgrade-nvidia-drivers">4. Upgrade Nvidia drivers</a></li>
+<li><a href="#5-install-kernel-headers-and-configure-gcc">5. Install kernel headers and configure GCC</a></li>
+</ul>
+</li>
+</ul>
+<p></p></details><p></p>
+<h2 id="creating-a-new-user-with-administrator-privileges-on-ubuntu">Creating a New User with Administrator Privileges on Ubuntu</h2>
+<p>When using a cloud service, provider-supplied, or self-configured Ubuntu server, a default user is created. Typically, this user can temporarily elevate privileges using the <code>sudo</code> command to perform tasks requiring administrator rights, but it is essentially a regular user (not an administrator account). If you need to create a custom user with the same administrator privileges, follow these steps:</p>
+<h3 id="1-create-a-new-user-and-specify-home-directory-login-shell">1. Create a new user and specify home directory, login shell</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> useradd</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -d</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/home/&#x3C;user_name></span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -m</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -s</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/bin/bash</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>Parameter explanation:</p>
+<ul>
+<li><code>-d "/home/&#x3C;user_name>"</code>: Sets the user’s home directory to <code>/home/&#x3C;user_name></code>.</li>
+<li><code>-m</code>: Automatically creates the home directory.</li>
+<li><code>-s "/bin/bash"</code>: Specifies the user’s default login shell as <code>/bin/bash</code>.</li>
+</ul>
+<h3 id="2-grant-administrator-privileges-to-the-new-user">2. Grant administrator privileges to the new user</h3>
+<p>To create a user with sudo (administrator) privileges, run the following command:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> useradd</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -d</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/home/&#x3C;user_name></span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -m</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -s</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/bin/bash</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -G</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> sudo</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>Where:</p>
+<ul>
+<li><code>-G sudo</code>: Adds <code>&#x3C;user_name></code> to the <code>sudo</code> user group, granting administrator privileges.</li>
+</ul>
+<h3 id="3-set-a-password-for-the-new-user">3. Set a password for the new user</h3>
+<p>Newly created users do not have a password by default. Set a password for <code>&#x3C;user_name></code> using the following command:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> passwd</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>After running this command, the system will prompt for the password twice. Note that for security reasons, no characters will be displayed when entering the password (no text or asterisks). Simply enter the password and press <code>Enter</code> to confirm.</p>
+<p>Through these steps, you can successfully create a new user <code>&#x3C;user_name></code> with administrator privileges, who can execute commands using <code>sudo</code>.</p>
+<hr>
+<h2 id="terminal-command-beautification">Terminal Command Beautification</h2>
+<p>A good-looking and useful terminal prompt can enhance work enjoyment. Here, we use <code>zsh</code> to beautify the terminal, with operations referring to <a href="/blog/2022/Linux%E5%AE%9E%E7%94%A8%E9%85%8D%E7%BD%AE%E8%AE%B0%E5%BD%95/">previous records</a>.</p>
+<hr>
+<h2 id="enabling-remote-access-to-the-server">Enabling Remote Access to the Server</h2>
+<p>To enable remote access to the Ubuntu server from locations other than its physical location, you can install and configure SSH service, along with necessary firewall configurations.</p>
+<h3 id="1-install-and-configure-ssh-service">1. Install and configure SSH service</h3>
+<p>If only basic SSH access is needed, installing <code>openssh-server</code> and enabling the SSH service is sufficient. However, in environments with higher security requirements, you can further optimize the SSH configuration file <code>/etc/ssh/sshd_config</code>:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> openssh-server</span></span></code></pre>
+<p>After installation, check the status of the SSH service to confirm it is running properly:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> systemctl</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> status</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ssh</span></span></code></pre>
+<ul>
+<li><strong>Configuration recommendations</strong>:
+<ul>
+<li>
+<p><strong>Disable direct root user login</strong> (recommended): Avoid logging in directly as root to increase security. In <code>/etc/ssh/sshd_config</code>, find <code>PermitRootLogin</code> and set it to <code>no</code>.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> nano</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /etc/ssh/sshd_config</span></span></code></pre>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>PermitRootLogin no</span></span></code></pre>
+</li>
+<li>
+<p><strong>Restrict allowed users</strong>: You can specify users allowed to log in via SSH through the <code>AllowUsers</code> configuration item to further strengthen security.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>AllowUsers &#x3C;user_name></span></span></code></pre>
+</li>
+<li>
+<p><strong>Use a non-default port</strong> (optional): Change the SSH port from the default 22 to another port, such as 2200. This method can reduce the possibility of scanning attacks, but you need to update firewall rules accordingly.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Port 2200</span></span></code></pre>
+</li>
+<li>
+<p><strong>Enable automatic disconnection of idle connections</strong>: To prevent unused SSH sessions from occupying resources for long periods, add the following lines to the configuration to set automatic disconnection of idle connections.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>ClientAliveInterval 300</span></span>
+<span class="line"><span>ClientAliveCountMax 2</span></span></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<p>After changes, restart the SSH service to apply the configuration:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> systemctl</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> restart</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ssh</span></span></code></pre>
+<h3 id="2-configure-ufw-firewall">2. Configure UFW firewall</h3>
+<p>If UFW firewall is enabled, ensure the SSH port is open, and configure accordingly if the port has been changed. If using the default port 22, you can use:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ufw</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> allow</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ssh</span></span></code></pre>
+<p>If the port has been changed, such as to 2200, use the following command:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ufw</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> allow</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> 2200/tcp</span></span></code></pre>
+<ul>
+<li><strong>Configuration recommendations:</strong>
+<ul>
+<li>
+<p>After enabling the firewall, check the status to ensure rules are applied correctly:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ufw</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> enable</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ufw</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> status</span></span></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-verify-ssh-connection">3. Verify SSH connection</h3>
+<p>Test the connection to the server from a client system (such as Windows). On Windows, it is recommended to use SSH protocol-supporting terminal tools like <a href="https://www.putty.org/">PuTTY</a> or <a href="https://aka.ms/terminal">Windows Terminal</a> to ensure connection security and stability.</p>
+<p>To test remote connection to the server on a Windows system, you can use the telnet command (note: telnet is often used for testing connections, but in production environments, use a more secure SSH client):</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">telnet</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">remote_i</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">p</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">remote_por</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">t</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>Replace &#x3C;remote_ip> with the server’s IP address, and &#x3C;remote_port> with the SSH port the server is listening on (default is 22).</p>
+<h3 id="4-fix-xauthority-file-permission-issues">4. Fix .Xauthority file permission issues</h3>
+<p>The <code>.Xauthority</code> file permission error in <code>/home/&#x3C;user_name>/.Xauthority</code> may occur because the file was created without root privileges. In addition to modifying the ownership of the user directory, ensure the permissions of related SSH session directories are correct:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> chown</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">:</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -R</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /home/</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>If the issue persists, try creating a new <code>.Xauthority</code> file:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -u</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> touch</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /home/</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">/.Xauthority</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> chown</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">:</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /home/</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">/.Xauthority</span></span></code></pre>
+<h3 id="5-set-up-fail2ban-recommended">5. Set up Fail2Ban (recommended)</h3>
+<p>To further protect the SSH service from brute-force attacks, you can install and configure <code>fail2ban</code>. This tool automatically detects multiple failed login attempts and temporarily disables the corresponding IP:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> fail2ban</span></span></code></pre>
+<p><code>fail2ban</code> will automatically enable SSH protection, and you can customize the <code>/etc/fail2ban/jail.local</code> file to adjust ban time, retry counts, etc.:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>[sshd]</span></span>
+<span class="line"><span>enabled = true</span></span>
+<span class="line"><span>port = 22</span></span>
+<span class="line"><span>maxretry = 5</span></span>
+<span class="line"><span>bantime = 600</span></span></code></pre>
+<p>Fail2Ban will automatically identify multiple failed login attempts and disable the corresponding IP, further securing the server.</p>
+<hr>
+<h2 id="configuring-ssh-connection-between-server-and-github">Configuring SSH Connection Between Server and GitHub</h2>
+<p>The following are detailed steps to configure SSH connection between the Ubuntu server and GitHub, ensuring secure cloning, pushing, and pulling of repositories on GitHub.</p>
+<h3 id="1-install-and-verify-git">1. Install and verify Git</h3>
+<p>First, install Git and confirm the installed version:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> git</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">git</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --version</span></span></code></pre>
+<h3 id="2-configure-git-user-information">2. Configure Git user information</h3>
+<p>Configure Git with your GitHub username and email. Ensure the information matches your GitHub account to correctly record authorship when committing code:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">git</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> config</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --global</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> user.name</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">&#x3C;github_account_name></span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">git</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> config</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --global</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> user.email</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">&#x3C;github_account_email></span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span></code></pre>
+<p>This configuration will be added to the <code>~/.gitconfig</code> file and is global, applying to all Git repositories under this user.</p>
+<h3 id="3-generate-ssh-key-pair">3. Generate SSH key pair</h3>
+<p>To establish a secure connection with GitHub on the server, generate an SSH key pair:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">ssh-keygen</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -C</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">&#x3C;github_account_email></span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -t</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> rsa</span></span></code></pre>
+<ul>
+<li>Explanation:
+<ul>
+<li><code>-C "&#x3C;github_account_email>"</code>: Adds a comment to the key, typically the GitHub account email.</li>
+<li><code>-t rsa</code>: Specifies the key type as RSA (a commonly supported type by GitHub).</li>
+</ul>
+</li>
+</ul>
+<p>After running the command, press <code>Enter</code> three times (keeping the default filename <code>id_rsa</code> and no passphrase), and the key pair will be stored in the <code>~/.ssh</code> directory.</p>
+<h3 id="4-add-ssh-public-key-to-github">4. Add SSH public key to GitHub</h3>
+<ol>
+<li>
+<p>Use the following command to open the generated public key file and copy its contents:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">cat</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ~/.ssh/id_rsa.pub</span></span></code></pre>
+<p>This command prints the public key in the terminal; you can optionally open it with a text editor and copy (e.g., using <code>vim ~/.ssh/id_rsa.pub</code>).</p>
+</li>
+<li>
+<p>Log in to GitHub website and navigate to <code>Settings</code> → <code>SSH and GPG keys</code> → <code>New SSH key</code>.</p>
+</li>
+<li>
+<p>Paste the contents of <code>id_rsa.pub</code> into the <code>New SSH key</code> page, set a descriptive title (e.g., <code>Ubuntu Server Key</code>), and save.</p>
+</li>
+</ol>
+<h3 id="5-test-ssh-connection-with-github">5. Test SSH connection with GitHub</h3>
+<p>After configuration, test the connection with GitHub using the following command:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">ssh</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -T</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> git@github.com</span></span></code></pre>
+<p>When executing this command, GitHub will return a message confirming successful connection, such as:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Hi &#x3C;github_account_name>! You've successfully authenticated, but GitHub does not provide shell access.</span></span></code></pre>
+<p>This message indicates that the SSH connection has been successfully established, allowing code pushing and pulling with GitHub on the server.</p>
+<h3 id="6-common-issues-and-solutions">6. Common issues and solutions</h3>
+<ol>
+<li>
+<p><strong>SSH key permission issues</strong>: Ensure the permissions of the SSH key pair files are correct to prevent connection issues. Check and set key permissions:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">chmod</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 600</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ~/.ssh/id_rsa</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">chmod</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 644</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ~/.ssh/id_rsa.pub</span></span></code></pre>
+</li>
+<li>
+<p><strong>Add key to SSH Agent</strong> (recommended): If the key is not automatically loaded after server startup, add it to the SSH Agent for automatic loading after each reboot:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#C5E478;--shiki-dark-font-style:italic">eval</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">ssh-agent</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -s</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">ssh-add</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ~/.ssh/id_rsa</span></span></code></pre>
+</li>
+</ol>
+<hr>
+<h2 id="python-environment-configuration-and-management">Python Environment Configuration and Management</h2>
+<hr>
+<h3 id="miniforge">Miniforge</h3>
+<p>For managing Python scientific environments on the server, I chose the lightweight and efficient Miniforge as a package manager, replacing Anaconda. Miniforge defaults to the conda-forge channel and integrates Mamba, providing faster package management solutions. Below are the steps for installing and configuring Miniforge, as well as creating and deleting environments.</p>
+<h4 id="1-install-miniforge">1. Install Miniforge</h4>
+<p>First, follow the installation instructions on Miniforge’s <a href="https://github.com/conda-forge/miniforge">GitHub project page</a> for downloading and installation. The core installation commands are:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">wget</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uname</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)-$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uname</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -m</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">).sh</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">bash</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Miniforge3-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uname</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uname</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -m</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">.sh</span></span></code></pre>
+<ul>
+<li>Configuration recommendations:
+<ul>
+<li>
+<p>It is recommended to install Miniforge in <code>/usr/local/miniforge3</code>, allowing multiple users to share environments, but only root can modify. During installation, you can choose the directory, and the system will automatically create necessary folders.</p>
+</li>
+<li>
+<p>If using ZSH, confirm that Miniforge’s path is added to the <code>.zshrc</code> file.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">export</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478"> PATH</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">$usr</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/local/miniforge3/bin:</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">$PATH</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span></code></pre>
+</li>
+<li>
+<p>Reload <code>.zshrc</code> configuration: <code>source ~/.zshrc</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-initialize-mamba-environment">2. Initialize Mamba environment</h4>
+<p>After installation, initialize Mamba to use the command in the terminal. Assuming Miniforge is installed in <code>/usr/local/miniforge3</code>, execute:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">/usr/local/miniforge3/bin/mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> init</span></span></code></pre>
+<p>This command initializes environment variables and requires restarting the terminal to apply changes.</p>
+<p>If ZSH doesn’t work, you can copy the <code>mamba</code> configuration from <code>.bashrc</code> to <code>.zshrc</code>, or configure otherwise.</p>
+<h4 id="3-create-and-manage-environments">3. Create and manage environments</h4>
+<p>In a multi-user server environment, it is recommended to create and manage environments with root privileges (switch using <code>sudo su</code>). This prevents ordinary users from accidentally or uncontrollably changing environment configurations.</p>
+<h5 id="create-new-environment">Create new environment</h5>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># Create new environment with specified name</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> create</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --name</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">new_env_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> python=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">3.11</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --no-default-packages</span></span></code></pre>
+<ul>
+<li><code>--name &#x3C;new_env_name></code>: Names the new environment.</li>
+<li><code>python=3.11</code>: Sets Python version to 3.11.</li>
+<li><code>--no-default-packages</code>: Installs only Python, without automatically installing other packages.</li>
+<li>Ordinary users can create private environments in their home directory (e.g., <code>/home/username/myenv</code>), executing:</li>
+</ul>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> create</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --prefix</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /home/username/myenv</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> python=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">3.11</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --no-default-packages</span></span></code></pre>
+<h5 id="delete-environment">Delete environment</h5>
+<p>To delete an environment (including all associated packages), use:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># Delete by environment name</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> remove</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --name</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">env_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --all</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># Delete by path</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> remove</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --prefix</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /path/to/directory</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --all</span></span></code></pre>
+<h4 id="4-install-common-packages">4. Install common packages</h4>
+<p>It is generally recommended not to modify the <code>base</code> environment directly, but to create dedicated environments based on actual needs. For example, you may need to install <code>JupyterHub</code>, which provides Jupyter notebook services for multiple users.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># Create Machine Learning environment</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> create</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --name</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ml_env</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> python=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">3.12</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyterhub</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyterlab</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> notebook</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> notebook</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> scipy</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> numpy</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> numpy</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># Activate environment</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> activate</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ml_env</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># Install other packages</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyter-lsp-python</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyterlab-lsp</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyterlab-git</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyterlab_execute_time</span></span></code></pre>
+<h4 id="5-prevent-unauthorized-updates">5. Prevent unauthorized updates</h4>
+<p>In multi-user environments, restricting ordinary users from modifying system-level environments helps maintain stability. If users try to update the environment, they will encounter permission errors. Example:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --all</span></span></code></pre>
+<p>Error message:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>EnvironmentNotWritableError: The current user does not have write permissions to the target environment.</span></span>
+<span class="line"><span>  environment location: /usr/local/miniforge3</span></span>
+<span class="line"><span>  uid: 1000</span></span>
+<span class="line"><span>  gid: 1000</span></span></code></pre>
+<p>This design ensures environment security and consistency, avoiding update failures due to permissions.</p>
+<p>If you need to temporarily grant permission to update the <code>base</code> environment, use the <code>sudo</code> command:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /usr/local/miniforge3/bin/mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --all</span></span></code></pre>
+<hr>
+<h3 id="poetry">Poetry</h3>
+<p>Poetry is an efficient and convenient Python project dependency management tool, suitable for quickly creating and managing virtual environments, installing dependency libraries, and publishing Python packages.</p>
+<h4 id="1-install-poetry">1. Install Poetry</h4>
+<p>Before installing Poetry, ensure Python 3.7 or higher is installed.</p>
+<ol>
+<li>
+<p>Use the official installation script:</p>
+<p>Poetry’s installation script automatically installs Poetry in the <code>$HOME/.local/bin</code> directory. Run the following command to download and execute the installation script:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">curl</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -sSL</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> https://install.python-poetry.org</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> |</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> python3</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> -</span></span></code></pre>
+</li>
+<li>
+<p>Add Poetry to PATH:</p>
+<p>After default installation, you need to add Poetry to environment variables. If you get a <code>command not found</code> error, you can add it to the current session’s environment variables with:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">export</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478"> PATH</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">$HOME</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/.local/bin:</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">$PATH</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span></code></pre>
+</li>
+<li>
+<p>Verify installation:</p>
+<p>After installation, check the installed version to confirm success:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --version</span></span></code></pre>
+</li>
+</ol>
+<h4 id="2-create-new-project">2. Create new project</h4>
+<p>Poetry provides simplified commands to quickly generate the basic structure of new projects.</p>
+<ol>
+<li>
+<p>Create new project:</p>
+<p>Use the following command to create a new project directory (e.g., <code>my_project</code>) and generate the default <code>pyproject.toml</code> file.</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> new</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> my_project</span></span></code></pre>
+<p>This command will generate the following structure in the project directory:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>my_project/</span></span>
+<span class="line"><span>├── my_project/</span></span>
+<span class="line"><span>│   └── __init__.py</span></span>
+<span class="line"><span>├── pyproject.toml</span></span>
+<span class="line"><span>└── tests/</span></span>
+<span class="line"><span>    └── __init__.py</span></span></code></pre>
+</li>
+<li>
+<p>Initialize existing project (optional):</p>
+<p>If a project already exists and you want to manage it with Poetry, you can initialize it with <code>poetry init</code>. This command will guide the generation of the <code>pyproject.toml</code> file and configure initial dependencies:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#C5E478;--shiki-dark-font-style:italic">cd</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> existing_project</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> init</span></span></code></pre>
+</li>
+</ol>
+<h4 id="3-manage-project-dependencies">3. Manage project dependencies</h4>
+<p>Poetry provides convenient dependency management, distinguishing between production and development dependencies.</p>
+<ol>
+<li>
+<p><strong>Add production dependencies</strong>:</p>
+<p>Add dependencies to the production environment, such as the <code>requests</code> library:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> add</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> requests</span></span></code></pre>
+</li>
+<li>
+<p><strong>Add development dependencies</strong>:</p>
+<p>If certain libraries are only for development and testing, use the <code>--dev</code> parameter. This adds dependencies to the <code>[tool.poetry.dev-dependencies]</code> section. For example, add <code>pytest</code> as a development dependency:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> add</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> pytest</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --dev</span></span></code></pre>
+</li>
+<li>
+<p><strong>Install all dependencies</strong>:</p>
+<p>After writing project dependencies to the <code>pyproject.toml</code> file, install all dependencies with:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span></span></code></pre>
+<p><code>poetry install</code> automatically creates a virtual environment and installs required dependencies within it. If a <code>poetry.lock</code> file exists, it ensures installed dependency versions match those in the lock file for environment consistency.</p>
+</li>
+</ol>
+<hr>
+<h4 id="4-manage-virtual-environments">4. Manage virtual environments</h4>
+<p>Poetry creates virtual environments outside the project directory and automatically activates and uses them.</p>
+<ol>
+<li>
+<p><strong>Activate virtual environment</strong>:</p>
+<p>Activate the virtual environment created by Poetry with:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> shell</span></span></code></pre>
+</li>
+<li>
+<p><strong>Exit virtual environment</strong>:</p>
+<p>After finishing work in the virtual environment, enter <code>exit</code> to exit.</p>
+</li>
+<li>
+<p><strong>View virtual environment path</strong>:</p>
+<p>To view the actual storage path of the virtual environment:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> env</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> info</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --path</span></span></code></pre>
+</li>
+<li>
+<p><strong>Delete virtual environment</strong> (optional):</p>
+<p>If you need to recreate or clean up the environment, delete the virtual environment:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> env</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> remove</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> python</span></span></code></pre>
+</li>
+</ol>
+<h4 id="5-manage-dependency-lock-file">5. Manage dependency lock file</h4>
+<p>Poetry uses the <code>poetry.lock</code> file to lock exact dependency versions, ensuring consistency across environments.</p>
+<ol>
+<li>
+<p><strong>Update dependency versions</strong>:</p>
+<p>When updating dependency versions, re-resolve dependencies and update the lock file with:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update</span></span></code></pre>
+</li>
+<li>
+<p><strong>Install specified lock versions</strong>:</p>
+<p>In collaborative projects, team members can install the project’s exact dependency versions based on the <code>poetry.lock</code> file:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span></span></code></pre>
+</li>
+</ol>
+<h4 id="6-run-scripts-and-commands">6. Run scripts and commands</h4>
+<p>Poetry supports running scripts or commands directly in the virtual environment, simplifying command management.</p>
+<ol>
+<li>
+<p><strong>Run project scripts</strong>:</p>
+<p>Use <code>poetry run</code> to execute commands in the virtual environment. For example, run a Python script:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> run</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> python</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> script.py</span></span></code></pre>
+</li>
+<li>
+<p><strong>Run unit tests directly</strong>:</p>
+<p>Run test commands like <code>pytest</code> directly in the virtual environment:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> run</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> pytest</span></span></code></pre>
+</li>
+</ol>
+<h4 id="7-publish-python-packages">7. Publish Python packages</h4>
+<p>Poetry can publish projects to <a href="https://pypi.org/">PyPI</a> or other custom package repositories.</p>
+<ol>
+<li>
+<p><strong>Build project</strong>:</p>
+<p>Poetry provides one-click project building, packaging the project into <code>.whl</code> and <code>.tar.gz</code> files for publishing:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> build</span></span></code></pre>
+</li>
+<li>
+<p><strong>Publish to PyPI</strong>:</p>
+<p>To publish to PyPI, configure PyPI credentials in the <code>~/.pypirc</code> file, or use Poetry’s <code>publish</code> command to enter interactively:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> publish</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --build</span></span></code></pre>
+<blockquote>
+<p><strong>Note</strong>: To verify the publishing process in a test environment, use the <code>--repository</code> parameter to publish to the PyPI test repository.</p>
+</blockquote>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> publish</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --repository</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> testpypi</span></span></code></pre>
+</li>
+</ol>
+<hr>
+<p>The following is a configuration guide for using R environment in econometrics, including installing R and RStudio, common R package configurations, etc.</p>
+<hr>
+<h2 id="configuring-r-environment-on-ubuntu-for-econometric-analysis">Configuring R Environment on Ubuntu for Econometric Analysis</h2>
+<p>In the field of econometrics, R is suitable for handling economic data, performing regression analysis, time series analysis, etc.</p>
+<h3 id="1-install-r">1. Install R</h3>
+<p>Ubuntu’s default software repository includes R, but it may not be the latest version. To get the latest R version, use the CRAN repository.</p>
+<ol>
+<li>
+<p><strong>Add CRAN repository</strong>:</p>
+<p>Update the package list and install necessary dependencies:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> software-properties-common</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> dirmngr</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span></code></pre>
+</li>
+<li>
+<p><strong>Add R project’s GPG key</strong>:</p>
+<p>Download and add CRAN’s GPG public key to ensure package integrity:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">wget</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -qO-</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> |</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> tee</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -a</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc</span></span></code></pre>
+</li>
+<li>
+<p><strong>Verify GPG key</strong> (optional):</p>
+<p>Verify the key’s fingerprint (<code>E298A3A825C0D65DFD57CBB651716619E084DAB9</code>):</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">gpg</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --show-keys</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc</span></span></code></pre>
+</li>
+<li>
+<p><strong>Add CRAN repository to source list</strong>:</p>
+<p>Add the CRAN repository to the apt source list to ensure the latest R version:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> add-apt-repository</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">deb https://cloud.r-project.org/bin/linux/ubuntu $(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">lsb_release</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -cs</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)-cran40/</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span></code></pre>
+</li>
+<li>
+<p><strong>Install R and development packages</strong>:</p>
+<p>Install the latest R version and development libraries:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> r-base</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> r-base-dev</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span></code></pre>
+</li>
+</ol>
+<h3 id="2-install-rstudio">2. Install RStudio</h3>
+<p>RStudio is a powerful IDE suitable for data analysis and visualization. The installation process for RStudio is straightforward; refer to the <a href="https://posit.co/download/rstudio-server/">official RStudio installation guide</a> for specific steps.</p>
+<p><strong>Installation steps</strong>:</p>
+<ol>
+<li>
+<p>Download the latest version of RStudio Server.</p>
+</li>
+<li>
+<p>Install using the <code>dpkg</code> command:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> dpkg</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -i</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> rstudio-server-</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">versio</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">n</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">.deb</span></span></code></pre>
+</li>
+<li>
+<p>Check installation status:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> systemctl</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> status</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> rstudio-server</span></span></code></pre>
+</li>
+</ol>
+<p>After successful installation of RStudio Server, access it via <code>http://&#x3C;your-server-ip>:8787</code> in the browser.</p>
+<h3 id="3-install-econometrics-related-r-packages">3. Install econometrics-related R packages</h3>
+<p>Econometric analysis typically requires specialized packages for data processing, regression analysis, and time series analysis.</p>
+<ol>
+<li>
+<p><strong>Install system dependencies</strong>:</p>
+<p>Install system-level development packages to ensure smooth R package installation (especially for packages requiring compilation, like <code>tidyverse</code> and <code>data.table</code>):</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt-get</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> build-essential</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libssl-dev</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libcurl4-openssl-dev</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libxml2-dev</span></span></code></pre>
+</li>
+<li>
+<p><strong>Install econometrics and data processing packages</strong>:</p>
+<p>Launch the R console and install commonly used econometrics packages:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> R</span></span></code></pre>
+<p>Execute the following commands in the R console:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">chooseCRANmirror</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#D7DBE0">graphics</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#1976D2;--shiki-dark:#82AAFF"> FALSE</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">install.packages</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">c</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">tidyverse</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">data.table</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">broom</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">plm</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">forecast</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lmtest</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">sandwich</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">stargazer</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">))</span></span></code></pre>
+<ul>
+<li><code>tidyverse</code>: Includes <code>dplyr</code>, <code>ggplot2</code>, <code>tidyr</code>, etc., for data processing and visualization.</li>
+<li><code>data.table</code>: For fast data processing.</li>
+<li><code>broom</code>: Tidies regression analysis results into analyzable tables.</li>
+<li><code>plm</code>: For panel data regression analysis.</li>
+<li><code>forecast</code>: For time series forecasting and analysis.</li>
+<li><code>lmtest</code> and <code>sandwich</code>: Provide econometric testing tools and robust standard errors.</li>
+<li><code>stargazer</code>: Outputs regression results as easy-to-understand tables, suitable for papers or reports.</li>
+</ul>
+</li>
+<li>
+<p><strong>Install advanced econometric tools</strong>:</p>
+<ul>
+<li><code>AER</code> (Applied Econometrics with R): Contains common functions and datasets for economic research.</li>
+<li><code>urca</code>: Provides unit root and cointegration tests.</li>
+<li><code>vars</code>: For vector autoregression (VAR) analysis.</li>
+</ul>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">install.packages</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">c</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">AER</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">urca</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vars</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">))</span></span></code></pre>
+</li>
+<li>
+<p><strong>Install financial time series analysis packages</strong> (optional):</p>
+<ul>
+<li><code>quantmod</code> and <code>TTR</code>: For financial market data analysis and technical indicator calculations.</li>
+<li><code>zoo</code> and <code>xts</code>: For handling irregular time series data.</li>
+</ul>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">install.packages</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">c</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">quantmod</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">TTR</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">zoo</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">xts</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">))</span></span></code></pre>
+</li>
+</ol>
+<h3 id="4-install-private-packages-using-github-token">4. Install private packages using GitHub token</h3>
+<p>If you need to install experimental or custom packages from GitHub, it is recommended to use a GitHub token to avoid API rate limits.</p>
+<p><strong>Generate GitHub token</strong>:</p>
+<ol>
+<li>
+<p>Generate a token in the R console:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">usethis</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">create_github_token</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">()</span></span></code></pre>
+</li>
+<li>
+<p>Generate a new Personal Access Token on the GitHub website (path: <code>Settings</code> → <code>Developer settings</code> → <code>Personal access token</code> → <code>Tokens (classic)</code>).</p>
+</li>
+<li>
+<p><strong>Configure GitHub token</strong>:</p>
+<p>Add the generated token to the R environment:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">gitcreds</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">gitcreds_set</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">()</span></span></code></pre>
+</li>
+</ol>
+<p>Under this setup, you can securely install private packages from GitHub without API restrictions.</p>
+<h3 id="5-example-install-and-use-plm-package-for-panel-data-regression">5. Example: Install and use <code>plm</code> package for panel data regression</h3>
+<p>Assuming you want to perform regression analysis using panel data, here’s how to install <code>plm</code> and run a fixed effects model:</p>
+<ol>
+<li>
+<p><strong>Install <code>plm</code></strong> (if not installed):</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">install.packages</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">plm</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span></code></pre>
+</li>
+<li>
+<p><strong>Load and use <code>plm</code></strong>:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">library</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">plm</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># Create example panel dataset</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">data</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Produc</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#212121;--shiki-dark:#D7DBE0">package</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">plm</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">pdata </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&#x3C;-</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> pdata.frame</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">Produc, </span><span style="--shiki-light:#212121;--shiki-dark:#D7DBE0">index</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478"> c</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">state</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">year</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">))</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># Fixed effects model regression</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">fe_model </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&#x3C;-</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> plm</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">log</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">gsp</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> ~</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478"> log</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">pcap</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> +</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478"> log</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">hwy</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> +</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478"> log</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">water</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> +</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478"> log</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">util</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#212121;--shiki-dark:#D7DBE0">data</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF"> pdata, </span><span style="--shiki-light:#212121;--shiki-dark:#D7DBE0">model</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">within</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">summary</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">fe_model</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span></code></pre>
+</li>
+</ol>
+<p>The following is an organized and optimized guide to help more effectively sync data, install fonts, and handle Nvidia driver and library version mismatch issues.</p>
+<hr>
+<h2 id="other-issues">Other Issues</h2>
+<hr>
+<h3 id="1-sync-data">1. Sync data</h3>
+<p>To sync local data to a remote server, it is recommended to use <code>rsync</code>, an efficient and reliable synchronization method. For more details, refer to <a href="https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories">this tutorial</a>.</p>
+<ul>
+<li>
+<p><strong>Sync command</strong>:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">rsync</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -r</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /path/to/sync/</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">usernam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">@</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">remote_hos</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">t</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">:</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">destination_director</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">y</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>The above command will “push” all contents of the local directory <code>/path/to/sync/</code> to the remote server’s <code>&#x3C;destination_directory></code>.</p>
+</li>
+<li>
+<p><strong>Monitor large file transfer progress</strong>:</p>
+<p>If syncing large files, use the <code>watch</code> command to monitor sync progress:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">watch</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -n</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">time_interva</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">l</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> du</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -sh</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /path/to/large/file</span></span></code></pre>
+<p>This command refreshes the file size change every <code>&#x3C;time_interval></code> seconds.</p>
+</li>
+</ul>
+<hr>
+<h3 id="2-install-common-fonts">2. Install common fonts</h3>
+<p>Linux systems do not come with some common fonts from Windows by default (such as <code>Arial</code> and <code>Times New Roman</code>). Installing these fonts can improve the display of documents and websites, especially graphical outputs that depend on these fonts. Install the Microsoft TrueType core fonts package and refresh the cache:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> msttcorefonts</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">rm</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -rf</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ~/.cache/matplotlib</span></span></code></pre>
+<ul>
+<li><code>msttcorefonts</code> includes various Microsoft fonts like Arial and Times New Roman.</li>
+<li>The second command removes the <code>matplotlib</code> cache directory to ensure updated fonts load correctly.</li>
+</ul>
+<hr>
+<h3 id="3-driverlibrary-version-mismatch">3. Driver/library version mismatch</h3>
+<p>When running <code>nvidia-smi</code>, if you encounter the following error:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Failed to initialize NVML: Driver/library version mismatch</span></span></code></pre>
+<p>Refer to the solution on <a href="https://stackoverflow.com/questions/43022843/nvidia-nvml-driver-library-version-mismatch/45319156#45319156">Stack Overflow</a>. The brief steps are:</p>
+<ol>
+<li>
+<p><strong>Reboot the server</strong>:
+In some cases, rebooting the server resolves the issue:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> reboot</span></span></code></pre>
+</li>
+<li>
+<p><strong>Uninstall and reinstall Nvidia drivers</strong>:</p>
+<p>If rebooting doesn’t work, try the following commands to clear existing Nvidia drivers and reinstall:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> purge</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> nvidia</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libnvidia</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ubuntu-drivers</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> reboot</span></span></code></pre>
+</li>
+</ol>
+<hr>
+<h3 id="4-upgrade-nvidia-drivers">4. Upgrade Nvidia drivers</h3>
+<p>To upgrade Nvidia drivers, follow these steps:</p>
+<ol>
+<li>
+<p><strong>Uninstall old drivers</strong>:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> purge</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">nvidia</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> remove</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">nvidia</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> rm</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /etc/apt/sources.list.d/cuda</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> autoremove</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB"> &#x26;&#x26;</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> autoclean</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> rm</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -rf</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /usr/local/cuda</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span></span></code></pre>
+</li>
+<li>
+<p><strong>Find and install recommended drivers</strong>:</p>
+<p>Run the following command to find the recommended Nvidia driver version:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">ubuntu-drivers</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> devices</span></span></code></pre>
+<p>Or install a specific version (e.g., <code>550</code>, adjust version number based on system needs):</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libnvidia-common-550-server</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libnvidia-gl-550-server</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> nvidia-driver-550-server</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span></code></pre>
+</li>
+<li>
+<p><strong>Reboot and check</strong>:</p>
+<p>Reboot the server and use <code>nvidia-smi</code> to check if the new driver is working properly:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> reboot</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> now</span></span></code></pre>
+<p>If <code>nvidia-smi</code> returns the following error:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.</span></span></code></pre>
+<p>Try reinstalling kernel headers and rebooting.</p>
+</li>
+</ol>
+<hr>
+<h3 id="5-install-kernel-headers-and-configure-gcc">5. Install kernel headers and configure GCC</h3>
+<p>If you encounter kernel header or GCC version issues, follow these steps:</p>
+<ol>
+<li>
+<p><strong>Reinstall kernel headers</strong>:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --reinstall</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> linux-headers-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uname</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -r</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> reboot</span></span></code></pre>
+</li>
+<li>
+<p><strong>Update GCC version</strong>:</p>
+<p>If GCC errors occur during kernel header installation, upgrade to <code>gcc-12</code>:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt-get</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> gcc-12</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update-alternatives</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /usr/bin/gcc</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> gcc</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /usr/bin/gcc-12</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 12</span></span></code></pre>
+<p>After reinstalling kernel headers and rebooting the server, <code>nvidia-smi</code> should work properly.</p>
+</li>
+</ol> </article> <hr class="my-8 border-dashed">  <ul class="mt-4 mb-8 sm:my-8"> <li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/en/tags/ubuntu/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-36ssibgs-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block opacity-80 -me-3.5 size-4"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 9l14 0" /><path d="M5 15l14 0" /><path d="M11 4l-4 16" /><path d="M17 4l-4 16" /></svg>
+&nbsp;<span>Ubuntu</span> </a> </li><li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/en/tags/productivity/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-36ssibgs-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block opacity-80 -me-3.5 size-4"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 9l14 0" /><path d="M5 15l14 0" /><path d="M11 4l-4 16" /><path d="M17 4l-4 16" /></svg>
+&nbsp;<span>Productivity</span> </a> </li><li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/en/tags/deployment/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-36ssibgs-4"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block opacity-80 -me-3.5 size-4"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 9l14 0" /><path d="M5 15l14 0" /><path d="M11 4l-4 16" /><path d="M17 4l-4 16" /></svg>
+&nbsp;<span>Deployment</span> </a> </li><li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/en/tags/server/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-36ssibgs-5"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block opacity-80 -me-3.5 size-4"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 9l14 0" /><path d="M5 15l14 0" /><path d="M11 4l-4 16" /><path d="M17 4l-4 16" /></svg>
+&nbsp;<span>Server</span> </a> </li> </ul> <section class="mb-12 rounded-xl border border-border/60 bg-muted/30 px-5 py-4 shadow-sm backdrop-blur dark:border-border/50"> <div class="mb-3 flex items-center gap-3"> <h2 class="text-lg font-semibold text-foreground"> Related posts </h2> <div class="h-px flex-1 bg-border/70" aria-hidden="true"></div> </div> <ul class="space-y-2"> <li> <a href="/en/posts/low-spec-cloud-server-setup" class="group flex items-center gap-2 rounded-lg px-3 py-2 text-base text-foreground transition hover:-translate-y-0.5 hover:bg-background/80 hover:text-accent focus-visible:-translate-y-0.5 focus-visible:bg-background/80"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-accent transition group-hover:translate-x-0.5 rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 6l6 6l-6 6" /></svg> <span class="truncate" title="Practical Configuration Guide for Low-Spec Cloud Servers"> Practical Configuration Guide for Low-Spec Cloud Servers </span> </a> </li><li> <a href="/en/posts/python-env-conda-venv" class="group flex items-center gap-2 rounded-lg px-3 py-2 text-base text-foreground transition hover:-translate-y-0.5 hover:bg-background/80 hover:text-accent focus-visible:-translate-y-0.5 focus-visible:bg-background/80"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-accent transition group-hover:translate-x-0.5 rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 6l6 6l-6 6" /></svg> <span class="truncate" title="Flexible and Efficient Python Environment Management with Conda and uv"> Flexible and Efficient Python Environment Management with Conda and uv </span> </a> </li><li> <a href="/en/posts/build-your-records" class="group flex items-center gap-2 rounded-lg px-3 py-2 text-base text-foreground transition hover:-translate-y-0.5 hover:bg-background/80 hover:text-accent focus-visible:-translate-y-0.5 focus-visible:bg-background/80"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-accent transition group-hover:translate-x-0.5 rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 6l6 6l-6 6" /></svg> <span class="truncate" title="Repost: Build Your Records"> Repost: Build Your Records </span> </a> </li> </ul> </section> <div id="btt-btn-container" class="fixed end-4 bottom-8 z-50 md:sticky md:end-auto md:float-end md:me-1 translate-y-14 opacity-0 transition duration-500"> <button data-button="back-to-top" class="group relative bg-background px-2 py-1 size-14 rounded-full shadow-xl md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg"> <span id="progress-indicator" class="absolute inset-0 -z-10 block size-14 scale-110 rounded-full bg-transparent md:hidden md:h-8 md:rounded-md"></span> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block rotate-90 md:hidden"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 6l-6 6l6 6" /></svg> <span class="sr-only text-sm group-hover:text-accent md:not-sr-only"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-4"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M16 9l-4 -4" /><path d="M8 9l4 -4" /></svg> 返回顶部 </span> </button> </div> <script data-astro-rerun>
+  /** Scrolls the document to the top when
+   * the "Back to Top" button is clicked. */
+  function backToTop() {
+    const rootElement = document.documentElement;
+    const btnContainer = document.querySelector("#btt-btn-container");
+    const backToTopBtn = document.querySelector("[data-button='back-to-top']");
+    const progressIndicator = document.querySelector("#progress-indicator");
+
+    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
+      return;
+
+    // Attach click event handler for back-to-top button
+    backToTopBtn.addEventListener("click", () => {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    });
+
+    // Handle button visibility according to scroll position
+    let lastVisible = null;
+    function handleScroll() {
+      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+      const scrollTop = rootElement.scrollTop;
+      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
+
+      progressIndicator.style.setProperty(
+        "background-image",
+        `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
+      );
+
+      const isVisible = scrollTop / scrollTotal > 0.3;
+
+      if (isVisible !== lastVisible) {
+        btnContainer.classList.toggle("opacity-100", isVisible);
+        btnContainer.classList.toggle("translate-y-0", isVisible);
+        btnContainer.classList.toggle("opacity-0", !isVisible);
+        btnContainer.classList.toggle("translate-y-14", !isVisible);
+        lastVisible = isVisible;
+      }
+    }
+
+    let ticking = false;
+    document.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+  backToTop();
+</script> <div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start"><span class="italic">Share this post on:</span><div class="text-center"><a href="https://wa.me/?text=https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via WhatsApp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" /><path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" /></svg><span class="sr-only">Share this post via WhatsApp</span></a><a href="https://www.facebook.com/sharer.php?u=https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on Facebook"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" /></svg><span class="sr-only">Share this post on Facebook</span></a><a href="https://x.com/intent/post?url=https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on X"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 4l11.733 16h4.267l-11.733 -16z" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg><span class="sr-only">Share this post on X</span></a><a href="https://t.me/share/url?url=https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via Telegram"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4" /></svg><span class="sr-only">Share this post via Telegram</span></a><a href="https://pinterest.com/pin/create/button/?url=https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on Pinterest"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 20l4 -9" /><path d="M10.7 14c.437 1.263 1.43 2 2.55 2c2.071 0 3.75 -1.554 3.75 -4a5 5 0 1 0 -9.7 1.7" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /></svg><span class="sr-only">Share this post on Pinterest</span></a><a href="mailto:?subject=See%20this%20post&#38;body=https://blog.wenjiexu.site/en/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via email"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg><span class="sr-only">Share this post via email</span></a></div></div> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="ZQIRKt" component-url="/_astro/Comments.BY92F0bY.js" component-export="default" renderer-url="/_astro/client.BJHgAj4G.js" props="{}" ssr client="only" opts="{&quot;name&quot;:&quot;Comments&quot;,&quot;value&quot;:&quot;react&quot;}"></astro-island> <hr class="my-6 border-dashed"> <!-- Previous/Next Post Buttons --> <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2"> <a href="/en/posts/write-citable-papers-fundable-proposals" class="flex w-full gap-1 hover:opacity-75"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block flex-none rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 6l-6 6l6 6" /></svg> <div> <span>Previous Post</span> <div class="text-sm text-accent/85">Repost: How to Write Citable Papers and Fundable Proposals</div> </div> </a> <a href="/en/posts/windows-system-setup" class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"> <div> <span>Next Post</span> <div class="text-sm text-accent/85">Windows System Configuration Record</div> </div> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block flex-none rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 6l6 6l-6 6" /></svg> </a> </div> </main> <footer class="w-full mt-auto"> <div class="mx-auto max-w-app px-0"> <hr class="border-border" aria-hidden="true"> </div> <div class="flex flex-col items-center justify-between py-6 sm:flex-row-reverse sm:py-4"> <div class="flex-wrap justify-center gap-1 flex"> <a href="https://github.com/satnaing/astro-paper" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on GitHub"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg> <span class="sr-only">Blog on GitHub</span> </a><a href="https://x.com/username" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on X"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 4l11.733 16h4.267l-11.733 -16z" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg> <span class="sr-only">Blog on X</span> </a><a href="https://www.linkedin.com/in/username/" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on LinkedIn"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 11v5" /><path d="M8 8v.01" /><path d="M12 16v-5" /><path d="M16 16v-3a2 2 0 1 0 -4 0" /><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4z" /></svg> <span class="sr-only">Blog on LinkedIn</span> </a><a href="mailto:yourmail@gmail.com" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Send an email to Blog"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg> <span class="sr-only">Send an email to Blog</span> </a> </div> <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row"> <span>Copyright &#169; 2025</span> <span class="hidden sm:inline">&nbsp;|&nbsp;</span> <span>All rights reserved.</span> </div> </div> </footer>  </body></html> <script data-astro-rerun>
+  /** Create a progress indicator
+   *  at the top */
+  function createProgressBar() {
+    // Create the main container div
+    const progressContainer = document.createElement("div");
+    progressContainer.className =
+      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+
+    // Create the progress bar div
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.id = "myBar";
+
+    // Append the progress bar to the progress container
+    progressContainer.appendChild(progressBar);
+
+    // Append the progress container to the document body or any other desired parent element
+    document.body.appendChild(progressContainer);
+  }
+  createProgressBar();
+
+  /** Update the progress bar
+   *  when user scrolls */
+  function updateScrollProgress() {
+    document.addEventListener("scroll", () => {
+      const winScroll =
+        document.body.scrollTop || document.documentElement.scrollTop;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      if (document) {
+        const myBar = document.getElementById("myBar");
+        if (myBar) {
+          myBar.style.width = scrolled + "%";
+        }
+      }
+    });
+  }
+  updateScrollProgress();
+
+  /** Attaches links to headings in the document,
+   *  allowing sharing of sections easily */
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+    for (const heading of headings) {
+      heading.classList.add("group");
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+  addHeadingLinks();
+
+  /** Attaches copy buttons to code blocks in the document,
+   * allowing users to copy code easily. */
+  function attachCopyButtons() {
+    const copyButtonLabel = "Copy";
+    const codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+    for (const codeBlock of codeBlocks) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "relative";
+
+      const copyButton = document.createElement("button");
+      copyButton.type = "button";
+      copyButton.className =
+        "copy-code absolute right-3 top-3 rounded-md border border-border/70 bg-background/85 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-muted/70 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed";
+      copyButton.innerHTML = copyButtonLabel;
+      codeBlock.setAttribute("tabindex", "0");
+
+      // wrap codeblock with relative parent element to host the button
+      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
+      wrapper.appendChild(codeBlock);
+      wrapper.appendChild(copyButton);
+
+      copyButton.addEventListener("click", async () => {
+        await copyCode(codeBlock, copyButton);
+      });
+    }
+
+    async function copyCode(block, button) {
+      const code = block.querySelector("code");
+      const text = code?.innerText;
+
+      await navigator.clipboard.writeText(text ?? "");
+
+      // visual feedback that task is completed
+      button.innerText = "Copied";
+
+      setTimeout(() => {
+        button.innerText = copyButtonLabel;
+      }, 700);
+    }
+  }
+  attachCopyButtons();
+
+  /* Go to page start after page swap */
+  document.addEventListener("astro:after-swap", () =>
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+  );
+</script>

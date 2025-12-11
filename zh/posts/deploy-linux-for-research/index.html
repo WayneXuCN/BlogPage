@@ -1,0 +1,1013 @@
+<!DOCTYPE html><html dir="ltr" lang="zh-CN" class="scroll-smooth" data-astro-cid-sckkx6r4> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="canonical" href="https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/"><meta name="generator" content="Astro v5.16.5"><!-- General Meta Tags --><title>部署用于学术研究的 Linux 服务器 | Blog</title><meta name="title" content="部署用于学术研究的 Linux 服务器 | Blog"><meta name="description" content="如何部署一个 Linux 服务器"><meta name="author" content="徐文杰"><link rel="sitemap" href="/sitemap-index.xml"><!-- Open Graph / Facebook --><meta property="og:title" content="部署用于学术研究的 Linux 服务器 | Blog"><meta property="og:description" content="如何部署一个 Linux 服务器"><meta property="og:url" content="https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/"><meta property="og:image" content="https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/index.png"><!-- Article Published/Modified time --><meta property="article:published_time" content="2024-08-24T14:34:28.000Z"><meta property="article:modified_time" content="2024-11-01T14:34:28.000Z"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/"><meta property="twitter:title" content="部署用于学术研究的 Linux 服务器 | Blog"><meta property="twitter:description" content="如何部署一个 Linux 服务器"><meta property="twitter:image" content="https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/index.png"><!-- Google JSON-LD Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"部署用于学术研究的 Linux 服务器 | Blog","image":"https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/index.png","datePublished":"2024-08-24T14:34:28.000Z","dateModified":"2024-11-01T14:34:28.000Z","author":[{"@type":"Person","name":"徐文杰","url":"https://wenjiexu.site/"}]}</script><!-- Enable RSS feed auto-discovery  --><!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery --><link rel="alternate" type="application/rss+xml" title="Blog" href="https://blog.wenjiexu.site/zh/rss.xml"><meta name="theme-color" content=""><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.QW52Ox2j.js"></script><script src="/toggle-theme.js"></script><link rel="stylesheet" href="/_astro/about.mCTKJIS7.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+:where([data-astro-image]){object-fit:var(--fit);object-position:var(--pos);height:auto}:where([data-astro-image=full-width]){width:100%}:where([data-astro-image=constrained]){max-width:100%}
+</style><style>[data-astro-transition-scope="astro-fam6wyqg-1"] { view-transition-name: \90E8\7F72\7528\4E8E\5B66\672F\7814\7A76\7684-linux-\670D\52A1\5668; }@layer astro { ::view-transition-old(\90E8\7F72\7528\4E8E\5B66\672F\7814\7A76\7684-linux-\670D\52A1\5668) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(\90E8\7F72\7528\4E8E\5B66\672F\7814\7A76\7684-linux-\670D\52A1\5668) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(\90E8\7F72\7528\4E8E\5B66\672F\7814\7A76\7684-linux-\670D\52A1\5668) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(\90E8\7F72\7528\4E8E\5B66\672F\7814\7A76\7684-linux-\670D\52A1\5668) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-fam6wyqg-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-fam6wyqg-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-fam6wyqg-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-fam6wyqg-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-fam6wyqg-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-fam6wyqg-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-fam6wyqg-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-fam6wyqg-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-36ssibgs-2"] { view-transition-name: ubuntu; }@layer astro { ::view-transition-old(ubuntu) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(ubuntu) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(ubuntu) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(ubuntu) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-36ssibgs-3"] { view-transition-name: productivity; }@layer astro { ::view-transition-old(productivity) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(productivity) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(productivity) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(productivity) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-36ssibgs-4"] { view-transition-name: deployment; }@layer astro { ::view-transition-old(deployment) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(deployment) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(deployment) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(deployment) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-4"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-4"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-4"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-4"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-4"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-4"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-4"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-4"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-36ssibgs-5"] { view-transition-name: server; }@layer astro { ::view-transition-old(server) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(server) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(server) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(server) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-5"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-5"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-5"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-5"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-36ssibgs-5"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-36ssibgs-5"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-36ssibgs-5"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-36ssibgs-5"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body data-astro-cid-sckkx6r4>  <header> <a id="skip-to-content" href="#main-content" class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"> 跳转到内容 </a> <div id="nav-container" class="mx-auto flex max-w-app flex-col items-center justify-between sm:flex-row"> <div id="top-nav-wrap" class="relative flex w-full items-baseline justify-between bg-background p-4 sm:items-center sm:py-6"> <a href="/zh" class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"> Blog </a> <nav id="nav-menu" class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"> <button id="menu-btn" class="focus-outline self-end p-2 sm:hidden" aria-label="打开菜单" aria-expanded="false" aria-controls="menu-items"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden" id="close-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep" id="menu-icon"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 6h16" /><path d="M7 12h13" /><path d="M10 18h10" /></svg> </button> <ul id="menu-items" class="mt-4 grid w-44 grid-cols-2 place-content-center gap-2 [&#38;>li>a]:block [&#38;>li>a]:px-4 [&#38;>li>a]:py-3 [&#38;>li>a]:text-center [&#38;>li>a]:font-medium [&#38;>li>a]:hover:text-accent sm:[&#38;>li>a]:px-2 sm:[&#38;>li>a]:py-1 hidden sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0"> <li class="col-span-2"> <a href="/zh/posts" class="active-nav"> 文章 </a> </li> <li class="col-span-2"> <a href="/zh/tags"> 标签 </a> </li> <li class="col-span-2"> <a href="/zh/categories"> 分类 </a> </li> <li class="col-span-2"> <a href="/zh/about"> 关于 </a> </li> <li class="col-span-2"> <a href="/zh/archives" class="group inline-block hover:text-accent focus-outline flex justify-center p-3 sm:p-1" aria-label="归档" title="归档"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden sm:inline-block"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 4m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" /><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" /><path d="M10 12l4 0" /></svg> <span class="sm:sr-only">归档</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <a href="/zh/search" class="group inline-block hover:text-accent focus-outline flex p-3 sm:p-1" aria-label="搜索" title="搜索"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg> <span class="sr-only">搜索</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <div class="language-switcher relative" data-astro-cid-a2mxz4y6> <button id="language-toggle" class="focus-outline flex items-center justify-center p-3 transition-colors sm:p-1 hover:[&>svg]:stroke-accent" aria-label="Select language" aria-expanded="false" aria-haspopup="true" title="中文" data-astro-cid-a2mxz4y6> <svg class="size-6 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <circle cx="12" cy="12" r="10" data-astro-cid-a2mxz4y6></circle> <line x1="2" y1="12" x2="22" y2="12" data-astro-cid-a2mxz4y6></line> <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" data-astro-cid-a2mxz4y6></path> </svg> <span class="sr-only" data-astro-cid-a2mxz4y6>中文</span> </button> <ul id="language-menu" class="absolute right-0 z-50 mt-1 hidden min-w-[120px] rounded-md border border-border bg-background shadow-lg" role="menu" data-astro-cid-a2mxz4y6> <li role="none" data-astro-cid-a2mxz4y6> <a href="/en/posts/deploy-linux-for-research" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent text-foreground" role="menuitem" lang="en" hreflang="en" data-astro-cid-a2mxz4y6> English  </a> </li><li role="none" data-astro-cid-a2mxz4y6> <a href="/zh/posts/deploy-linux-for-research" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent bg-muted/50 font-medium text-accent" role="menuitem" lang="zh" hreflang="zh" data-astro-cid-a2mxz4y6> 中文 <svg class="ml-1 inline-block size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <polyline points="20 6 9 17 4 12" data-astro-cid-a2mxz4y6></polyline> </svg> </a> </li> </ul> </div> <script type="module">function s(){const e=document.querySelector("#language-toggle"),t=document.querySelector("#language-menu");!e||!t||(e.addEventListener("click",()=>{!t.classList.contains("hidden")?(t.classList.add("hidden"),e.setAttribute("aria-expanded","false")):(t.classList.remove("hidden"),e.setAttribute("aria-expanded","true"))}),document.addEventListener("click",a=>{const n=a.target;!e.contains(n)&&!t.contains(n)&&(t.classList.add("hidden"),e.setAttribute("aria-expanded","false"))}),e.addEventListener("keydown",a=>{const n=a;n.key==="Enter"||n.key===" "?(a.preventDefault(),e.click()):n.key==="Escape"&&(t.classList.add("hidden"),e.setAttribute("aria-expanded","false"))}))}s();document.addEventListener("astro:after-swap",s);</script>  </li> <li class="col-span-1 flex items-center justify-center"> <button id="theme-btn" class="focus-outline relative size-12 p-4 sm:size-8 hover:[&>svg]:stroke-accent" title="切换主题" aria-label="auto" aria-live="polite"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" /></svg> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M14.828 14.828a4 4 0 1 0 -5.656 -5.656a4 4 0 0 0 5.656 5.656z" /><path d="M6.343 17.657l-1.414 1.414" /><path d="M6.343 6.343l-1.414 -1.414" /><path d="M17.657 6.343l1.414 -1.414" /><path d="M17.657 17.657l1.414 1.414" /><path d="M4 12h-2" /><path d="M12 4v-2" /><path d="M20 12h2" /><path d="M12 20v2" /></svg> </button> </li> </ul> </nav> </div> </div> <div class="mx-auto max-w-app px-4"> <hr class="border-border" aria-hidden="true"> </div> </header> <script type="module">function s(){const e=document.querySelector("#menu-btn"),t=document.querySelector("#menu-items"),n=document.querySelector("#menu-icon"),o=document.querySelector("#close-icon");!e||!t||!n||!o||e.addEventListener("click",()=>{const c=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",c?"false":"true"),e.setAttribute("aria-label",c?"Close Menu":"Open Menu"),t.classList.toggle("hidden"),n.classList.toggle("hidden"),o.classList.toggle("hidden")})}s();document.addEventListener("astro:after-swap",s);</script> <div class="mx-auto flex w-full max-w-app items-center justify-start px-2"><a id="back-button" href="/zh" class="group inline-block hover:text-accent focus-outline mt-8 mb-2 flex hover:text-foreground/75"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 6l-6 6l6 6" /></svg><span>返回首页</span></a></div><script type="module">function o(){const t=document.querySelector("#back-button"),e=sessionStorage.getItem("backUrl");e&&t&&(t.href=e)}document.addEventListener("astro:page-load",o);o();</script> <main id="main-content" class="mx-auto w-full max-w-app px-4 pb-12" data-pagefind-body> <h1 class="inline-block text-2xl font-bold text-accent sm:text-3xl" data-astro-transition-scope="astro-fam6wyqg-1"> 部署用于学术研究的 Linux 服务器 </h1> <div class="my-2 flex items-center gap-2"> <div class="flex items-center gap-x-2 opacity-80"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 min-w-[1.375rem]"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M7 14h.013" /><path d="M10.01 14h.005" /><path d="M13.01 14h.005" /><path d="M16.015 14h.005" /><path d="M13.015 17h.005" /><path d="M7.01 17h.005" /><path d="M10.01 17h.005" /></svg> <span class="text-sm sm:text-base"> 更新于:
+</span> <time class="text-sm sm:text-base" datetime="2024-11-01T14:34:28.000Z">2024年11月1日</time> </div> <span aria-hidden="true" class="max-sm:hidden hidden">|</span>  <span aria-hidden="true">|</span> <span class="text-muted-foreground text-sm"> 5 分钟阅读 </span>  <span aria-hidden="true">|</span> <a href="/zh/categories/productivity/" class="text-muted-foreground text-sm decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"> 分类: Productivity </a>  </div> <article id="article" class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"> <p>最近，我将一台 MiniPC 改造为一台基于 Ubuntu 操作系统的服务器，配置它以满足未来研究的潜在需求。</p>
+<p>鉴于我对 Linux 的了解有限，我花了一些时间学习并尝试完成部署，并记录配置步骤、可能出现的问题及其相应的解决方案。</p>
+<h2 id="目录">目录</h2>
+<p></p><details><summary>Open 目录</summary><p></p>
+<ul>
+<li><a href="#%E5%9C%A8-ubuntu-%E4%B8%8A%E5%88%9B%E5%BB%BA%E5%85%B7%E6%9C%89%E7%AE%A1%E7%90%86%E5%91%98%E6%9D%83%E9%99%90%E7%9A%84%E6%96%B0%E7%94%A8%E6%88%B7">在 Ubuntu 上创建具有管理员权限的新用户</a>
+<ul>
+<li><a href="#1-%E5%88%9B%E5%BB%BA%E6%96%B0%E7%94%A8%E6%88%B7%E5%B9%B6%E6%8C%87%E5%AE%9A%E4%B8%BB%E7%9B%AE%E5%BD%95%E7%99%BB%E5%BD%95-shell">1. 创建新用户并指定主目录、登录 shell</a></li>
+<li><a href="#2-%E8%B5%8B%E4%BA%88%E6%96%B0%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86%E5%91%98%E6%9D%83%E9%99%90">2. 赋予新用户管理员权限</a></li>
+<li><a href="#3-%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%94%A8%E6%88%B7%E7%9A%84%E5%AF%86%E7%A0%81">3. 设置新用户的密码</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BB%88%E7%AB%AF%E5%91%BD%E4%BB%A4%E7%BE%8E%E5%8C%96">终端命令美化</a></li>
+<li><a href="#%E5%90%AF%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE">启用服务器的远程访问</a>
+<ul>
+<li><a href="#1-%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE-ssh-%E6%9C%8D%E5%8A%A1">1. 安装和配置 SSH 服务</a></li>
+<li><a href="#2-%E9%85%8D%E7%BD%AE-ufw-%E9%98%B2%E7%81%AB%E5%A2%99">2. 配置 UFW 防火墙</a></li>
+<li><a href="#3-%E9%AA%8C%E8%AF%81-ssh-%E8%BF%9E%E6%8E%A5">3. 验证 SSH 连接</a></li>
+<li><a href="#4-%E4%BF%AE%E5%A4%8D-xauthority-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98">4. 修复 .Xauthority 文件权限问题</a></li>
+<li><a href="#5-%E8%AE%BE%E7%BD%AE-fail2ban%E6%8E%A8%E8%8D%90">5. 设置 Fail2Ban（推荐）</a></li>
+</ul>
+</li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8E-github-%E7%9A%84-ssh-%E8%BF%9E%E6%8E%A5">配置服务器与 GitHub 的 SSH 连接</a>
+<ul>
+<li><a href="#1-%E5%AE%89%E8%A3%85%E5%B9%B6%E9%AA%8C%E8%AF%81-git">1. 安装并验证 Git</a></li>
+<li><a href="#2-%E9%85%8D%E7%BD%AE-git-%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF">2. 配置 Git 用户信息</a></li>
+<li><a href="#3-%E7%94%9F%E6%88%90-ssh-%E5%AF%86%E9%92%A5%E5%AF%B9">3. 生成 SSH 密钥对</a></li>
+<li><a href="#4-%E6%B7%BB%E5%8A%A0-ssh-%E5%85%AC%E9%92%A5%E5%88%B0-github">4. 添加 SSH 公钥到 GitHub</a></li>
+<li><a href="#5-%E6%B5%8B%E8%AF%95%E4%B8%8E-github-%E7%9A%84-ssh-%E8%BF%9E%E6%8E%A5">5. 测试与 GitHub 的 SSH 连接</a></li>
+<li><a href="#6-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%92%8C%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95">6. 常见问题和解决方法</a></li>
+</ul>
+</li>
+<li><a href="#python-%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E4%B8%8E%E7%AE%A1%E7%90%86">Python 环境配置与管理</a>
+<ul>
+<li><a href="#miniforge">Miniforge</a>
+<ul>
+<li><a href="#1-%E5%AE%89%E8%A3%85-miniforge">1. 安装 Miniforge</a></li>
+<li><a href="#2-%E5%88%9D%E5%A7%8B%E5%8C%96-mamba-%E7%8E%AF%E5%A2%83">2. 初始化 Mamba 环境</a></li>
+<li><a href="#3-%E5%88%9B%E5%BB%BA%E5%92%8C%E7%AE%A1%E7%90%86%E7%8E%AF%E5%A2%83">3. 创建和管理环境</a>
+<ul>
+<li><a href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%8E%AF%E5%A2%83">创建新环境</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E7%8E%AF%E5%A2%83">删除环境</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%AE%89%E8%A3%85%E5%B8%B8%E7%94%A8%E5%8C%85">4. 安装常用包</a></li>
+<li><a href="#5-%E9%98%B2%E6%AD%A2%E6%9C%AA%E7%BB%8F%E6%8E%88%E6%9D%83%E7%9A%84%E6%9B%B4%E6%96%B0">5. 防止未经授权的更新</a></li>
+</ul>
+</li>
+<li><a href="#poetry">Poetry</a>
+<ul>
+<li><a href="#1-%E5%AE%89%E8%A3%85-poetry">1. 安装 Poetry</a></li>
+<li><a href="#2-%E5%88%9B%E5%BB%BA%E6%96%B0%E9%A1%B9%E7%9B%AE">2. 创建新项目</a></li>
+<li><a href="#3-%E7%AE%A1%E7%90%86%E9%A1%B9%E7%9B%AE%E4%BE%9D%E8%B5%96">3. 管理项目依赖</a></li>
+<li><a href="#4-%E7%AE%A1%E7%90%86%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83">4. 管理虚拟环境</a></li>
+<li><a href="#5-%E7%AE%A1%E7%90%86%E4%BE%9D%E8%B5%96%E9%94%81%E5%AE%9A%E6%96%87%E4%BB%B6">5. 管理依赖锁定文件</a></li>
+<li><a href="#6-%E8%BF%90%E8%A1%8C%E8%84%9A%E6%9C%AC%E5%92%8C%E5%91%BD%E4%BB%A4">6. 运行脚本和命令</a></li>
+<li><a href="#7-%E5%8F%91%E5%B8%83-python-%E5%8C%85">7. 发布 Python 包</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%9C%A8-ubuntu-%E4%B8%8A%E9%85%8D%E7%BD%AE-r-%E7%8E%AF%E5%A2%83%E7%94%A8%E4%BA%8E%E8%AE%A1%E9%87%8F%E7%BB%8F%E6%B5%8E%E5%AD%A6%E5%88%86%E6%9E%90">在 Ubuntu 上配置 R 环境用于计量经济学分析</a>
+<ul>
+<li><a href="#1-%E5%AE%89%E8%A3%85-r">1. 安装 R</a></li>
+<li><a href="#2-%E5%AE%89%E8%A3%85-rstudio">2. 安装 RStudio</a></li>
+<li><a href="#3-%E5%AE%89%E8%A3%85%E8%AE%A1%E9%87%8F%E7%BB%8F%E6%B5%8E%E5%AD%A6%E7%9B%B8%E5%85%B3%E7%9A%84-r-%E5%8C%85">3. 安装计量经济学相关的 R 包</a></li>
+<li><a href="#4-%E4%BD%BF%E7%94%A8-github-%E4%BB%A4%E7%89%8C%E5%AE%89%E8%A3%85%E7%A7%81%E6%9C%89%E5%8C%85">4. 使用 GitHub 令牌安装私有包</a></li>
+<li><a href="#5-%E7%A4%BA%E4%BE%8B%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8-plm-%E5%8C%85%E8%BF%9B%E8%A1%8C%E9%9D%A2%E6%9D%BF%E6%95%B0%E6%8D%AE%E5%9B%9E%E5%BD%92">5. 示例：安装和使用 <code>plm</code> 包进行面板数据回归</a></li>
+</ul>
+</li>
+<li><a href="#%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98">其他问题</a>
+<ul>
+<li><a href="#1-%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE">1. 同步数据</a></li>
+<li><a href="#2-%E5%AE%89%E8%A3%85%E5%B8%B8%E7%94%A8%E5%AD%97%E4%BD%93">2. 安装常用字体</a></li>
+<li><a href="#3-%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F%E5%BA%93%E7%89%88%E6%9C%AC%E4%B8%8D%E5%8C%B9%E9%85%8D">3. 驱动程序/库版本不匹配</a></li>
+<li><a href="#4%E5%8D%87%E7%BA%A7-nvidia-%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F">4.升级 Nvidia 驱动程序</a></li>
+<li><a href="#5%E5%86%85%E6%A0%B8%E5%A4%B4%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85%E5%92%8C-gcc-%E9%85%8D%E7%BD%AE">5.内核头文件安装和 GCC 配置</a></li>
+</ul>
+</li>
+</ul>
+<p></p></details><p></p>
+<h2 id="在-ubuntu-上创建具有管理员权限的新用户">在 Ubuntu 上创建具有管理员权限的新用户</h2>
+<p>当使用云服务、供应商提供或者自己配置的 Ubuntu 服务器时，会创建一个默认用户（default User）。通常，这个用户可以通过<code>sudo</code>命令临时提升权限来执行需要管理员权限的任务，但它本质上仍是一个普通用户（不是管理员账户）。如果需要创建一个拥有相同管理员权限的自定义用户，可以按照以下步骤进行：</p>
+<h3 id="1-创建新用户并指定主目录登录-shell">1. 创建新用户并指定主目录、登录 shell</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> useradd</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -d</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/home/&#x3C;user_name></span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -m</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -s</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/bin/bash</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>参数说明：</p>
+<ul>
+<li><code>-d "/home/&#x3C;user_name>"</code>：设置用户的主目录为 <code>/home/&#x3C;user_name></code>。</li>
+<li><code>-m</code>：自动创建主目录。</li>
+<li><code>-s "/bin/bash"</code>：指定用户的默认登录 shell 为 <code>/bin/bash</code>。</li>
+</ul>
+<h3 id="2-赋予新用户管理员权限">2. 赋予新用户管理员权限</h3>
+<p>要创建具有 sudo（管理员）权限的用户，运行以下命令：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> useradd</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -d</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/home/&#x3C;user_name></span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -m</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -s</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/bin/bash</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -G</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> sudo</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>其中：</p>
+<ul>
+<li><code>-G sudo</code>：将 <code>&#x3C;user_name></code> 添加到 <code>sudo</code> 用户组，使其具有管理员权限。</li>
+</ul>
+<h3 id="3-设置新用户的密码">3. 设置新用户的密码</h3>
+<p>新创建的用户默认没有密码。通过以下命令为 <code>&#x3C;user_name></code> 设置密码：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> passwd</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>运行此命令后，系统将提示输入两次密码。注意，出于安全考虑，在输入密码时不会有任何字符显示（不显示文本或提示符号）。只需输入密码并按 <code>Enter</code> 确认。</p>
+<p>通过以上步骤，可以成功创建一个新用户 <code>&#x3C;user_name></code>，该用户具备管理员权限，可以使用 <code>sudo</code> 执行命令。</p>
+<hr>
+<h2 id="终端命令美化">终端命令美化</h2>
+<p>好看好用的终端提示符可以增加工作的愉悦感，这里使用<code>zsh</code>来美化终端，相关操作参考<a href="/blog/2022/Linux%E5%AE%9E%E7%94%A8%E9%85%8D%E7%BD%AE%E8%AE%B0%E5%BD%95/">先前记录</a>。</p>
+<hr>
+<h2 id="启用服务器的远程访问">启用服务器的远程访问</h2>
+<p>若要实现从非服务器物理位置远程访问 Ubuntu 服务器，可以通过安装并配置 SSH 服务来实现，并进行必要的防火墙配置。</p>
+<h3 id="1-安装和配置-ssh-服务">1. 安装和配置 SSH 服务</h3>
+<p>如果只需基本的 SSH 访问，安装<code>openssh-server</code>并开启 SSH 服务已足够。然而，在更高安全性需求的环境中，可以进一步优化 SSH 的配置文件<code>/etc/ssh/sshd_config</code>：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> openssh-server</span></span></code></pre>
+<p>在完成安装后，检查 SSH 服务的状态以确认其正常运行：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> systemctl</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> status</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ssh</span></span></code></pre>
+<ul>
+<li><strong>配置建议</strong>：
+<ul>
+<li>
+<p><strong>禁用 Root 用户直接登录</strong>（推荐）：避免直接以 root 身份登录服务器，增加安全性。在 <code>/etc/ssh/sshd_config</code> 中找到 <code>PermitRootLogin</code> 并将其设置为 <code>no</code>。</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> nano</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /etc/ssh/sshd_config</span></span></code></pre>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>PermitRootLogin no</span></span></code></pre>
+</li>
+<li>
+<p><strong>限制允许访问的用户</strong>：可以通过 <code>AllowUsers</code> 配置项指定允许通过 SSH 登录的用户，进一步强化安全性。</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>AllowUsers &#x3C;user_name></span></span></code></pre>
+</li>
+<li>
+<p><strong>使用非默认端口</strong>（可选）：将 SSH 端口从默认的 22 改为其他端口，比如 2200。此方法可以减少扫描攻击的可能性，但需同时更新防火墙规则。</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Port 2200</span></span></code></pre>
+</li>
+<li>
+<p><strong>启用自动断开空闲连接</strong>：为避免未使用的 SSH 会话长期占用资源，可在配置中添加以下行，以设置自动断开空闲连接。</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>ClientAliveInterval 300</span></span>
+<span class="line"><span>ClientAliveCountMax 2</span></span></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<p>更改完成后，重启 SSH 服务以应用配置：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> systemctl</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> restart</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ssh</span></span></code></pre>
+<h3 id="2-配置-ufw-防火墙">2. 配置 UFW 防火墙</h3>
+<p>如启用了 UFW 防火墙，确保开启 SSH 端口，并根据是否更改了端口号进行相应设置。若使用默认的 22 端口，可以直接使用：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ufw</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> allow</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ssh</span></span></code></pre>
+<p>若更改了端口号，如设置为 2200，则需要如下命令：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ufw</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> allow</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> 2200/tcp</span></span></code></pre>
+<ul>
+<li><strong>配置建议：</strong>
+<ul>
+<li>
+<p>启用防火墙后，进行状态检查以确保规则正确应用：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ufw</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> enable</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ufw</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> status</span></span></code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-验证-ssh-连接">3. 验证 SSH 连接</h3>
+<p>在客户端系统（如 Windows）上测试与服务器的连接。Windows 下推荐使用 <a href="https://www.putty.org/">PuTTY</a> 或 <a href="https://aka.ms/terminal">Windows Terminal</a> 等支持 SSH 协议的终端工具，以确保连接的安全性和稳定性。</p>
+<p>要在 Windows 系统上测试与服务器的远程连接，可以使用 telnet 命令（注意：telnet 常用于测试连接，但生产环境中应使用更安全的 SSH 客户端）：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">telnet</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">remote_i</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">p</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">remote_por</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">t</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>将 &#x3C;remote_ip> 替换为服务器的 IP 地址，&#x3C;remote_port> 替换为服务器监听的 SSH 端口（默认是 22）。</p>
+<h3 id="4-修复-xauthority-文件权限问题">4. 修复 .Xauthority 文件权限问题</h3>
+<p><code>/home/&#x3C;user_name>/.Xauthority</code> 文件权限错误可能是因为在非 root 权限下创建了该文件。除了修改用户目录的所有权外，确保相关 SSH 会话目录的权限也正确：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> chown</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">:</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -R</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /home/</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>若问题仍然存在，可以试试创建一个新的 <code>.Xauthority</code> 文件：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -u</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> touch</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /home/</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">/.Xauthority</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> chown</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">:</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /home/</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">user_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">/.Xauthority</span></span></code></pre>
+<h3 id="5-设置-fail2ban推荐">5. 设置 Fail2Ban（推荐）</h3>
+<p>为了进一步保护 SSH 服务免受暴力破解攻击，可以安装并配置 <code>fail2ban</code>。该工具会自动检测多次失败的登录尝试，并暂时禁用相应的 IP：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> fail2ban</span></span></code></pre>
+<p><code>fail2ban</code> 会自动启用 SSH 保护，也可以自定义 <code>/etc/fail2ban/jail.local</code> 文件以调整禁用时间、重试次数等参数：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>[sshd]</span></span>
+<span class="line"><span>enabled = true</span></span>
+<span class="line"><span>port = 22</span></span>
+<span class="line"><span>maxretry = 5</span></span>
+<span class="line"><span>bantime = 600</span></span></code></pre>
+<p>Fail2Ban 将自动识别多次失败的登录尝试并禁用相应 IP，从而进一步保障服务器安全。</p>
+<hr>
+<h2 id="配置服务器与-github-的-ssh-连接">配置服务器与 GitHub 的 SSH 连接</h2>
+<p>以下是将 Ubuntu 服务器与 GitHub 配置为 SSH 连接的详细步骤，确保可以安全地克隆、推送和拉取 GitHub 上的仓库。</p>
+<h3 id="1-安装并验证-git">1. 安装并验证 Git</h3>
+<p>首先，安装 Git，并确认安装版本：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> git</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">git</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --version</span></span></code></pre>
+<h3 id="2-配置-git-用户信息">2. 配置 Git 用户信息</h3>
+<p>使用 GitHub 用户名和电子邮箱配置 Git。确保填写与 GitHub 账户一致的信息，以便在提交代码时正确记录作者身份：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">git</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> config</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --global</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> user.name</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">&#x3C;github_account_name></span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">git</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> config</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --global</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> user.email</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">&#x3C;github_account_email></span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span></code></pre>
+<p>以上配置会添加到 <code>~/.gitconfig</code> 文件中，是全局设置，即应用于该用户下所有 Git 仓库。</p>
+<h3 id="3-生成-ssh-密钥对">3. 生成 SSH 密钥对</h3>
+<p>为了在服务器上与 GitHub 建立安全连接，需要生成 SSH 密钥对：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">ssh-keygen</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -C</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">&#x3C;github_account_email></span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -t</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> rsa</span></span></code></pre>
+<ul>
+<li>说明：
+<ul>
+<li><code>-C "&#x3C;github_account_email>"</code>：为密钥添加注释，一般是 GitHub 账户的邮箱地址。</li>
+<li><code>-t rsa</code>：指定密钥类型为 RSA（GitHub 支持的常用类型）。</li>
+</ul>
+</li>
+</ul>
+<p>运行命令后，按 <code>Enter</code> 三次（即保持默认文件名 <code>id_rsa</code> 和默认无密码的设置），密钥对会存储在 <code>~/.ssh</code> 目录中。</p>
+<h3 id="4-添加-ssh-公钥到-github">4. 添加 SSH 公钥到 GitHub</h3>
+<ol>
+<li>
+<p>使用以下命令打开生成的公钥文件，并复制其中的内容：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">cat</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ~/.ssh/id_rsa.pub</span></span></code></pre>
+<p>此命令会将公钥打印在终端上，可以选择性地使用文本编辑器打开并复制（例如使用 <code>vim ~/.ssh/id_rsa.pub</code>）。</p>
+</li>
+<li>
+<p>登录 GitHub 网站并导航到 <code>Settings</code> → <code>SSH and GPG keys</code> → <code>New SSH key</code>。</p>
+</li>
+<li>
+<p>将 <code>id_rsa.pub</code> 中的内容粘贴到 <code>New SSH key</code> 页面，并为此密钥设置一个描述性的名称（如 <code>Ubuntu Server Key</code>），然后保存。</p>
+</li>
+</ol>
+<h3 id="5-测试与-github-的-ssh-连接">5. 测试与 GitHub 的 SSH 连接</h3>
+<p>配置完成后，通过以下命令测试与 GitHub 的连接：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">ssh</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -T</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> git@github.com</span></span></code></pre>
+<p>执行该命令时，GitHub 会返回一条信息确认连接成功，例如：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Hi &#x3C;github_account_name>! You've successfully authenticated, but GitHub does not provide shell access.</span></span></code></pre>
+<p>此信息表明 SSH 连接已成功建立，可以在服务器上与 GitHub 进行代码的推送和拉取操作。</p>
+<h3 id="6-常见问题和解决方法">6. 常见问题和解决方法</h3>
+<ol>
+<li>
+<p><strong>SSH 密钥权限问题</strong>：确保 SSH 密钥对文件的权限正确，以防连接问题。检查和设置密钥的权限：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">chmod</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 600</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ~/.ssh/id_rsa</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">chmod</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 644</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ~/.ssh/id_rsa.pub</span></span></code></pre>
+</li>
+<li>
+<p><strong>添加密钥到 SSH Agent</strong>（推荐）：若密钥在服务器启动后未自动加载，可以将其添加到 SSH Agent，以便每次重启后自动加载：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#C5E478;--shiki-dark-font-style:italic">eval</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">ssh-agent</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -s</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">ssh-add</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ~/.ssh/id_rsa</span></span></code></pre>
+</li>
+</ol>
+<hr>
+<h2 id="python-环境配置与管理">Python 环境配置与管理</h2>
+<hr>
+<h3 id="miniforge">Miniforge</h3>
+<p>在服务器上管理 Python Scientific 环境，我选择轻量、高效的 Miniforge 作为包管理工具，代替 Anaconda。Miniforge 默认配置 conda-forge 频道并集成了 Mamba，为包管理提供了更快的解决方案。下面是安装和配置 Miniforge 以及创建和删除环境的步骤。</p>
+<h4 id="1-安装-miniforge">1. 安装 Miniforge</h4>
+<p>首先，按照 <code>Miniforge</code> 的 <a href="https://github.com/conda-forge/miniforge">GitHub 项目页面</a> 中的安装说明进行下载和安装。以下是核心安装命令：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">wget</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uname</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)-$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uname</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -m</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">).sh</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">bash</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Miniforge3-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uname</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uname</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -m</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">.sh</span></span></code></pre>
+<ul>
+<li>配置建议：
+<ul>
+<li>
+<p>建议将 Miniforge 安装在 <code>/usr/local/miniforge3</code>，这样可以让多个用户共享环境，但只有 root 用户可以进行修改。安装过程中，可以选择安装目录，系统会自动创建所需文件夹。</p>
+</li>
+<li>
+<p>如果使用 ZSH，应确认 Miniforge 的路径被添加到<code>.zshrc</code>文件中。</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">export</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478"> PATH</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">$usr</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/local/miniforge3/bin:</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">$PATH</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span></code></pre>
+</li>
+<li>
+<p>重新加载<code>.zshrc</code>配置：<code>source ~/.zshrc</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-初始化-mamba-环境">2. 初始化 Mamba 环境</h4>
+<p>安装完成后，初始化 Mamba 以便在终端使用该命令。假设 Miniforge 安装在 <code>/usr/local/miniforge3</code>，执行以下命令：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">/usr/local/miniforge3/bin/mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> init</span></span></code></pre>
+<p>此命令将初始化环境变量，需要重新启动终端以应用更改</p>
+<p>若使用 ZSH 无法，可以将<code>.bashrc</code>中的<code>mamba</code>配置复制到<code>.zshrc</code>，或者其他方式配置。</p>
+<h4 id="3-创建和管理环境">3. 创建和管理环境</h4>
+<p>在多用户服务器环境中，建议使用 root 权限（通过 <code>sudo su</code> 切换）创建和管理环境。这种方式可以避免普通用户意外或不受控地更改环境配置。</p>
+<h5 id="创建新环境">创建新环境</h5>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># 以指定名称创建新环境</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> create</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --name</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">new_env_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> python=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">3.11</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --no-default-packages</span></span></code></pre>
+<ul>
+<li><code>--name &#x3C;new_env_name></code>：为新环境命名。</li>
+<li><code>python=3.11</code>：设置 Python 版本为 3.11。</li>
+<li><code>--no-default-packages</code>：仅安装 Python，不自动安装其他包。</li>
+<li>普通用户可以在其主目录中创建私有环境（例如 <code>/home/username/myenv</code>），执行如下命令：</li>
+</ul>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> create</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --prefix</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /home/username/myenv</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> python=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">3.11</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --no-default-packages</span></span></code></pre>
+<h5 id="删除环境">删除环境</h5>
+<p>若要删除某个环境（包括所有关联的包），可以使用以下命令：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># 通过环境名称删除</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> remove</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --name</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">env_nam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --all</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># 通过路径删除</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> remove</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --prefix</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /path/to/directory</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --all</span></span></code></pre>
+<h4 id="4-安装常用包">4. 安装常用包</h4>
+<p>通常建议不直接修改 <code>base</code> 环境，而是根据实际需求创建专门环境。例如，可能需要安装 <code>JupyterHub</code>，它为多个用户提供 Jupyter notebook 服务。</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># 创建 Machine Learning 环境</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> create</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --name</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ml_env</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> python=</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C">3.12</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyterhub</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyterlab</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> notebook</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> notebook</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> scipy</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> numpy</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> numpy</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># 激活环境</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> activate</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ml_env</span></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># 下载其他包</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyter-lsp-python</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyterlab-lsp</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyterlab-git</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> jupyterlab_execute_time</span></span></code></pre>
+<h4 id="5-防止未经授权的更新">5. 防止未经授权的更新</h4>
+<p>在多用户环境中，限制普通用户修改系统级环境有助于保持环境的稳定性。如果用户试图更新环境，将会遇到权限不足的错误。示例如下：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --all</span></span></code></pre>
+<p>错误信息：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>EnvironmentNotWritableError: The current user does not have write permissions to the target environment.</span></span>
+<span class="line"><span>  environment location: /usr/local/miniforge3</span></span>
+<span class="line"><span>  uid: 1000</span></span>
+<span class="line"><span>  gid: 1000</span></span></code></pre>
+<p>这种设计可以确保环境的安全和一致性，避免因权限问题导致更新失败。</p>
+<p>如果需要临时给权限更新<code>base</code>环境，可以用<code>sudo</code>命令：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /usr/local/miniforge3/bin/mamba</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --all</span></span></code></pre>
+<hr>
+<h3 id="poetry">Poetry</h3>
+<p>Poetry 是一种高效、便捷的 Python 项目依赖管理工具，适用于快速创建和管理虚拟环境、安装依赖库以及发布 Python 包。</p>
+<h4 id="1-安装-poetry">1. 安装 Poetry</h4>
+<p>在安装 Poetry 前，应确保已安装 Python 3.7 以上版本。</p>
+<ol>
+<li>
+<p>使用官方安装脚本：</p>
+<p>Poetry 的安装脚本可以自动将 Poetry 安装在 <code>$HOME/.local/bin</code> 目录下。运行以下命令下载并执行安装脚本：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">curl</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -sSL</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> https://install.python-poetry.org</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> |</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> python3</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> -</span></span></code></pre>
+</li>
+<li>
+<p>将 Poetry 添加到 PATH：</p>
+<p>默认安装完成后，需要将 Poetry 添加到环境变量中。如果出现 <code>command not found</code> 错误，可以通过以下命令将其添加到当前会话的环境变量中：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">export</span><span style="--shiki-light:#24292EFF;--shiki-dark:#C5E478"> PATH</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">=</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">$HOME</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">/.local/bin:</span><span style="--shiki-light:#22863A;--shiki-dark:#C5E478">$PATH</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span></code></pre>
+</li>
+<li>
+<p>验证安装：</p>
+<p>安装完成后，可以通过以下命令检查安装版本，确认安装是否成功：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --version</span></span></code></pre>
+</li>
+</ol>
+<h4 id="2-创建新项目">2. 创建新项目</h4>
+<p>Poetry 提供了简化的命令来快速生成新项目的基本结构。</p>
+<ol>
+<li>
+<p>创建新项目：</p>
+<p>使用以下命令创建新项目目录（例如 <code>my_project</code>），并生成默认的 <code>pyproject.toml</code> 文件。</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> new</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> my_project</span></span></code></pre>
+<p>该命令将在项目目录中生成以下结构：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>my_project/</span></span>
+<span class="line"><span>├── my_project/</span></span>
+<span class="line"><span>│   └── __init__.py</span></span>
+<span class="line"><span>├── pyproject.toml</span></span>
+<span class="line"><span>└── tests/</span></span>
+<span class="line"><span>    └── __init__.py</span></span></code></pre>
+</li>
+<li>
+<p>初始化现有项目（可选）：</p>
+<p>如果已存在项目并希望使用 Poetry 进行管理，可以通过 <code>poetry init</code> 初始化该项目。此命令将引导生成 <code>pyproject.toml</code> 文件，并配置初始依赖项：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#C5E478;--shiki-dark-font-style:italic">cd</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> existing_project</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> init</span></span></code></pre>
+</li>
+</ol>
+<h4 id="3-管理项目依赖">3. 管理项目依赖</h4>
+<p>Poetry 提供了便捷的依赖管理方式，区分了生产依赖和开发依赖。</p>
+<ol>
+<li>
+<p><strong>添加生产依赖</strong>：</p>
+<p>将依赖项添加到生产环境，例如 <code>requests</code> 库：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> add</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> requests</span></span></code></pre>
+</li>
+<li>
+<p><strong>添加开发依赖</strong>：</p>
+<p>如果某些库仅用于开发和测试环境，可以使用 <code>--dev</code> 参数。此参数将依赖项添加到 <code>[tool.poetry.dev-dependencies]</code> 部分。例如，添加 <code>pytest</code> 作为开发依赖：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> add</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> pytest</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --dev</span></span></code></pre>
+</li>
+<li>
+<p><strong>安装所有依赖</strong>：</p>
+<p>项目依赖项写入 <code>pyproject.toml</code> 文件后，可以使用以下命令安装所有依赖：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span></span></code></pre>
+<p><code>poetry install</code> 会自动创建虚拟环境，并在虚拟环境中安装所需依赖。如果已存在 <code>poetry.lock</code> 文件，它将确保安装的依赖版本与锁定文件中的版本一致，以保证环境一致性。</p>
+</li>
+</ol>
+<hr>
+<h4 id="4-管理虚拟环境">4. 管理虚拟环境</h4>
+<p>Poetry 在项目目录外创建虚拟环境，并自动激活和使用该虚拟环境。</p>
+<ol>
+<li>
+<p><strong>激活虚拟环境</strong>：</p>
+<p>可以通过以下命令激活 Poetry 创建的虚拟环境：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> shell</span></span></code></pre>
+</li>
+<li>
+<p><strong>退出虚拟环境</strong>：</p>
+<p>在虚拟环境中工作结束后，输入 <code>exit</code> 即可退出。</p>
+</li>
+<li>
+<p><strong>查看虚拟环境路径</strong>：</p>
+<p>若需查看虚拟环境的实际存储路径，可以使用：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> env</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> info</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --path</span></span></code></pre>
+</li>
+<li>
+<p><strong>删除虚拟环境</strong>（可选）：</p>
+<p>如果需要重新创建虚拟环境或清理环境，可以删除虚拟环境：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> env</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> remove</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> python</span></span></code></pre>
+</li>
+</ol>
+<h4 id="5-管理依赖锁定文件">5. 管理依赖锁定文件</h4>
+<p>Poetry 使用 <code>poetry.lock</code> 文件锁定依赖的确切版本，以保证跨环境的一致性。</p>
+<ol>
+<li>
+<p><strong>更新依赖版本</strong>：</p>
+<p>当需要更新依赖版本时，可以使用以下命令重新解析依赖项并更新锁定文件：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update</span></span></code></pre>
+</li>
+<li>
+<p><strong>安装指定的锁定版本</strong>：</p>
+<p>在协作项目中，团队成员可以基于 <code>poetry.lock</code> 文件安装项目的精确依赖项版本：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span></span></code></pre>
+</li>
+</ol>
+<h4 id="6-运行脚本和命令">6. 运行脚本和命令</h4>
+<p>Poetry 支持直接在虚拟环境中运行脚本或命令，简化了命令管理。</p>
+<ol>
+<li>
+<p><strong>运行项目脚本</strong>：</p>
+<p>使用 <code>poetry run</code> 在虚拟环境中执行命令。例如，执行 Python 脚本：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> run</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> python</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> script.py</span></span></code></pre>
+</li>
+<li>
+<p><strong>直接运行单元测试</strong>：</p>
+<p>可以在虚拟环境中直接运行测试命令，如 <code>pytest</code>：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> run</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> pytest</span></span></code></pre>
+</li>
+</ol>
+<h4 id="7-发布-python-包">7. 发布 Python 包</h4>
+<p>Poetry 可以将项目发布到 <a href="https://pypi.org/">PyPI</a> 或其他自定义包仓库。</p>
+<ol>
+<li>
+<p><strong>构建项目</strong>：</p>
+<p>Poetry 提供了一键构建项目的功能，将项目打包为 <code>.whl</code> 和 <code>.tar.gz</code> 文件，准备发布：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> build</span></span></code></pre>
+</li>
+<li>
+<p><strong>发布到 PyPI</strong>：</p>
+<p>将包发布到 PyPI，需要在 <code>~/.pypirc</code> 文件中配置 PyPI 凭据，或使用 Poetry 的 <code>publish</code> 命令交互输入：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> publish</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --build</span></span></code></pre>
+<blockquote>
+<p><strong>注意</strong>：要在测试环境中验证发布过程，可以使用 <code>--repository</code> 参数发布到 PyPI 测试仓库。</p>
+</blockquote>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">poetry</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> publish</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --repository</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> testpypi</span></span></code></pre>
+</li>
+</ol>
+<hr>
+<p>以下是针对计量经济学领域使用 R 环境的配置指南，包括安装 R 和 RStudio、常用的 R 包配置等。</p>
+<hr>
+<h2 id="在-ubuntu-上配置-r-环境用于计量经济学分析">在 Ubuntu 上配置 R 环境用于计量经济学分析</h2>
+<p>在计量经济学领域，R 适合处理经济数据、执行回归分析、时间序列分析等任务。</p>
+<h3 id="1-安装-r">1. 安装 R</h3>
+<p>Ubuntu 默认的软件仓库包含 R，但可能不是最新版本。为了获取最新的 R 版本，可以使用 CRAN 仓库。</p>
+<ol>
+<li>
+<p><strong>添加 CRAN 仓库</strong>：</p>
+<p>更新软件包列表并安装必要的依赖项：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> software-properties-common</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> dirmngr</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span></code></pre>
+</li>
+<li>
+<p><strong>添加 R 项目的 GPG 密钥</strong>：</p>
+<p>下载并添加 CRAN 的 GPG 公钥，以确保软件包的完整性：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">wget</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -qO-</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> |</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> tee</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -a</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc</span></span></code></pre>
+</li>
+<li>
+<p><strong>验证 GPG 密钥</strong>（可选）：</p>
+<p>验证密钥的指纹（<code>E298A3A825C0D65DFD57CBB651716619E084DAB9</code>）：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">gpg</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --show-keys</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc</span></span></code></pre>
+</li>
+<li>
+<p><strong>添加 CRAN 仓库到源列表</strong>：</p>
+<p>将 CRAN 仓库添加到 apt 源列表中，以确保获取最新版本的 R：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> add-apt-repository</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">deb https://cloud.r-project.org/bin/linux/ubuntu $(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">lsb_release</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -cs</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">)-cran40/</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span></span></code></pre>
+</li>
+<li>
+<p><strong>安装 R 和开发包</strong>：</p>
+<p>安装最新版本的 R 和开发库：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> r-base</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> r-base-dev</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span></code></pre>
+</li>
+</ol>
+<h3 id="2-安装-rstudio">2. 安装 RStudio</h3>
+<p>RStudio 是一个功能强大的 IDE，适用于数据分析和可视化。RStudio 的安装过程简单，具体安装步骤可参考 <a href="https://posit.co/download/rstudio-server/">RStudio 官方安装指南</a>。</p>
+<p><strong>安装步骤</strong>：</p>
+<ol>
+<li>
+<p>下载 RStudio Server 的最新版本。</p>
+</li>
+<li>
+<p>使用 <code>dpkg</code> 命令进行安装：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> dpkg</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -i</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> rstudio-server-</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">versio</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">n</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">.deb</span></span></code></pre>
+</li>
+<li>
+<p>检查安装状态：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> systemctl</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> status</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> rstudio-server</span></span></code></pre>
+</li>
+</ol>
+<p>RStudio Server 安装成功后，可以通过 <code>http://&#x3C;your-server-ip>:8787</code> 在浏览器中访问。</p>
+<h3 id="3-安装计量经济学相关的-r-包">3. 安装计量经济学相关的 R 包</h3>
+<p>计量经济学分析通常需要专门的数据处理、回归分析和时间序列分析包。</p>
+<ol>
+<li>
+<p><strong>安装系统依赖</strong>：</p>
+<p>安装系统级的开发包，以确保 R 包安装顺利（特别是对一些需要编译的包，如 <code>tidyverse</code> 和 <code>data.table</code>）：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt-get</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> build-essential</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libssl-dev</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libcurl4-openssl-dev</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libxml2-dev</span></span></code></pre>
+</li>
+<li>
+<p><strong>安装计量经济学和数据处理包</strong>：</p>
+<p>启动 R 控制台并安装常用的计量经济学包：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> R</span></span></code></pre>
+<p>在 R 控制台中执行以下命令：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">chooseCRANmirror</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#D7DBE0">graphics</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#1976D2;--shiki-dark:#82AAFF"> FALSE</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">install.packages</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">c</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">tidyverse</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">data.table</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">broom</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">plm</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">forecast</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lmtest</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">sandwich</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">stargazer</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">))</span></span></code></pre>
+<ul>
+<li><code>tidyverse</code>：包含 <code>dplyr</code>、<code>ggplot2</code>、<code>tidyr</code> 等数据处理和可视化包。</li>
+<li><code>data.table</code>：用于快速数据处理。</li>
+<li><code>broom</code>：将回归分析结果整理成易于分析的表格。</li>
+<li><code>plm</code>：用于面板数据回归分析。</li>
+<li><code>forecast</code>：用于时间序列预测和分析。</li>
+<li><code>lmtest</code> 和 <code>sandwich</code>：提供计量经济学的测试工具和稳健标准误差。</li>
+<li><code>stargazer</code>：用于将回归结果输出为易于理解的表格，适合论文或报告。</li>
+</ul>
+</li>
+<li>
+<p><strong>安装高级计量经济学工具</strong>：</p>
+<ul>
+<li><code>AER</code>（Applied Econometrics with R）：包含用于经济学研究的常用函数和数据集。</li>
+<li><code>urca</code>：提供单根和协整检验。</li>
+<li><code>vars</code>：用于向量自回归（VAR）分析。</li>
+</ul>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">install.packages</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">c</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">AER</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">urca</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vars</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">))</span></span></code></pre>
+</li>
+<li>
+<p><strong>安装金融时间序列分析包</strong>（可选）：</p>
+<ul>
+<li><code>quantmod</code> 和 <code>TTR</code>：用于金融市场数据分析和技术指标计算。</li>
+<li><code>zoo</code> 和 <code>xts</code>：处理不规则时间序列数据。</li>
+</ul>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">install.packages</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">c</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">quantmod</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">TTR</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">zoo</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">xts</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">))</span></span></code></pre>
+</li>
+</ol>
+<h3 id="4-使用-github-令牌安装私有包">4. 使用 GitHub 令牌安装私有包</h3>
+<p>如果需要从 GitHub 安装某些实验性或定制的包，建议使用 GitHub 令牌，以免受到 API 速率限制。</p>
+<p><strong>生成 GitHub 令牌</strong>：</p>
+<ol>
+<li>
+<p>在 R 控制台中生成令牌：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">usethis</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">create_github_token</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">()</span></span></code></pre>
+</li>
+<li>
+<p>在 GitHub 网站上生成一个新的 Personal Access Token（路径：<code>Settings</code> → <code>Developer settings</code> → <code>Personal access token</code> → <code>Tokens (classic)</code>）。</p>
+</li>
+<li>
+<p><strong>配置 GitHub 令牌</strong>：</p>
+<p>将生成的令牌添加到 R 环境中：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">gitcreds</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#C792EA;--shiki-dark-font-style:italic">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF">gitcreds_set</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">()</span></span></code></pre>
+</li>
+</ol>
+<p>在此设置下，可以安全地从 GitHub 安装私有包，避免 API 限制。</p>
+<h3 id="5-示例安装和使用-plm-包进行面板数据回归">5. 示例：安装和使用 <code>plm</code> 包进行面板数据回归</h3>
+<p>假设要使用面板数据进行回归分析，下面是如何安装 <code>plm</code> 并执行固定效应模型的示例：</p>
+<ol>
+<li>
+<p><strong>安装 <code>plm</code></strong>（如果未安装）：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">install.packages</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">plm</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span></code></pre>
+</li>
+<li>
+<p><strong>加载并使用 <code>plm</code></strong>：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="r"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">library</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">plm</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># 创建示例面板数据集</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">data</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Produc</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#212121;--shiki-dark:#D7DBE0">package</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">plm</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">pdata </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&#x3C;-</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> pdata.frame</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">Produc, </span><span style="--shiki-light:#212121;--shiki-dark:#D7DBE0">index</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478"> c</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">state</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">year</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">))</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"># 固定效应模型回归</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">fe_model </span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA">&#x3C;-</span><span style="--shiki-light:#6F42C1;--shiki-dark:#82AAFF"> plm</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">log</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">gsp</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> ~</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478"> log</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">pcap</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> +</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478"> log</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">hwy</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> +</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478"> log</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">water</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> +</span><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478"> log</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">util</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">, </span><span style="--shiki-light:#212121;--shiki-dark:#D7DBE0">data</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF"> pdata, </span><span style="--shiki-light:#212121;--shiki-dark:#D7DBE0">model</span><span style="--shiki-light:#D32F2F;--shiki-dark:#C792EA"> =</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">within</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-dark:#C5E478">summary</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">(</span><span style="--shiki-light:#212121;--shiki-dark:#82AAFF">fe_model</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">)</span></span></code></pre>
+<p>以下是整理优化后的指南，以帮助更有效地同步数据、安装字体、并处理 Nvidia 驱动程序和库的相关问题。</p>
+</li>
+</ol>
+<hr>
+<h2 id="其他问题">其他问题</h2>
+<hr>
+<h3 id="1-同步数据">1. 同步数据</h3>
+<p>要将本地数据同步到远程服务器，建议使用 <code>rsync</code>，这是一种高效且可靠的同步方法。更多细节应参考<a href="https://www.digitalocean.com/community/tutorials/how-to-use-rsync-to-sync-local-and-remote-directories">此教程</a>。</p>
+<ul>
+<li>
+<p><strong>同步命令</strong>：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">rsync</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -r</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /path/to/sync/</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">usernam</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">e</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">@</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">remote_hos</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">t</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">:</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">&#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">destination_director</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">y</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span></span></code></pre>
+<p>上述命令会将本地目录 <code>/path/to/sync/</code> 的所有内容「推送」到远程服务器的 <code>&#x3C;destination_directory></code>。</p>
+</li>
+<li>
+<p><strong>监控大文件的传输进度</strong>：</p>
+<p>如果同步的是较大文件，可以用 <code>watch</code> 命令来监控同步进度：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">watch</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -n</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> &#x3C;</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">time_interva</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">l</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">></span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> du</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -sh</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /path/to/large/file</span></span></code></pre>
+<p>该命令会每隔 <code>&#x3C;time_interval></code> 秒刷新一次文件的大小变化。</p>
+</li>
+</ul>
+<hr>
+<h3 id="2-安装常用字体">2. 安装常用字体</h3>
+<p>Linux 系统默认不带有一些 Windows 中的常用字体（例如 <code>Arial</code> 和 <code>Times New Roman</code>）。安装这些字体可以改善文档和网站的显示效果，特别是那些依赖这些字体的图形输出。安装 Microsoft TrueType 核心字体包并刷新缓存：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> msttcorefonts</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">rm</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -rf</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ~/.cache/matplotlib</span></span></code></pre>
+<ul>
+<li><code>msttcorefonts</code> 包括多种 Microsoft 字体，如 Arial 和 Times New Roman。</li>
+<li>第二个命令删除了 <code>matplotlib</code> 缓存目录，以确保更新后的字体正确加载。</li>
+</ul>
+<hr>
+<h3 id="3-驱动程序库版本不匹配">3. 驱动程序/库版本不匹配</h3>
+<p>在运行 <code>nvidia-smi</code> 时，如果出现以下错误：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Failed to initialize NVML: Driver/library version mismatch</span></span></code></pre>
+<p>可以参考 <a href="https://stackoverflow.com/questions/43022843/nvidia-nvml-driver-library-version-mismatch/45319156#45319156">Stack Overflow 上的解决方案</a>。简要的步骤如下：</p>
+<ol>
+<li>
+<p><strong>重启服务器</strong>：<br>
+某些情况下，重启服务器即可解决问题：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> reboot</span></span></code></pre>
+</li>
+<li>
+<p><strong>卸载并重新安装 Nvidia 驱动程序</strong>：</p>
+<p>如果重启无效，尝试以下命令清除现有的 Nvidia 驱动程序并重新安装：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> purge</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> nvidia</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libnvidia</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ubuntu-drivers</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> reboot</span></span></code></pre>
+</li>
+</ol>
+<hr>
+<h3 id="4升级-nvidia-驱动程序">4.升级 Nvidia 驱动程序</h3>
+<p>要升级 Nvidia 驱动程序，可以按照以下步骤进行：</p>
+<ol>
+<li>
+<p><strong>卸载旧驱动程序</strong>：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> purge</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">nvidia</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> remove</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA"> *</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">nvidia</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> rm</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /etc/apt/sources.list.d/cuda</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> autoremove</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB"> &#x26;&#x26;</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> autoclean</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> rm</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -rf</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /usr/local/cuda</span><span style="--shiki-light:#2B5581;--shiki-dark:#7FDBCA">*</span></span></code></pre>
+</li>
+<li>
+<p><strong>查找并安装推荐的驱动程序</strong>：</p>
+<p>运行以下命令来查找推荐的 Nvidia 驱动程序版本：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">ubuntu-drivers</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> devices</span></span></code></pre>
+<p>或者通过以下命令安装指定版本（例如 <code>550</code>，根据系统需求调整版本号）：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libnvidia-common-550-server</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> libnvidia-gl-550-server</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> nvidia-driver-550-server</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -y</span></span></code></pre>
+</li>
+<li>
+<p><strong>重启并检查</strong>：</p>
+<p>重启服务器并使用 <code>nvidia-smi</code> 检查新驱动是否正常运行：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> reboot</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> now</span></span></code></pre>
+<p>如果 <code>nvidia-smi</code> 返回以下错误：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.</span></span></code></pre>
+<p>尝试重新安装内核头文件并重启。</p>
+</li>
+</ol>
+<hr>
+<h3 id="5内核头文件安装和-gcc-配置">5.内核头文件安装和 GCC 配置</h3>
+<p>如遇到内核头文件或 GCC 版本问题，按以下步骤操作：</p>
+<ol>
+<li>
+<p><strong>重新安装内核头文件</strong>：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --reinstall</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> linux-headers-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">$(</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">uname</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -r</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> reboot</span></span></code></pre>
+</li>
+<li>
+<p><strong>更新 GCC 版本</strong>：</p>
+<p>如果内核头文件安装过程中遇到 GCC 错误，可以升级到 <code>gcc-12</code>：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> apt-get</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> gcc-12</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">sudo</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> update-alternatives</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> --install</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /usr/bin/gcc</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> gcc</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> /usr/bin/gcc-12</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 12</span></span></code></pre>
+<p>重新安装内核头文件并重启服务器后，<code>nvidia-smi</code> 应该能够正常工作。</p>
+</li>
+</ol> </article> <hr class="my-8 border-dashed">  <ul class="mt-4 mb-8 sm:my-8"> <li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/zh/tags/ubuntu/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-36ssibgs-2"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block opacity-80 -me-3.5 size-4"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 9l14 0" /><path d="M5 15l14 0" /><path d="M11 4l-4 16" /><path d="M17 4l-4 16" /></svg>
+&nbsp;<span>Ubuntu</span> </a> </li><li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/zh/tags/productivity/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-36ssibgs-3"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block opacity-80 -me-3.5 size-4"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 9l14 0" /><path d="M5 15l14 0" /><path d="M11 4l-4 16" /><path d="M17 4l-4 16" /></svg>
+&nbsp;<span>Productivity</span> </a> </li><li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/zh/tags/deployment/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-36ssibgs-4"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block opacity-80 -me-3.5 size-4"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 9l14 0" /><path d="M5 15l14 0" /><path d="M11 4l-4 16" /><path d="M17 4l-4 16" /></svg>
+&nbsp;<span>Deployment</span> </a> </li><li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/zh/tags/server/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-36ssibgs-5"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block opacity-80 -me-3.5 size-4"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 9l14 0" /><path d="M5 15l14 0" /><path d="M11 4l-4 16" /><path d="M17 4l-4 16" /></svg>
+&nbsp;<span>Server</span> </a> </li> </ul> <section class="mb-12 rounded-xl border border-border/60 bg-muted/30 px-5 py-4 shadow-sm backdrop-blur dark:border-border/50"> <div class="mb-3 flex items-center gap-3"> <h2 class="text-lg font-semibold text-foreground"> 相关文章 </h2> <div class="h-px flex-1 bg-border/70" aria-hidden="true"></div> </div> <ul class="space-y-2"> <li> <a href="/zh/posts/low-spec-cloud-server-setup" class="group flex items-center gap-2 rounded-lg px-3 py-2 text-base text-foreground transition hover:-translate-y-0.5 hover:bg-background/80 hover:text-accent focus-visible:-translate-y-0.5 focus-visible:bg-background/80"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-accent transition group-hover:translate-x-0.5 rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 6l6 6l-6 6" /></svg> <span class="truncate" title="低性能云服务器实用配置记录"> 低性能云服务器实用配置记录 </span> </a> </li><li> <a href="/zh/posts/python-env-conda-venv" class="group flex items-center gap-2 rounded-lg px-3 py-2 text-base text-foreground transition hover:-translate-y-0.5 hover:bg-background/80 hover:text-accent focus-visible:-translate-y-0.5 focus-visible:bg-background/80"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-accent transition group-hover:translate-x-0.5 rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 6l6 6l-6 6" /></svg> <span class="truncate" title="使用 Conda 和 uv 实现灵活高效的 Python 环境管理"> 使用 Conda 和 uv 实现灵活高效的 Python 环境管理 </span> </a> </li><li> <a href="/zh/posts/build-your-records" class="group flex items-center gap-2 rounded-lg px-3 py-2 text-base text-foreground transition hover:-translate-y-0.5 hover:bg-background/80 hover:text-accent focus-visible:-translate-y-0.5 focus-visible:bg-background/80"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-accent transition group-hover:translate-x-0.5 rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 6l6 6l-6 6" /></svg> <span class="truncate" title="「转载」建立你的记录"> 「转载」建立你的记录 </span> </a> </li> </ul> </section> <div id="btt-btn-container" class="fixed end-4 bottom-8 z-50 md:sticky md:end-auto md:float-end md:me-1 translate-y-14 opacity-0 transition duration-500"> <button data-button="back-to-top" class="group relative bg-background px-2 py-1 size-14 rounded-full shadow-xl md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg"> <span id="progress-indicator" class="absolute inset-0 -z-10 block size-14 scale-110 rounded-full bg-transparent md:hidden md:h-8 md:rounded-md"></span> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block rotate-90 md:hidden"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 6l-6 6l6 6" /></svg> <span class="sr-only text-sm group-hover:text-accent md:not-sr-only"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-4"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M16 9l-4 -4" /><path d="M8 9l4 -4" /></svg> 返回顶部 </span> </button> </div> <script data-astro-rerun>
+  /** Scrolls the document to the top when
+   * the "Back to Top" button is clicked. */
+  function backToTop() {
+    const rootElement = document.documentElement;
+    const btnContainer = document.querySelector("#btt-btn-container");
+    const backToTopBtn = document.querySelector("[data-button='back-to-top']");
+    const progressIndicator = document.querySelector("#progress-indicator");
+
+    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
+      return;
+
+    // Attach click event handler for back-to-top button
+    backToTopBtn.addEventListener("click", () => {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    });
+
+    // Handle button visibility according to scroll position
+    let lastVisible = null;
+    function handleScroll() {
+      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+      const scrollTop = rootElement.scrollTop;
+      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
+
+      progressIndicator.style.setProperty(
+        "background-image",
+        `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
+      );
+
+      const isVisible = scrollTop / scrollTotal > 0.3;
+
+      if (isVisible !== lastVisible) {
+        btnContainer.classList.toggle("opacity-100", isVisible);
+        btnContainer.classList.toggle("translate-y-0", isVisible);
+        btnContainer.classList.toggle("opacity-0", !isVisible);
+        btnContainer.classList.toggle("translate-y-14", !isVisible);
+        lastVisible = isVisible;
+      }
+    }
+
+    let ticking = false;
+    document.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+  backToTop();
+</script> <div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start"><span class="italic">分享这篇文章到：</span><div class="text-center"><a href="https://wa.me/?text=https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via WhatsApp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" /><path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" /></svg><span class="sr-only">Share this post via WhatsApp</span></a><a href="https://www.facebook.com/sharer.php?u=https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on Facebook"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" /></svg><span class="sr-only">Share this post on Facebook</span></a><a href="https://x.com/intent/post?url=https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on X"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 4l11.733 16h4.267l-11.733 -16z" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg><span class="sr-only">Share this post on X</span></a><a href="https://t.me/share/url?url=https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via Telegram"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 10l-4 4l6 6l4 -16l-18 7l4 2l2 6l3 -4" /></svg><span class="sr-only">Share this post via Telegram</span></a><a href="https://pinterest.com/pin/create/button/?url=https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on Pinterest"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 20l4 -9" /><path d="M10.7 14c.437 1.263 1.43 2 2.55 2c2.071 0 3.75 -1.554 3.75 -4a5 5 0 1 0 -9.7 1.7" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /></svg><span class="sr-only">Share this post on Pinterest</span></a><a href="mailto:?subject=See%20this%20post&#38;body=https://blog.wenjiexu.site/zh/posts/deploy-linux-for-research/" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via email"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg><span class="sr-only">Share this post via email</span></a></div></div> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="ZQIRKt" component-url="/_astro/Comments.BY92F0bY.js" component-export="default" renderer-url="/_astro/client.BJHgAj4G.js" props="{}" ssr client="only" opts="{&quot;name&quot;:&quot;Comments&quot;,&quot;value&quot;:&quot;react&quot;}"></astro-island> <hr class="my-6 border-dashed"> <!-- Previous/Next Post Buttons --> <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2"> <a href="/zh/posts/write-citable-papers-fundable-proposals" class="flex w-full gap-1 hover:opacity-75"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block flex-none rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M15 6l-6 6l6 6" /></svg> <div> <span>上一篇</span> <div class="text-sm text-accent/85">「转载」如何撰写被引用的论文和获得资助的提案</div> </div> </a> <a href="/zh/posts/windows-system-setup" class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"> <div> <span>下一篇</span> <div class="text-sm text-accent/85">Windows 系统配置记录</div> </div> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block flex-none rtl:rotate-180"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 6l6 6l-6 6" /></svg> </a> </div> </main> <footer class="w-full mt-auto"> <div class="mx-auto max-w-app px-0"> <hr class="border-border" aria-hidden="true"> </div> <div class="flex flex-col items-center justify-between py-6 sm:flex-row-reverse sm:py-4"> <div class="flex-wrap justify-center gap-1 flex"> <a href="https://github.com/satnaing/astro-paper" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on GitHub"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" /></svg> <span class="sr-only">Blog on GitHub</span> </a><a href="https://x.com/username" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on X"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 4l11.733 16h4.267l-11.733 -16z" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg> <span class="sr-only">Blog on X</span> </a><a href="https://www.linkedin.com/in/username/" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on LinkedIn"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M8 11v5" /><path d="M8 8v.01" /><path d="M12 16v-5" /><path d="M16 16v-3a2 2 0 1 0 -4 0" /><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4z" /></svg> <span class="sr-only">Blog on LinkedIn</span> </a><a href="mailto:yourmail@gmail.com" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Send an email to Blog"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg> <span class="sr-only">Send an email to Blog</span> </a> </div> <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row"> <span>版权 &#169; 2025</span> <span class="hidden sm:inline">&nbsp;|&nbsp;</span> <span>保留所有权利。</span> </div> </div> </footer>  </body></html> <script data-astro-rerun>
+  /** Create a progress indicator
+   *  at the top */
+  function createProgressBar() {
+    // Create the main container div
+    const progressContainer = document.createElement("div");
+    progressContainer.className =
+      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+
+    // Create the progress bar div
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.id = "myBar";
+
+    // Append the progress bar to the progress container
+    progressContainer.appendChild(progressBar);
+
+    // Append the progress container to the document body or any other desired parent element
+    document.body.appendChild(progressContainer);
+  }
+  createProgressBar();
+
+  /** Update the progress bar
+   *  when user scrolls */
+  function updateScrollProgress() {
+    document.addEventListener("scroll", () => {
+      const winScroll =
+        document.body.scrollTop || document.documentElement.scrollTop;
+      const height =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      if (document) {
+        const myBar = document.getElementById("myBar");
+        if (myBar) {
+          myBar.style.width = scrolled + "%";
+        }
+      }
+    });
+  }
+  updateScrollProgress();
+
+  /** Attaches links to headings in the document,
+   *  allowing sharing of sections easily */
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+    for (const heading of headings) {
+      heading.classList.add("group");
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+  addHeadingLinks();
+
+  /** Attaches copy buttons to code blocks in the document,
+   * allowing users to copy code easily. */
+  function attachCopyButtons() {
+    const copyButtonLabel = "Copy";
+    const codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+    for (const codeBlock of codeBlocks) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "relative";
+
+      const copyButton = document.createElement("button");
+      copyButton.type = "button";
+      copyButton.className =
+        "copy-code absolute right-3 top-3 rounded-md border border-border/70 bg-background/85 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-muted/70 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed";
+      copyButton.innerHTML = copyButtonLabel;
+      codeBlock.setAttribute("tabindex", "0");
+
+      // wrap codeblock with relative parent element to host the button
+      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
+      wrapper.appendChild(codeBlock);
+      wrapper.appendChild(copyButton);
+
+      copyButton.addEventListener("click", async () => {
+        await copyCode(codeBlock, copyButton);
+      });
+    }
+
+    async function copyCode(block, button) {
+      const code = block.querySelector("code");
+      const text = code?.innerText;
+
+      await navigator.clipboard.writeText(text ?? "");
+
+      // visual feedback that task is completed
+      button.innerText = "Copied";
+
+      setTimeout(() => {
+        button.innerText = copyButtonLabel;
+      }, 700);
+    }
+  }
+  attachCopyButtons();
+
+  /* Go to page start after page swap */
+  document.addEventListener("astro:after-swap", () =>
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+  );
+</script>
