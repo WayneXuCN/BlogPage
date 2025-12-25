@@ -68,28 +68,6 @@ allPosts: "所有文章"
 # About page
 aboutTitle: "关于"
 aboutDescription: "AstroPaper 是一个使用 Astro 和 Tailwind CSS 构建的极简、无障碍且对 SEO 友好的博客主题。"
-aboutFeatures: "特性"
-aboutSupport: "表示支持"
-aboutSupportText: "如果您喜欢 AstroPaper，请考虑给它一个星标 ⭐️。"
-aboutBugText: "发现错误 🐛 或有改进建议 ✨？随时可以提出 issue、提交 pull request 或开始讨论。"
-aboutSponsorText: "如果您觉得这个主题有帮助，也可以在 GitHub 上赞助我或请我喝杯咖啡来表示支持 — 每一分钱都很重要。"
-aboutIntro:
-  - "AstroPaper 是一个使用 Astro 和 Tailwind CSS 构建的极简、无障碍且对 SEO 友好的博客主题。"
-  - "AstroPaper 为博客甚至作品集提供了坚实的基础，具有完整的 Markdown 支持、内置的暗色模式和开箱即用的简洁布局。"
-  - "该主题中的博客文章也可以作为指南、文档或示例文章，使 AstroPaper 成为您下一个内容驱动网站的灵活起点。"
-aboutFeaturesList:
-  - "对 SEO 友好"
-  - "快速性能"
-  - "明暗模式"
-  - "高度可定制"
-  - "可组织的博客文章"
-  - "响应式和无障碍"
-  - "使用 PageFind 的静态搜索"
-  - "自动社交图像生成"
-aboutSupportList:
-  - "如果您喜欢 AstroPaper，请考虑给它一个星标 ⭐️。"
-  - "发现错误 🐛 或有改进建议 ✨？随时可以提出 issue、提交 pull request 或开始讨论。"
-  - "如果您觉得这个主题有帮助，也可以在 GitHub 上赞助我或请我喝杯咖啡来表示支持 — 每一分钱都很重要。"
 
 # Posts page
 postsTitle: "文章"
@@ -124,7 +102,7 @@ relatedPosts: "相关文章"
 
 # Footer
 copyright: "版权"
-allRightsReserved: "保留所有权利。"
+allRightsReserved: "保留所有权利"
 
 # Pagination
 prev: "上一页"

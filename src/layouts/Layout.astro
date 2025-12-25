@@ -2,7 +2,7 @@
 import { ClientRouter } from "astro:transitions";
 import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
 import { GoogleAnalytics } from "@astrolib/analytics";
-import { SITE, LATEX } from "@/config";
+import { SITE } from "@/config";
 import { getLangFromUrl, getLocalePath } from "@/i18n";
 import { DEFAULT_LOCALE, getLocaleConfig } from "@/i18n/config";
 import "@/styles/global.css";
@@ -123,8 +123,6 @@ const structuredData = {
     />
 
     <meta name="theme-color" content="" />
-
-    {LATEX.enabled && <link rel="stylesheet" href={LATEX.katexCdn} />}
 
     {
       // If PUBLIC_GOOGLE_SITE_VERIFICATION is set in the environment variable,

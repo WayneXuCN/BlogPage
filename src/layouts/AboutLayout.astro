@@ -3,8 +3,9 @@ import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Layout from "./Layout.astro";
-import { SITE } from "@/config";
+import { SITE, LATEX } from "@/config";
 import Comments from "@/components/Comments";
+import KatexStyles from "@/components/KatexStyles.astro";
 
 export interface Props {
   frontmatter: {
@@ -17,6 +18,7 @@ const { frontmatter } = Astro.props;
 ---
 
 <Layout title={`${frontmatter.title} | ${SITE.title}`}>
+  {LATEX.enabled && <KatexStyles />}
   <Header />
   <Breadcrumb />
   <main id="main-content">
@@ -25,7 +27,7 @@ const { frontmatter } = Astro.props;
       <slot />
     </section>
     <section class="max-w-app px-4 pb-16">
-      <Comments client:only="react" />
+      <Comments client:visible={{ rootMargin: "200px" }} />
     </section>
   </main>
   <Footer />

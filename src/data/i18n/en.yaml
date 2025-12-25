@@ -68,28 +68,6 @@ allPosts: "All Posts"
 # About page
 aboutTitle: "About"
 aboutDescription: "AstroPaper is a minimal, accessible and SEO-friendly blog theme built with Astro and Tailwind CSS."
-aboutFeatures: "Features"
-aboutSupport: "Show your support"
-aboutSupportText: "If you like AstroPaper, consider giving it a star ⭐️."
-aboutBugText: "Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an issue, submit a pull request or start a discussion."
-aboutSponsorText: "If you find this theme helpful, you can also sponsor me on GitHub or buy me a coffee to show your support — every penny counts."
-aboutIntro:
-  - "AstroPaper is a minimal, accessible and SEO-friendly blog theme built with Astro and Tailwind CSS."
-  - "AstroPaper provides a solid foundation for blogs, or even portfolios with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box."
-  - "The blog posts in this theme also serve as guides, docs or example articles making AstroPaper a flexible starting point for your next content-driven site."
-aboutFeaturesList:
-  - "SEO-friendly"
-  - "Fast performance"
-  - "Light & dark mode"
-  - "Highly customizable"
-  - "Organizable blog posts"
-  - "Responsive & accessible"
-  - "Static search with PageFind"
-  - "Automatic social image generation"
-aboutSupportList:
-  - "If you like AstroPaper, consider giving it a star ⭐️."
-  - "Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an issue, submit a pull request or start a discussion."
-  - "If you find this theme helpful, you can also sponsor me on GitHub or buy me a coffee to show your support — every penny counts."
 
 # Posts page
 postsTitle: "Posts"
@@ -124,7 +102,7 @@ relatedPosts: "Related posts"
 
 # Footer
 copyright: "Copyright"
-allRightsReserved: "All rights reserved."
+allRightsReserved: "All rights reserved"
 
 # Pagination
 prev: "Prev"
