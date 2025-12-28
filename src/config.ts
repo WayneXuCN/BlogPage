@@ -22,10 +22,44 @@ export const SITE = {
   timezone: "Asia/Shanghai", // Default global timezone (IANA format) https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 } as const;
 
+/**
+ * 功能开关（页面是否显示/是否生成）
+ *
+ * 说明：这里的 "页面" 指站点导航中的独立页面（文章、标签、分类、关于）。
+ * - 关闭后：导航不显示、对应路由不生成（静态构建时不会输出）；开发环境直接访问会重定向到 /404。
+ * - posts 关闭后：文章列表页、文章详情页、RSS 等与文章相关的入口都会被统一关闭，避免死链与误导入口。
+ */
+export const PAGES = {
+  posts: { enabled: true },
+  tags: { enabled: true },
+  categories: { enabled: true },
+  about: { enabled: false },
+} as const;
+
+/**
+ * 社交站点配置（是否启用 + 链接）
+ *
+ * 只在此处维护链接与开关；图标与渲染逻辑在 src/constants.ts 与组件中。
+ */
+export const SOCIAL = {
+  // Global
+  github: { enabled: true, href: "https://github.com/WayneXuCN" },
+  email: { enabled: true, href: "mailto:wenjie.xu.cn@outlook.com" },
+  x: { enabled: false, href: "https://x.com/username" },
+  linkedin: { enabled: false, href: "https://www.linkedin.com/in/username/" },
+  bilibili: { enabled: false, href: "https://space.bilibili.com/" },
+  zhihu: { enabled: true, href: "https://www.zhihu.com/people/wayne-67-86-29" },
+  juejin: { enabled: false, href: "https://juejin.cn/user/" },
+  weibo: { enabled: true, href: "https://weibo.com/u/6577473146" },
+  csdn: { enabled: false, href: "https://blog.csdn.net/" },
+  segmentfault: { enabled: false, href: "https://segmentfault.com/u/" },
+  douban: { enabled: false, href: "https://www.douban.com/people/" },
+} as const;
+
 // 功能开关与配置
 export const LATEX = {
   enabled: true,
-  katexCdn: "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css",
+  katexCdn: "https://cdn.jsdelivr.net/np~m/katex@0.16.11/dist/katex.min.css",
 } as const;
 
 export const COMMENTS = {

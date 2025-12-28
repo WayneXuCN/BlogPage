@@ -47,8 +47,6 @@ export default function Comments() {
     () => hasRequired(giscus as GiscusConfig),
     [giscus]
   );
-  const lightTheme = giscus.lightTheme || "light";
-  const darkTheme = giscus.darkTheme || "dark";
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -74,9 +72,11 @@ export default function Comments() {
 
   if (!hasConfig) return null;
 
-  const { lightTheme: _l, darkTheme: _d, ...rest } = giscus;
+  const { lightTheme, darkTheme, ...rest } = giscus;
   const resolvedTheme =
-    theme === "dark" ? (darkTheme as Theme) : (lightTheme as Theme);
+    theme === "dark"
+      ? ((darkTheme ?? "dark") as Theme)
+      : ((lightTheme ?? "light") as Theme);
 
   return (
     <div className="mt-10 rounded-lg border border-border/70 bg-background/70 px-4 py-5 shadow-sm dark:border-border/60">

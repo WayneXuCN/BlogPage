@@ -7,7 +7,7 @@ import Main from "@/layouts/Main.astro";
 import Card from "@/components/Card.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { slugifyStr } from "@/utils/slugify";
-import { SITE } from "@/config";
+import { PAGES, SITE } from "@/config";
 import { t } from "@/i18n/utils";
 import { SUPPORTED_LOCALES } from "@/i18n/config";
 import { DEFAULT_CATEGORY_SLUG } from "@/utils/getUniqueCategories";
@@ -19,6 +19,7 @@ interface PathProps {
 }
 
 export async function getStaticPaths() {
+  if (!PAGES.categories.enabled) return [];
   const posts = await getCollection("blog", ({ data }) => !data.draft);
 
   const paths = SUPPORTED_LOCALES.flatMap(locale => {
@@ -41,6 +42,10 @@ export async function getStaticPaths() {
   });
 
   return paths;
+}
+
+if (!PAGES.categories.enabled) {
+  return Astro.redirect("/404", 308);
 }
 
 const { categoryName, locale } = Astro.props as PathProps;

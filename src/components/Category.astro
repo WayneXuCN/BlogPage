@@ -1,6 +1,7 @@
 ---
 import IconArchive from "@/assets/icons/IconArchive.svg";
 import { getLangFromUrl } from "@/i18n/utils";
+import { PAGES } from "@/config";
 
 export interface Props {
   category: string;
@@ -19,21 +20,41 @@ const currentLang = lang || getLangFromUrl(Astro.url);
     size === "sm" ? "my-1 underline-offset-4" : "mx-1 my-3 underline-offset-8",
   ]}
 >
-  <a
-    href={`/${currentLang}/categories/${category}/`}
-    transition:name={category}
-    class:list={[
-      "relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline",
-      { "text-sm": size === "sm" },
-    ]}
-  >
-    <IconArchive
-      class:list={[
-        "inline-block opacity-80",
-        { "-me-3.5 size-4": size === "sm" },
-        { "-me-5 size-6": size === "lg" },
-      ]}
-    />
-    &nbsp;<span>{categoryName}</span>
-  </a>
+  {
+    PAGES.categories.enabled ? (
+      <a
+        href={`/${currentLang}/categories/${category}/`}
+        transition:name={category}
+        class:list={[
+          "relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline",
+          { "text-sm": size === "sm" },
+        ]}
+      >
+        <IconArchive
+          class:list={[
+            "inline-block opacity-80",
+            { "-me-3.5 size-4": size === "sm" },
+            { "-me-5 size-6": size === "lg" },
+          ]}
+        />
+        &nbsp;<span>{categoryName}</span>
+      </a>
+    ) : (
+      <span
+        class:list={[
+          "relative pe-2 text-lg text-muted-foreground",
+          { "text-sm": size === "sm" },
+        ]}
+      >
+        <IconArchive
+          class:list={[
+            "inline-block opacity-70",
+            { "-me-3.5 size-4": size === "sm" },
+            { "-me-5 size-6": size === "lg" },
+          ]}
+        />
+        &nbsp;<span>{categoryName}</span>
+      </span>
+    )
+  }
 </li>

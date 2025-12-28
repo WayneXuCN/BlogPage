@@ -55,19 +55,11 @@ poweredBy: "由"
 # Meta
 minutesRead: "分钟阅读"
 
-# Index page
-siteTitle: "明嘎拉巴"
-siteDescription: "AstroPaper 是一个极简、响应式、无障碍且对 SEO 友好的 Astro 博客主题。该主题遵循最佳实践，并提供开箱即用的无障碍功能。默认支持明暗模式。此外，还可以配置额外的颜色方案。"
-readBlogPosts: "阅读博客文章或查看"
-forMoreInfo: "获取更多信息"
+# Index page (UI labels)
 socialLinks: "社交链接："
 featured: "精选"
 recentPosts: "最新文章"
 allPosts: "所有文章"
-
-# About page
-aboutTitle: "关于"
-aboutDescription: "AstroPaper 是一个使用 Astro 和 Tailwind CSS 构建的极简、无障碍且对 SEO 友好的博客主题。"
 
 # Posts page
 postsTitle: "文章"

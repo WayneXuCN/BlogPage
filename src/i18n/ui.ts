@@ -67,24 +67,15 @@ type TranslationKeys = {
   // Meta
   minutesRead: string;
 
-  // Index page
-  siteTitle: string;
-  siteDescription: string;
-  readBlogPosts: string;
-  forMoreInfo: string;
+  // Index page (UI labels)
   socialLinks: string;
   featured: string;
   recentPosts: string;
   allPosts: string;
 
-  // About page
-  aboutTitle: string;
-  aboutDescription: string;
-  aboutFeatures: string;
-  aboutSupport: string;
-  aboutSupportText: string;
-  aboutBugText: string;
-  aboutSponsorText: string;
+  // NOTE: Page-specific rich content (e.g. Index/About) should live under
+  // `src/data/**` like `src/data/about/*.md` and `src/data/index/*.md`.
+  // Keep i18n for reusable UI strings only.
 
   // Posts page
   postsTitle: string;
@@ -140,16 +131,9 @@ type TranslationKeys = {
   october: string;
   november: string;
   december: string;
-  // About rich content
-  aboutIntro: string[];
-  aboutFeaturesList: string[];
-  aboutSupportList: string[];
 };
 
-type TranslationListKeys =
-  | "aboutIntro"
-  | "aboutFeaturesList"
-  | "aboutSupportList";
+type TranslationListKeys = never;
 
 // 加载翻译文件的函数
 function readTranslationFile(locale: LocaleCode): TranslationKeys | null {

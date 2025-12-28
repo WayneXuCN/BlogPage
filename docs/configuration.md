@@ -18,7 +18,7 @@ export const SITE = {
   ogImage: "astropaper-og.jpg", // 默认 Open Graph 图片
   lightAndDarkMode: true, // 是否启用亮色/暗色模式
   postPerIndex: 4, // 首页显示的文章数量
-  postPerPage: 5, // 每页显示的文章数量
+  postPerPage: 10, // 文章列表每页显示的数量
   scheduledPostMargin: 15 * 60 * 1000, // 计划发布文章的时间边距（15分钟）
   showArchives: true, // 是否显示归档页面
   showBackButton: true, // 文章详情页是否显示返回按钮
@@ -31,6 +31,64 @@ export const SITE = {
   dir: "ltr", // 文本方向 ("ltr" | "rtl" | "auto")
   lang: "", // HTML 语言代码，留空则从多语言配置中解析
   timezone: "Asia/Shanghai", // 默认时区 (IANA 格式)
+} as const;
+```
+
+### 页面显示开关（PAGES）
+
+站点导航里的 **文章列表 / 标签 / 分类 / 关于** 四个页面可以在 `src/config.ts` 的 `PAGES` 一处统一配置是否启用：
+
+- 影响导航：`src/components/Header.astro` 会根据开关决定是否展示菜单项
+- 影响路由输出：对应页面的 `getStaticPaths()` 会在禁用时返回空数组（构建时不会生成静态页面）
+- 影响站内链接：
+  - 标签链接（`src/components/Tag.astro`）在禁用时会显示为不可点击文本
+  - 分类链接（`src/components/Category.astro` / `src/layouts/PostDetails.astro`）在禁用时隐藏或不可点击
+
+配置示例（节选）：
+
+```ts
+export const PAGES = {
+  posts: { enabled: true },
+  tags: { enabled: true },
+  categories: { enabled: true },
+  about: { enabled: true },
+} as const;
+```
+
+> 说明：`PAGES.posts` 会统一控制**与文章相关的入口**，包括：
+> - 文章列表页：`/[lang]/posts`
+> - 文章详情页：`/[lang]/posts/:slug`
+> - 根路径重定向：`/posts/:slug`（跳转到默认语言）
+> - RSS：`/rss.xml` 与 `/[lang]/rss.xml`
+>
+> 关闭后会避免生成对应静态路由，同时在开发环境直接访问时跳转到 `/404`，以减少死链。
+
+### 社交站点配置（SOCIAL）
+
+社交站点的 **开关与链接** 统一在 `src/config.ts` 的 `SOCIAL` 中配置。
+
+支持：GitHub、Email、X、LinkedIn，以及常见中文站点（B 站、知乎、掘金、微博、CSDN、SegmentFault、豆瓣）。
+
+配置要点：
+
+- `enabled: true/false`：是否显示该社交图标
+- `href`：链接地址（建议填完整 URL；邮箱使用 `mailto:`）
+
+渲染逻辑：
+
+- `src/constants.ts` 会读取 `SOCIAL` 并生成 `SOCIALS` 数组（只包含 enabled 且 href 非空的项）
+- `src/components/Socials.astro` 负责把 `SOCIALS` 渲染成图标按钮
+- 图标资源位于 `src/assets/icons/`（本项目新增了一组简洁风格的站点图标）
+
+配置示例（节选）：
+
+```ts
+export const SOCIAL = {
+  github: { enabled: true, href: "https://github.com/WayneXuCN/astro-paper" },
+  bilibili: { enabled: false, href: "https://space.bilibili.com/" },
+  zhihu: { enabled: false, href: "https://www.zhihu.com/people/" },
+  juejin: { enabled: false, href: "https://juejin.cn/user/" },
+  weibo: { enabled: false, href: "https://weibo.com/" },
 } as const;
 ```
 
@@ -141,3 +199,18 @@ PUBLIC_GOOGLE_ANALYTICS_ID=your-google-analytics-id
 - `lint`: 代码检查
 
 构建过程会自动生成站点地图、RSS 订阅，并集成 Pagefind 搜索功能。
+
+## 页面内容与 i18n 的分工（推荐约定）
+
+为了避免“页面内容被拆成一堆 i18n 字段导致配置割裂”，建议保持如下分工：
+
+- **页面内容（可富文本 / 含链接 / 段落结构）**：放在 `src/data/**` 的 Markdown 中
+  - 首页文案：`src/data/index/*.md`
+  - 关于页内容：`src/data/about/*.md`
+- **通用 UI 文案（导航项、按钮、提示语、标签名等）**：放在 `src/data/i18n/*.yaml`
+  - 例如：导航 `posts/tags/categories/about`，以及首页的 UI 标签 `socialLinks/featured/recentPosts/allPosts`
+
+这样做的收益：
+
+- 页面内容更容易编辑（Markdown 一段写完，不用拆字段再拼）
+- i18n 更“干净”（只承担 UI 文案，避免与 data 内容重复）

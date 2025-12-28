@@ -18,7 +18,7 @@ import { DEFAULT_CATEGORY_SLUG } from "@/utils/getUniqueCategories";
 import getSortedPosts from "@/utils/getSortedPosts";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
-import { SITE, LATEX } from "@/config";
+import { SITE, LATEX, PAGES } from "@/config";
 import { t, getLangFromUrl } from "@/i18n";
 
 export interface Props {
@@ -157,17 +157,18 @@ const nextPost =
         {t("minutesRead", postLocale)}
       </span>
       {
-        category && (
-          <>
-            <span aria-hidden="true">|</span>
-            <a
-              href={`/${postLocale}/categories/${slugifyStr(category)}/`}
-              class="text-muted-foreground text-sm decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
-            >
-              {t("categoryLabel", postLocale)}: {displayCategoryName}
-            </a>
-          </>
-        )
+        category &&
+          PAGES.categories.enabled && (
+            <>
+              <span aria-hidden="true">|</span>
+              <a
+                href={`/${postLocale}/categories/${slugifyStr(category)}/`}
+                class="text-muted-foreground text-sm decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
+              >
+                {t("categoryLabel", postLocale)}: {displayCategoryName}
+              </a>
+            </>
+          )
       }
     </div>
     <article

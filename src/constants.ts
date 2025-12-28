@@ -3,11 +3,18 @@ import IconMail from "@/assets/icons/IconMail.svg";
 import IconGitHub from "@/assets/icons/IconGitHub.svg";
 import IconBrandX from "@/assets/icons/IconBrandX.svg";
 import IconLinkedin from "@/assets/icons/IconLinkedin.svg";
+import IconBilibili from "@/assets/icons/IconBilibili.svg";
+import IconZhihu from "@/assets/icons/IconZhihu.svg";
+import IconJuejin from "@/assets/icons/IconJuejin.svg";
+import IconWeibo from "@/assets/icons/IconWeibo.svg";
+import IconCSDN from "@/assets/icons/IconCSDN.svg";
+import IconSegmentFault from "@/assets/icons/IconSegmentFault.svg";
+import IconDouban from "@/assets/icons/IconDouban.svg";
 import IconWhatsapp from "@/assets/icons/IconWhatsapp.svg";
 import IconFacebook from "@/assets/icons/IconFacebook.svg";
 import IconTelegram from "@/assets/icons/IconTelegram.svg";
 import IconPinterest from "@/assets/icons/IconPinterest.svg";
-import { SITE } from "@/config";
+import { SITE, SOCIAL } from "@/config";
 
 interface Social {
   name: string;
@@ -16,32 +23,73 @@ interface Social {
   icon: (_props: Props) => Element;
 }
 
-export const SOCIALS: Social[] = [
-  {
+type SocialKey = keyof typeof SOCIAL;
+
+const SOCIAL_META: Record<SocialKey, Omit<Social, "href">> = {
+  github: {
     name: "GitHub",
-    href: "https://github.com/satnaing/astro-paper",
     linkTitle: `${SITE.title} on GitHub`,
     icon: IconGitHub,
   },
-  {
-    name: "X",
-    href: "https://x.com/username",
-    linkTitle: `${SITE.title} on X`,
-    icon: IconBrandX,
-  },
-  {
-    name: "LinkedIn",
-    href: "https://www.linkedin.com/in/username/",
-    linkTitle: `${SITE.title} on LinkedIn`,
-    icon: IconLinkedin,
-  },
-  {
+  email: {
     name: "Mail",
-    href: "mailto:yourmail@gmail.com",
     linkTitle: `Send an email to ${SITE.title}`,
     icon: IconMail,
   },
-] as const;
+  x: {
+    name: "X",
+    linkTitle: `${SITE.title} on X`,
+    icon: IconBrandX,
+  },
+  linkedin: {
+    name: "LinkedIn",
+    linkTitle: `${SITE.title} on LinkedIn`,
+    icon: IconLinkedin,
+  },
+  bilibili: {
+    name: "Bilibili",
+    linkTitle: `${SITE.title} on Bilibili`,
+    icon: IconBilibili,
+  },
+  zhihu: {
+    name: "Zhihu",
+    linkTitle: `${SITE.title} on Zhihu`,
+    icon: IconZhihu,
+  },
+  juejin: {
+    name: "Juejin",
+    linkTitle: `${SITE.title} on Juejin`,
+    icon: IconJuejin,
+  },
+  weibo: {
+    name: "Weibo",
+    linkTitle: `${SITE.title} on Weibo`,
+    icon: IconWeibo,
+  },
+  csdn: {
+    name: "CSDN",
+    linkTitle: `${SITE.title} on CSDN`,
+    icon: IconCSDN,
+  },
+  segmentfault: {
+    name: "SegmentFault",
+    linkTitle: `${SITE.title} on SegmentFault`,
+    icon: IconSegmentFault,
+  },
+  douban: {
+    name: "Douban",
+    linkTitle: `${SITE.title} on Douban`,
+    icon: IconDouban,
+  },
+};
+
+export const SOCIALS: Social[] = (Object.keys(SOCIAL) as SocialKey[])
+  .filter(key => SOCIAL[key].enabled)
+  .map(key => ({
+    ...SOCIAL_META[key],
+    href: SOCIAL[key].href,
+  }))
+  .filter(s => typeof s.href === "string" && s.href.trim().length > 0);
 
 export const SHARE_LINKS: Social[] = [
   {

@@ -9,7 +9,7 @@ import getSortedPosts from "@/utils/getSortedPosts";
 import { getCanonicalSlug } from "@/utils/getPath";
 import { t, getLocaleName, getLocalePath } from "@/i18n";
 import { SUPPORTED_LOCALES, getLocaleConfig } from "@/i18n/config";
-import { SITE } from "@/config";
+import { PAGES, SITE } from "@/config";
 import type { LocaleCode } from "@/i18n/config";
 
 export interface Props {
@@ -20,6 +20,8 @@ export interface Props {
 }
 
 export async function getStaticPaths() {
+  if (!PAGES.posts.enabled) return [];
+
   const posts = await getCollection("blog", ({ data }) => !data.draft);
   const locales = SUPPORTED_LOCALES;
 
@@ -51,6 +53,11 @@ export async function getStaticPaths() {
 }
 
 const { post, lang, slug, availableLocales = [] } = Astro.props;
+
+if (!PAGES.posts.enabled) {
+  return Astro.redirect("/404");
+}
+
 const locale = getLocaleConfig(lang).code as LocaleCode;
 const posts = await getCollection(
   "blog",

@@ -6,13 +6,18 @@ import Tag from "@/components/Tag.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
-import { SITE } from "@/config";
+import { PAGES, SITE } from "@/config";
 import { t, getStaticPaths as getI18nStaticPaths } from "@/i18n/utils";
 import { getLocaleConfig } from "@/i18n/config";
 import type { LocaleCode } from "@/i18n/config";
 
 export async function getStaticPaths() {
+  if (!PAGES.tags.enabled) return [];
   return getI18nStaticPaths();
+}
+
+if (!PAGES.tags.enabled) {
+  return Astro.redirect("/404", 308);
 }
 
 const { lang } = Astro.params;
