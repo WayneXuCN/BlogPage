@@ -5,6 +5,7 @@ import { t, getLangFromUrl } from "@/i18n";
 
 const URL = Astro.url;
 const currentLocale = getLangFromUrl(Astro.url);
+const encodedUrl = encodeURIComponent(URL.toString());
 ---
 
 {
@@ -14,7 +15,7 @@ const currentLocale = getLangFromUrl(Astro.url);
       <div class="text-center">
         {SHARE_LINKS.map(social => (
           <LinkButton
-            href={`${social.href + URL}`}
+            href={`${social.href + encodedUrl}`}
             class="scale-90 p-2 hover:rotate-6 sm:p-1"
             title={social.linkTitle}
           >

@@ -1,13 +1,13 @@
 ---
 import { DEFAULT_LOCALE } from "@/i18n/config";
 import { getLocalePath } from "@/i18n/utils";
-import { PAGES } from "@/config";
+import { SITE } from "@/config";
 
 export const prerender = true;
 const target = `${getLocalePath(DEFAULT_LOCALE.code)}/tags`.replace(/\/+/, "/");
 
 export function GET() {
-  if (!PAGES.tags.enabled) {
+  if (!SITE.pages.tags.enabled) {
     return Response.redirect("/404", 308);
   }
   return Response.redirect(target, 308);

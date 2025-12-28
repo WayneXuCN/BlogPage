@@ -1,5 +1,5 @@
 ---
-import { PAGES } from "@/config";
+import { SITE } from "@/config";
 import { DEFAULT_LOCALE } from "@/i18n/config";
 import { getLocalePath } from "@/i18n/utils";
 
@@ -7,7 +7,7 @@ export const prerender = true;
 const target = `${getLocalePath(DEFAULT_LOCALE.code)}/about`.replace(/\/+/, "/");
 
 export function GET() {
-  if (!PAGES.about.enabled) {
+  if (!SITE.pages.about.enabled) {
     return Response.redirect("/404", 308);
   }
   return Response.redirect(target, 308);

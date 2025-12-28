@@ -38,13 +38,16 @@ const headerProps = {
       )
     }
   </a>
-  <div class="text-muted-foreground flex flex-wrap items-center gap-2 text-sm">
-    <Datetime {pubDatetime} {modDatetime} {timezone} />
-    <span aria-hidden="true">•</span>
-    <span>
-      {readingTime}
-      {t("minutesRead", data.lang)}
-    </span>
-  </div>
+      <ul class="text-muted-foreground flex flex-wrap items-center gap-y-1 text-sm">
+        <li class="inline-flex items-center after:mx-2 after:text-muted-foreground after:opacity-70 after:content-['•']">
+          <Datetime {pubDatetime} {modDatetime} {timezone} />
+        </li>
+        <li class="inline-flex items-center">
+          <span class="whitespace-nowrap">
+            {readingTime}
+            {t("minutesRead", data.lang)}
+          </span>
+        </li>
+      </ul>
   <p>{description}</p>
 </li>

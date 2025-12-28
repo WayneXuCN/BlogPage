@@ -7,7 +7,7 @@ import Main from "@/layouts/Main.astro";
 import Card from "@/components/Card.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { slugifyStr } from "@/utils/slugify";
-import { PAGES, SITE } from "@/config";
+import { SITE } from "@/config";
 import { t } from "@/i18n/utils";
 import { SUPPORTED_LOCALES } from "@/i18n/config";
 import type { LocaleCode } from "@/i18n/config";
@@ -18,7 +18,7 @@ interface PathProps {
 }
 
 export async function getStaticPaths() {
-  if (!PAGES.tags.enabled) return [];
+  if (!SITE.pages.tags.enabled) return [];
   const posts = await getCollection("blog", ({ data }) => !data.draft);
 
   return SUPPORTED_LOCALES.flatMap(locale => {
@@ -39,7 +39,7 @@ export async function getStaticPaths() {
   });
 }
 
-if (!PAGES.tags.enabled) {
+if (!SITE.pages.tags.enabled) {
   return Astro.redirect("/404", 308);
 }
 

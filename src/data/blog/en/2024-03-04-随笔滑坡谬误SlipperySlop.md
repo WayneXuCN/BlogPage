@@ -6,10 +6,11 @@ modDatetime: 2024-03-04 17:42:00
 description: Slippery Slope
 tags:
   - Discussion
-  - Philosophy
+  - Thoughts
 category: Life
 featured: false
 draft: false
+showCopyright: true
 slug: "en/slippery-slope-fallacy"
 lang: en
 ---

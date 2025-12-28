@@ -31,6 +31,8 @@ ogImage: "path/to/image.jpg"   # Open Graph 图片（可选）
 description: "文章描述"         # 文章描述
 canonicalURL: "https://example.com/original-post"  # 规范 URL（可选）
 hideEditPost: false            # 是否隐藏编辑文章按钮（可选）
+showCopyright: true            # 是否在文章底部显示版权卡片（可选）
+ccLicense: "by-nc-sa"          # CC 许可证组合（可选，默认 by-nc-sa）
 timezone: "Asia/Shanghai"      # 时区（可选）
 lang: "zh"                     # 语言代码（en/zh）
 ---
@@ -51,6 +53,9 @@ lang: "zh"                     # 语言代码（en/zh）
 - `description`: 文章描述，用于 SEO
 - `canonicalURL`: 规范 URL，用于 SEO（可选）
 - `hideEditPost`: 是否隐藏编辑文章按钮（可选）
+- `showCopyright`: 是否在文章底部显示版权卡片（可选，默认不显示）
+- `ccLicense`: CC 许可证组合（可选，仅在 showCopyright=true 时生效）
+  - 可选值：`by` / `by-sa` / `by-nd` / `by-nc` / `by-nc-sa` / `by-nc-nd`
 - `timezone`: 时区设置（可选）
 - `lang`: 语言代码，支持 "en" 或 "zh"
 

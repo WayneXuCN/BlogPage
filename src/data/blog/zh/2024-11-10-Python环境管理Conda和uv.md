@@ -1,16 +1,17 @@
 ---
-title: 使用 Conda 和 uv 实现灵活高效的 Python 环境管理
+title: 使用 Conda 和 uv 实现灵活的 Python 环境管理
 author: 徐文杰
 pubDatetime: 2024-02-09 13:08:36
 modDatetime: 2024-12-05 17:20:03
 description: 不同需求下的 Python 环境管理方法
 tags:
   - Python
-  - Ubuntu
-  - Windows
+  - OS-Linux
+  - OS-Windows
 category: Productivity
 featured: false
 draft: false
+showCopyright: true
 slug: "zh/python-env-conda-venv"
 lang: zh
 ---

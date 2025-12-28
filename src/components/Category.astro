@@ -1,7 +1,7 @@
 ---
 import IconArchive from "@/assets/icons/IconArchive.svg";
 import { getLangFromUrl } from "@/i18n/utils";
-import { PAGES } from "@/config";
+import { SITE } from "@/config";
 
 export interface Props {
   category: string;
@@ -21,7 +21,7 @@ const currentLang = lang || getLangFromUrl(Astro.url);
   ]}
 >
   {
-    PAGES.categories.enabled ? (
+    SITE.pages.categories.enabled ? (
       <a
         href={`/${currentLang}/categories/${category}/`}
         transition:name={category}

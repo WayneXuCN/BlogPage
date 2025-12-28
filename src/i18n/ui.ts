@@ -114,6 +114,13 @@ type TranslationKeys = {
   copyright: string;
   allRightsReserved: string;
 
+  // Post copyright card
+  copyrightCardText: string;
+  copyrightCardContactLinkText: string;
+  copyrightCardExtraSA: string;
+  copyrightCardSameLicenseLinkText: string;
+  copyrightCardExtraND: string;
+
   // Pagination
   prev: string;
   next: string;

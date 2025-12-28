@@ -96,6 +96,13 @@ relatedPosts: "Related posts"
 copyright: "Copyright"
 allRightsReserved: "All rights reserved"
 
+# Post copyright card
+copyrightCardText: "This work is licensed under “{license}”. For commercial use, please {contact} for authorization. For non-commercial sharing, please keep attribution and the original link.{extra}"
+copyrightCardContactLinkText: "contact the site owner"
+copyrightCardExtraSA: " If you remix, transform, or build upon this material, you must distribute your contributions under the {sameLicense}."
+copyrightCardSameLicenseLinkText: "same license"
+copyrightCardExtraND: " No derivatives are permitted (you may not remix or adapt this material)."
+
 # Pagination
 prev: "Prev"
 next: "Next"

@@ -2,7 +2,7 @@
 import { getStaticPaths as getI18nStaticPaths } from "@/i18n/utils";
 import { getLocaleConfig } from "@/i18n/config";
 import AboutLayout from "@/layouts/AboutLayout.astro";
-import { PAGES } from "@/config";
+import { SITE } from "@/config";
 import type { LocaleCode } from "@/i18n/config";
 import type { MarkdownInstance } from "astro";
 
@@ -17,11 +17,11 @@ const aboutPages = import.meta.glob("@/data/about/*.md", {
 }) as Record<string, AboutEntry>;
 
 export async function getStaticPaths() {
-  if (!PAGES.about.enabled) return [];
+  if (!SITE.pages.about.enabled) return [];
   return getI18nStaticPaths();
 }
 
-if (!PAGES.about.enabled) {
+if (!SITE.pages.about.enabled) {
   return Astro.redirect("/404", 308);
 }
 

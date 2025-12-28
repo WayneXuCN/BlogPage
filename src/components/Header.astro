@@ -8,7 +8,7 @@ import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import IconMenuDeep from "@/assets/icons/IconMenuDeep.svg";
 import LinkButton from "./LinkButton.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
-import { PAGES, SITE } from "@/config";
+import { SITE } from "@/config";
 import { t, getLangFromUrl } from "@/i18n";
 import { stripLocaleFromPath } from "@/i18n/config";
 
@@ -81,7 +81,7 @@ const isActive = (path: string) => {
           ]}
         >
           {
-            PAGES.posts.enabled && (
+            SITE.pages.posts.enabled && (
               <li class="col-span-2">
                 <a
                   href={`/${currentLocale}/posts`}
@@ -93,7 +93,7 @@ const isActive = (path: string) => {
             )
           }
           {
-            PAGES.tags.enabled && (
+            SITE.pages.tags.enabled && (
               <li class="col-span-2">
                 <a
                   href={`/${currentLocale}/tags`}
@@ -105,7 +105,7 @@ const isActive = (path: string) => {
             )
           }
           {
-            PAGES.categories.enabled && (
+            SITE.pages.categories.enabled && (
               <li class="col-span-2">
                 <a
                   href={`/${currentLocale}/categories`}
@@ -117,7 +117,7 @@ const isActive = (path: string) => {
             )
           }
           {
-            PAGES.about.enabled && (
+            SITE.pages.about.enabled && (
               <li class="col-span-2">
                 <a
                   href={`/${currentLocale}/about`}

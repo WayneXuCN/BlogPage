@@ -8,7 +8,6 @@ import Card from "@/components/Card.astro";
 import Pagination from "@/components/Pagination.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { SITE } from "@/config";
-import { PAGES } from "@/config";
 import { t } from "@/i18n/utils";
 import {
   SUPPORTED_LOCALES,
@@ -25,7 +24,7 @@ type PaginateFn = <T>(
 ) => unknown[];
 
 export async function getStaticPaths({ paginate }: { paginate: PaginateFn }) {
-  if (!PAGES.posts.enabled) return [];
+  if (!SITE.pages.posts.enabled) return [];
   const posts = await getCollection("blog");
 
   return SUPPORTED_LOCALES.flatMap(locale =>
@@ -39,7 +38,7 @@ export async function getStaticPaths({ paginate }: { paginate: PaginateFn }) {
   );
 }
 
-if (!PAGES.posts.enabled) {
+if (!SITE.pages.posts.enabled) {
   return Astro.redirect("/404", 308);
 }
 

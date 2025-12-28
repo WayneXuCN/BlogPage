@@ -34,9 +34,9 @@ export const SITE = {
 } as const;
 ```
 
-### 页面显示开关（PAGES）
+### 页面显示开关（SITE.pages）
 
-站点导航里的 **文章列表 / 标签 / 分类 / 关于** 四个页面可以在 `src/config.ts` 的 `PAGES` 一处统一配置是否启用：
+站点导航里的 **文章列表 / 标签 / 分类 / 关于** 四个页面可以在 `src/config.ts` 的 `SITE.pages` 一处统一配置是否启用：
 
 - 影响导航：`src/components/Header.astro` 会根据开关决定是否展示菜单项
 - 影响路由输出：对应页面的 `getStaticPaths()` 会在禁用时返回空数组（构建时不会生成静态页面）
@@ -47,15 +47,19 @@ export const SITE = {
 配置示例（节选）：
 
 ```ts
-export const PAGES = {
-  posts: { enabled: true },
-  tags: { enabled: true },
-  categories: { enabled: true },
-  about: { enabled: true },
+export const SITE = {
+  // ...
+  pages: {
+    posts: { enabled: true },
+    tags: { enabled: true },
+    categories: { enabled: true },
+    about: { enabled: false },
+  },
 } as const;
 ```
 
-> 说明：`PAGES.posts` 会统一控制**与文章相关的入口**，包括：
+> 说明：`SITE.pages.posts` 会统一控制**与文章相关的入口**，包括：
+>
 > - 文章列表页：`/[lang]/posts`
 > - 文章详情页：`/[lang]/posts/:slug`
 > - 根路径重定向：`/posts/:slug`（跳转到默认语言）
@@ -89,6 +93,31 @@ export const SOCIAL = {
   zhihu: { enabled: false, href: "https://www.zhihu.com/people/" },
   juejin: { enabled: false, href: "https://juejin.cn/user/" },
   weibo: { enabled: false, href: "https://weibo.com/" },
+} as const;
+```
+
+### 文章分享配置（SHARE）
+
+文章详情页底部的「分享这篇文章到」按钮组可以在 `src/config.ts` 的 `SHARE` 统一配置。
+
+- `SHARE.enabled`：控制整组分享按钮是否展示
+- `SHARE.links.<platform>.enabled`：控制单个平台是否展示（顺序按 key 书写顺序）
+
+支持平台会随项目迭代增加，当前包含：Email、WeChat（二维码）、QQ、QZone、Weibo，以及部分海外平台（LinkedIn、WhatsApp、Facebook、X、Telegram、Pinterest）。
+
+配置示例（节选）：
+
+```ts
+export const SHARE = {
+  enabled: true,
+  links: {
+    email: { enabled: true },
+    wechat: { enabled: true },
+    qq: { enabled: true },
+    qzone: { enabled: true },
+    weibo: { enabled: true },
+    // 其他平台...
+  },
 } as const;
 ```
 
@@ -162,6 +191,7 @@ PUBLIC_GOOGLE_ANALYTICS_ID=your-google-analytics-id
 - 中文 (zh)
 
 每种语言的配置包括：
+
 - 代码 (code)
 - URL 路径 (path)
 - 显示名称 (name)

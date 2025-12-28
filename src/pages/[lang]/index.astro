@@ -9,7 +9,7 @@ import Hr from "@/components/Hr.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import IconRss from "@/assets/icons/IconRss.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
-import { PAGES, SITE } from "@/config";
+import { SITE } from "@/config";
 import {
   t,
   getStaticPaths as getI18nStaticPaths,
@@ -47,15 +47,15 @@ if (!matched) {
 
 const { Content, frontmatter } = matched;
 
-const posts = PAGES.posts.enabled
+const posts = SITE.pages.posts.enabled
   ? await getCollection("blog", ({ data }) => data.lang === locale)
   : [];
 
-const sortedPosts = PAGES.posts.enabled ? getSortedPosts(posts) : [];
-const featuredPosts = PAGES.posts.enabled
+const sortedPosts = SITE.pages.posts.enabled ? getSortedPosts(posts) : [];
+const featuredPosts = SITE.pages.posts.enabled
   ? sortedPosts.filter(({ data }) => data.featured)
   : [];
-const recentPosts = PAGES.posts.enabled
+const recentPosts = SITE.pages.posts.enabled
   ? sortedPosts.filter(({ data }) => !data.featured)
   : [];
 const backUrlValue = (getLocalePath(locale) || "/").replace(/\/$/, "") + "/";
@@ -79,7 +79,7 @@ document.addEventListener("astro:page-load", () => {
         {frontmatter.title}
       </h1>
       {
-        PAGES.posts.enabled && (
+        SITE.pages.posts.enabled && (
           <a
             target="_blank"
             href={`${getLocalePath(locale)}/rss.xml`}
@@ -108,7 +108,7 @@ document.addEventListener("astro:page-load", () => {
     <Hr />
 
     {
-      PAGES.posts.enabled && featuredPosts.length > 0 && (
+      SITE.pages.posts.enabled && featuredPosts.length > 0 && (
         <>
           <section id="featured" class="pt-12 pb-6">
             <h2 class="text-2xl font-semibold tracking-wide">
@@ -126,7 +126,7 @@ document.addEventListener("astro:page-load", () => {
     }
 
     {
-      PAGES.posts.enabled && recentPosts.length > 0 && (
+      SITE.pages.posts.enabled && recentPosts.length > 0 && (
         <section id="recent-posts" class="pt-12 pb-6">
           <h2 class="text-2xl font-semibold tracking-wide">
             {t("recentPosts", locale)}
@@ -142,7 +142,7 @@ document.addEventListener("astro:page-load", () => {
     }
 
     {
-      PAGES.posts.enabled && (
+      SITE.pages.posts.enabled && (
         <div class="my-8 text-center">
           <LinkButton href={`${getLocalePath(locale)}/posts`}>
             {t("allPosts", locale)}

@@ -6,6 +6,15 @@ import { DEFAULT_LOCALE, LOCALE_CODES } from "@/i18n/config";
 export const BLOG_PATH = "src/data/blog";
 
 const LOCALE_ENUM_VALUES = LOCALE_CODES as [string, ...string[]];
+const CC_LICENSE_VALUES =
+  [
+    "by",
+    "by-sa",
+    "by-nd",
+    "by-nc",
+    "by-nc-sa",
+    "by-nc-nd",
+  ] as const;
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: `./${BLOG_PATH}` }),
@@ -27,6 +36,8 @@ const blog = defineCollection({
       description: z.string(),
       canonicalURL: z.string().optional(),
       hideEditPost: z.boolean().optional(),
+      showCopyright: z.boolean().optional(),
+      ccLicense: z.enum(CC_LICENSE_VALUES).optional(),
       timezone: z.string().optional(),
       lang: z.enum(LOCALE_ENUM_VALUES).default(DEFAULT_LOCALE.code),
     }),

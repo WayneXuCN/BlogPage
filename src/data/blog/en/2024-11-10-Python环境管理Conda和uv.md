@@ -1,16 +1,17 @@
 ---
-title: Flexible and Efficient Python Environment Management with Conda and uv
+title: Flexible Python Environment Management with Conda and uv
 author: Wenjie Xu
 pubDatetime: 2024-02-09 13:08:36
 modDatetime: 2024-12-05 17:20:03
 description: Python environment management methods for different needs
 tags:
   - Python
-  - Ubuntu
-  - Windows
+  - OS-Linux
+  - OS-Windows
 category: Productivity
 featured: false
 draft: false
+showCopyright: true
 slug: "en/python-env-conda-venv"
 lang: en
 ---

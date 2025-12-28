@@ -2,10 +2,10 @@ import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 import { getPath } from "@/utils/getPath";
 import getSortedPosts from "@/utils/getSortedPosts";
-import { PAGES, SITE } from "@/config";
+import { SITE } from "@/config";
 
 export async function GET() {
-  if (!PAGES.posts.enabled) return new Response(null, { status: 404 });
+  if (!SITE.pages.posts.enabled) return new Response(null, { status: 404 });
 
   const posts = await getCollection("blog");
   const sortedPosts = getSortedPosts(posts);

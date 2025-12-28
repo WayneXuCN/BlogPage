@@ -11,14 +11,14 @@ import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import Comments from "@/components/Comments";
 import KatexStyles from "@/components/KatexStyles.astro";
+import CopyrightCard from "@/components/CopyrightCard.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
 import getReadingTime from "@/utils/getReadingTime";
 import { DEFAULT_CATEGORY_SLUG } from "@/utils/getUniqueCategories";
-import getSortedPosts from "@/utils/getSortedPosts";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
-import { SITE, LATEX, PAGES } from "@/config";
+import { SITE, LATEX, SOCIAL } from "@/config";
 import { t, getLangFromUrl } from "@/i18n";
 
 export interface Props {
@@ -42,7 +42,12 @@ const {
   tags,
   hideEditPost,
   category,
+  showCopyright,
+  ccLicense,
 } = post.data;
+
+const isRepost = title.trim().startsWith("转载");
+const shouldShowCopyright = showCopyright ?? !isRepost;
 
 const { Content } = await render(post);
 const readingTime = getReadingTime(post.body || "");
@@ -50,25 +55,6 @@ const displayCategoryName =
   slugifyStr(category || "") === DEFAULT_CATEGORY_SLUG
     ? t("defaultCategory", postLocale)
     : category;
-
-/* ========== Related Posts ========== */
-const relatedCandidates = posts.filter(p => p.id !== post.id);
-const currentTags = new Set(tags.map(tg => tg.toLowerCase()));
-const relatedScored = relatedCandidates
-  .map(p => {
-    const sameCategory =
-      slugifyStr(p.data.category || "") === slugifyStr(category || "");
-    const tagOverlap = (p.data.tags || []).filter(tg =>
-      currentTags.has(tg.toLowerCase())
-    ).length;
-    const score = (sameCategory ? 2 : 0) + tagOverlap;
-    return { post: p, score };
-  })
-  .filter(item => item.score > 0);
-
-const relatedPosts = getSortedPosts(
-  relatedScored.sort((a, b) => b.score - a.score).map(item => item.post)
-).slice(0, 3);
 
 let ogImageUrl: string | undefined;
 
@@ -141,36 +127,44 @@ const nextPost =
     >
       {title}
     </h1>
-    <div class="my-2 flex items-center gap-2">
-      <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-      <span
-        aria-hidden="true"
-        class:list={[
-          "max-sm:hidden",
-          { hidden: !SITE.editPost.enabled || hideEditPost },
-        ]}>|</span
-      >
-      <EditPost {hideEditPost} {post} class="max-sm:hidden" />
-      <span aria-hidden="true">|</span>
-      <span class="text-muted-foreground text-sm">
-        {readingTime}
-        {t("minutesRead", postLocale)}
-      </span>
+    <ul class="my-2 flex flex-wrap items-center gap-y-1">
+      <li class="inline-flex items-center after:mx-2 after:text-muted-foreground after:opacity-70 after:content-['|'] last:after:content-none">
+        <Datetime
+          {pubDatetime}
+          {modDatetime}
+          {timezone}
+          size="lg"
+          showLabel={true}
+        />
+      </li>
+
+      {SITE.editPost.enabled && !hideEditPost && (
+        <li class="hidden items-center after:mx-2 after:text-muted-foreground after:opacity-70 after:content-['|'] last:after:content-none sm:inline-flex">
+          <EditPost {hideEditPost} {post} />
+        </li>
+      )}
+
+      <li class="inline-flex items-center text-muted-foreground text-sm after:mx-2 after:text-muted-foreground after:opacity-70 after:content-['|'] last:after:content-none">
+        <span class="whitespace-nowrap">
+          {readingTime}
+          {t("minutesRead", postLocale)}
+        </span>
+      </li>
+
       {
         category &&
-          PAGES.categories.enabled && (
-            <>
-              <span aria-hidden="true">|</span>
+          SITE.pages.categories.enabled && (
+            <li class="inline-flex min-w-0 items-center text-muted-foreground text-sm">
               <a
                 href={`/${postLocale}/categories/${slugifyStr(category)}/`}
-                class="text-muted-foreground text-sm decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
+                class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
               >
                 {t("categoryLabel", postLocale)}: {displayCategoryName}
               </a>
-            </>
+            </li>
           )
       }
-    </div>
+    </ul>
     <article
       id="article"
       class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
@@ -186,39 +180,14 @@ const nextPost =
       {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
     </ul>
 
-    {
-      relatedPosts.length > 0 && (
-        <section class="mb-12 rounded-xl border border-border/60 bg-muted/30 px-5 py-4 shadow-sm backdrop-blur dark:border-border/50">
-          <div class="mb-3 flex items-center gap-3">
-            <h2 class="text-lg font-semibold text-foreground">
-              {t("relatedPosts", postLocale)}
-            </h2>
-            <div class="h-px flex-1 bg-border/70" aria-hidden="true" />
-          </div>
-          <ul class="space-y-2">
-            {relatedPosts.map(data => (
-              <li>
-                <a
-                  href={getPath(
-                    data.id,
-                    data.filePath,
-                    true,
-                    data.data.lang,
-                    data.data.slug
-                  )}
-                  class="group flex items-center gap-2 rounded-lg px-3 py-2 text-base text-foreground transition hover:-translate-y-0.5 hover:bg-background/80 hover:text-accent focus-visible:-translate-y-0.5 focus-visible:bg-background/80"
-                >
-                  <IconChevronRight class="size-4 text-accent transition group-hover:translate-x-0.5 rtl:rotate-180" />
-                  <span class="truncate" title={data.data.title}>
-                    {data.data.title}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    {shouldShowCopyright && (
+      <CopyrightCard
+        locale={postLocale}
+        year={pubDatetime.getFullYear()}
+        ccLicense={ccLicense}
+        contactHref={SOCIAL.email?.href}
+      />
+    )}
 
     <BackToTopButton />
 

@@ -2,17 +2,17 @@ import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 import { getPath } from "@/utils/getPath";
 import getSortedPosts from "@/utils/getSortedPosts";
-import { PAGES, SITE } from "@/config";
+import { SITE } from "@/config";
 import { getLocaleConfig, type LocaleCode } from "@/i18n/config";
 import { getStaticPaths as getI18nStaticPaths } from "@/i18n/utils";
 
 export async function getStaticPaths() {
-  if (!PAGES.posts.enabled) return [];
+  if (!SITE.pages.posts.enabled) return [];
   return getI18nStaticPaths();
 }
 
 export async function GET({ params }: { params: { lang: string } }) {
-  if (!PAGES.posts.enabled) return new Response(null, { status: 404 });
+  if (!SITE.pages.posts.enabled) return new Response(null, { status: 404 });
 
   const locale = getLocaleConfig(params.lang).code as LocaleCode;
   const posts = await getCollection(

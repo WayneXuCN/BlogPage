@@ -1,7 +1,7 @@
 ---
 import IconHash from "@/assets/icons/IconHash.svg";
 import { getLangFromUrl } from "@/i18n/utils";
-import { PAGES } from "@/config";
+import { SITE } from "@/config";
 
 export interface Props {
   tag: string;
@@ -21,7 +21,7 @@ const currentLang = lang || getLangFromUrl(Astro.url);
   ]}
 >
   {
-    PAGES.tags.enabled ? (
+    SITE.pages.tags.enabled ? (
       <a
         href={`/${currentLang}/tags/${tag}/`}
         transition:name={tag}

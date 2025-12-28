@@ -1,0 +1,215 @@
+---
+import type { LocaleCode } from "@/i18n/config";
+import { t } from "@/i18n";
+import Signature from "@/assets/images/signature.svg";
+
+export interface Props {
+  locale: LocaleCode;
+  year?: number;
+  ccLicense?: "by" | "by-sa" | "by-nd" | "by-nc" | "by-nc-sa" | "by-nc-nd";
+  contactHref?: string;
+}
+
+const {
+  locale,
+  year = new Date().getFullYear(),
+  ccLicense = "by-nc-sa",
+  contactHref,
+} = Astro.props;
+
+type CCToken = "BY" | "NC" | "SA" | "ND";
+
+const CC_MAP = {
+  by: {
+    code: "CC BY 4.0",
+    url: "https://creativecommons.org/licenses/by/4.0/",
+    tokens: ["BY"],
+  },
+  "by-sa": {
+    code: "CC BY-SA 4.0",
+    url: "https://creativecommons.org/licenses/by-sa/4.0/",
+    tokens: ["BY", "SA"],
+  },
+  "by-nd": {
+    code: "CC BY-ND 4.0",
+    url: "https://creativecommons.org/licenses/by-nd/4.0/",
+    tokens: ["BY", "ND"],
+  },
+  "by-nc": {
+    code: "CC BY-NC 4.0",
+    url: "https://creativecommons.org/licenses/by-nc/4.0/",
+    tokens: ["BY", "NC"],
+  },
+  "by-nc-sa": {
+    code: "CC BY-NC-SA 4.0",
+    url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    tokens: ["BY", "NC", "SA"],
+  },
+  "by-nc-nd": {
+    code: "CC BY-NC-ND 4.0",
+    url: "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    tokens: ["BY", "NC", "ND"],
+  },
+} as const;
+
+const license = CC_MAP[ccLicense] ?? CC_MAP["by-nc-sa"];
+const tokens = license.tokens as readonly CCToken[];
+const hasSA = tokens.includes("SA");
+const hasND = tokens.includes("ND");
+
+function escapeHtml(input: string) {
+  return input
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function templateToHtml(
+  template: string,
+  replacements: Record<string, string>
+) {
+  const re = /\{([a-zA-Z0-9_]+)\}/g;
+  let result = "";
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = re.exec(template))) {
+    result += escapeHtml(template.slice(lastIndex, match.index));
+    const key = match[1];
+    result += replacements[key] ?? escapeHtml(match[0]);
+    lastIndex = match.index + match[0].length;
+  }
+
+  result += escapeHtml(template.slice(lastIndex));
+  return result;
+}
+
+const linkClass =
+  "font-semibold text-foreground underline decoration-dashed underline-offset-4 hover:text-accent";
+
+const licenseLink = `<a href="${license.url}" target="_blank" rel="noreferrer" class="${linkClass}">${escapeHtml(
+  license.code
+)}</a>`;
+
+const contactText = escapeHtml(t("copyrightCardContactLinkText", locale));
+const contactLink = contactHref
+  ? `<a href="${encodeURI(contactHref)}" class="${linkClass}">${contactText}</a>`
+  : `<span class="font-semibold text-foreground">${contactText}</span>`;
+
+const sameLicenseText = escapeHtml(t("copyrightCardSameLicenseLinkText", locale));
+const sameLicenseLink = `<a href="${license.url}" target="_blank" rel="noreferrer" class="${linkClass}">${sameLicenseText}</a>`;
+
+const extraHtml = hasND
+  ? templateToHtml(t("copyrightCardExtraND", locale), {})
+  : hasSA
+    ? templateToHtml(t("copyrightCardExtraSA", locale), {
+        sameLicense: sameLicenseLink,
+      })
+    : "";
+
+const textHtml = templateToHtml(t("copyrightCardText", locale), {
+  license: licenseLink,
+  contact: contactLink,
+  extra: extraHtml,
+});
+---
+
+<section
+  data-pagefind-ignore
+  class="mb-12 rounded-xl border border-border/60 bg-muted/30 px-5 py-4 shadow-sm backdrop-blur dark:border-border/50"
+>
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div class="min-w-0">
+      <div class="flex flex-wrap items-center gap-2">
+        <a
+          href={license.url}
+          target="_blank"
+          rel="noreferrer"
+          class="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-sm"
+        >
+          <span class="text-accent">CC</span>
+          <span aria-hidden="true" class="text-muted-foreground">•</span>
+          <span class="text-muted-foreground">{license.tokens.join("-")}</span>
+        </a>
+        <span class="text-muted-foreground text-xs">
+          © {year}
+        </span>
+      </div>
+
+      <p
+        class="text-muted-foreground mt-3 text-sm leading-relaxed"
+        set:html={textHtml}
+      />
+
+    </div>
+
+    <div class="shrink-0 self-end sm:self-start">
+      <Signature
+        class="animated-signature h-9 w-auto max-w-52 text-black dark:text-white"
+        aria-hidden="true"
+        focusable="false"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .animated-signature {
+    overflow: visible;
+  }
+
+  .animated-signature :global(path) {
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+
+    /* 通过 fill-opacity 控制填充阶段，避免 fill: transparent/currentColor 来回切换 */
+    fill: currentColor;
+    fill-opacity: 0;
+
+    /* signature.svg sets pathLength=1, so these are normalized */
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: signature-draw 8s linear infinite both;
+    will-change: stroke-dashoffset, fill-opacity;
+  }
+
+  @keyframes signature-draw {
+    0% {
+      stroke-dashoffset: 1;
+      fill-opacity: 0;
+    }
+
+    /* 15% 之前只描边（填充保持透明） */
+    15% {
+      fill-opacity: 0;
+    }
+
+    /* 35%～75%：描边完成并保持展示（与示例节奏一致） */
+    35%,
+    75% {
+      stroke-dashoffset: 0;
+      fill-opacity: 1;
+    }
+
+    /* 90%～100%：回退到起点并清空填充，进入下一轮 */
+    90%,
+    to {
+      stroke-dashoffset: 1;
+      fill-opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animated-signature :global(path) {
+      animation: none;
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+      fill: currentColor;
+      fill-opacity: 1;
+    }
+  }
+</style>
