@@ -96,6 +96,13 @@ relatedPosts: "相关文章"
 copyright: "版权"
 allRightsReserved: "保留所有权利"
 
+# Post copyright card
+copyrightCardText: "本文使用“{license}”进行许可。商业转载请{contact}获得授权。非商业转载请注明本文出处及文章链接。{extra}"
+copyrightCardContactLinkText: "联系站长"
+copyrightCardExtraSA: "如果您混合、转换或者基于本作品进行创作，您必须基于{sameLicense}分发您贡献的作品。"
+copyrightCardSameLicenseLinkText: "相同的协议"
+copyrightCardExtraND: "本作品禁止演绎（不允许改编、再创作）。"
+
 # Pagination
 prev: "上一页"
 next: "下一页"

@@ -16,6 +16,7 @@ export interface Props {
   timezone: string | undefined;
   pubDatetime: string | Date;
   modDatetime: string | Date | undefined | null;
+  showLabel?: boolean;
 }
 
 const {
@@ -24,6 +25,7 @@ const {
   size = "sm",
   class: className = "",
   timezone: postTimezone,
+  showLabel = false,
 } = Astro.props;
 
 const currentLocale = getLangFromUrl(Astro.url);
@@ -31,11 +33,10 @@ const localeConfig = getLocaleConfig(currentLocale);
 const fallbackLocaleConfig = getLocaleConfig(DEFAULT_LOCALE.code);
 
 /* ========== Formatted Datetime ========== */
-const isModified = modDatetime && modDatetime > pubDatetime;
-
-const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(
-  postTimezone || SITE.timezone
-);
+const tz = postTimezone || SITE.timezone;
+const pub = dayjs(pubDatetime).tz(tz);
+const mod = modDatetime ? dayjs(modDatetime).tz(tz) : null;
+const isModified = Boolean(mod && mod.isAfter(pub));
 
 // 动态加载 dayjs 语言包（如可用）
 let activeDayjsLocale =
@@ -58,25 +59,65 @@ try {
 const formatPattern =
   localeConfig.dateFormat || fallbackLocaleConfig.dateFormat || "YYYY-MM-DD";
 
-const date = datetime.locale(activeDayjsLocale).format(formatPattern);
+const pubDate = pub.locale(activeDayjsLocale).format(formatPattern);
+const modDate =
+  isModified && mod
+    ? mod.locale(activeDayjsLocale).format(formatPattern)
+    : undefined;
+
+const effectiveDate = isModified && mod ? mod : pub;
+const effectiveDateText = isModified && modDate ? modDate : pubDate;
+const effectiveLabelKey = isModified ? "updatedOn" : "publishedOn";
 ---
 
-<div class:list={["flex items-center gap-x-2 opacity-80", className]}>
+<div
+  class:list={[
+    "flex items-start gap-x-2 opacity-80 sm:items-center",
+    className,
+  ]}
+>
   <IconCalendar
     class:list={[
-      "inline-block size-6 min-w-[1.375rem]",
-      { "scale-90": size === "sm" },
+      "inline-block flex-none text-muted-foreground",
+      { "size-5": size === "sm", "size-6": size === "lg" },
     ]}
   />
-  {
-    isModified && (
-      <span class:list={["text-sm", { "sm:text-base": size === "lg" }]}>
-        {t("updatedOn", currentLocale)}:
+
+  {showLabel ? (
+    <span class="flex min-w-0 flex-col gap-y-0.5 sm:flex-row sm:items-baseline sm:gap-x-1 sm:gap-y-0">
+      <span
+        class:list={[
+          [
+            "text-sm whitespace-nowrap break-keep",
+            { "sm:text-base": size === "lg" },
+          ],
+        ]}
+      >
+        {t(effectiveLabelKey, currentLocale)}:
       </span>
-    )
-  }
-  <time
-    class:list={["text-sm", { "sm:text-base": size === "lg" }]}
-    datetime={datetime.toISOString()}>{date}</time
-  >
+      <time
+        class:list={[
+          [
+            "text-sm whitespace-nowrap break-keep",
+            { "sm:text-base": size === "lg" },
+          ],
+        ]}
+        datetime={effectiveDate.toISOString()}
+      >
+        {effectiveDateText}
+      </time>
+    </span>
+  ) : (
+    <time
+      class:list={[
+        [
+          "text-sm whitespace-nowrap break-keep",
+          { "sm:text-base": size === "lg" },
+        ],
+      ]}
+      datetime={effectiveDate.toISOString()}
+    >
+      {effectiveDateText}
+    </time>
+  )}
 </div>
