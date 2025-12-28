@@ -1,5 +1,5 @@
 ---
-title: 「随笔」理解滑坡谬误
+title: 随笔 | 理解滑坡谬误
 author: 徐文杰
 pubDatetime: 2024-03-04 17:42:00
 modDatetime: 2024-03-04 17:42:00
