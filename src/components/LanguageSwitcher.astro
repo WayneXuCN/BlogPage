@@ -16,16 +16,6 @@ const locales = getLocales();
 // 获取当前页面的路径（不包括语言前缀）
 const { pathWithoutLocale: currentPath } = stripLocaleFromPath(pathname);
 
-const posts = await getCollection("blog", ({ data }) => !data.draft);
-const slugLocaleMap = new Map<string, Set<string>>();
-
-posts.forEach(post => {
-  const slug = getCanonicalSlug(post.id, post.filePath, post.data.slug);
-  const langs = slugLocaleMap.get(slug) || new Set<string>();
-  langs.add(post.data.lang);
-  slugLocaleMap.set(slug, langs);
-});
-
 const postSlugFromPath = (() => {
   const segments = currentPath.split("/").filter(Boolean);
   const postsIndex = segments.indexOf("posts");
@@ -33,9 +23,15 @@ const postSlugFromPath = (() => {
   return segments.slice(postsIndex + 1).join("/");
 })();
 
-const hasKnownSlug = postSlugFromPath
-  ? slugLocaleMap.has(postSlugFromPath)
-  : false;
+let hasKnownSlug = false;
+
+if (postSlugFromPath) {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const knownPostSlugs = new Set(
+    posts.map(post => getCanonicalSlug(post.id, post.filePath, post.data.slug))
+  );
+  hasKnownSlug = knownPostSlugs.has(postSlugFromPath);
+}
 
 // 生成每种语言的链接
 const languageLinks = locales.map(locale => {
