@@ -248,6 +248,9 @@ const nextPost =
   /** Create a progress indicator
    *  at the top */
   function createProgressBar() {
+    const existingBar = document.getElementById("myBar");
+    if (existingBar) return existingBar;
+
     // Create the main container div
     const progressContainer = document.createElement("div");
     progressContainer.className =
@@ -263,26 +266,27 @@ const nextPost =
 
     // Append the progress container to the document body or any other desired parent element
     document.body.appendChild(progressContainer);
+
+    return progressBar;
   }
   createProgressBar();
 
   /** Update the progress bar
    *  when user scrolls */
   function updateScrollProgress() {
-    document.addEventListener("scroll", () => {
-      const winScroll =
-        document.body.scrollTop || document.documentElement.scrollTop;
-      const height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      if (document) {
-        const myBar = document.getElementById("myBar");
-        if (myBar) {
-          myBar.style.width = scrolled + "%";
-        }
-      }
-    });
+    const myBar = document.getElementById("myBar");
+    if (!myBar) return;
+
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+    myBar.style.width = scrolled + "%";
+  }
+  if (document.documentElement.dataset.postScrollBound !== "true") {
+    document.addEventListener("scroll", updateScrollProgress, { passive: true });
+    document.documentElement.dataset.postScrollBound = "true";
   }
   updateScrollProgress();
 
@@ -293,6 +297,8 @@ const nextPost =
       document.querySelectorAll("h2, h3, h4, h5, h6")
     );
     for (const heading of headings) {
+      if (!heading.id || heading.querySelector(".heading-link")) continue;
+
       heading.classList.add("group");
       const link = document.createElement("a");
       link.className =
@@ -315,8 +321,12 @@ const nextPost =
     const codeBlocks = Array.from(document.querySelectorAll("pre"));
 
     for (const codeBlock of codeBlocks) {
+      if (codeBlock.parentElement?.classList.contains("code-copy-wrapper")) {
+        continue;
+      }
+
       const wrapper = document.createElement("div");
-      wrapper.className = "relative";
+      wrapper.className = "code-copy-wrapper relative";
 
       const copyButton = document.createElement("button");
       copyButton.type = "button";
@@ -352,7 +362,10 @@ const nextPost =
   attachCopyButtons();
 
   /* Go to page start after page swap */
-  document.addEventListener("astro:after-swap", () =>
-    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
-  );
+  if (document.documentElement.dataset.postAfterSwapBound !== "true") {
+    document.addEventListener("astro:after-swap", () =>
+      window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+    );
+    document.documentElement.dataset.postAfterSwapBound = "true";
+  }
 </script>

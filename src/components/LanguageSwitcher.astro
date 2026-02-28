@@ -140,14 +140,19 @@ const languageLinks = locales.map(locale => {
       }
     });
 
-    // 点击外部关闭菜单
-    document.addEventListener("click", e => {
-      const target = e.target as Node;
-      if (!toggle.contains(target) && !menu.contains(target)) {
-        menu.classList.add("hidden");
-        toggle.setAttribute("aria-expanded", "false");
-      }
-    });
+    // 点击外部关闭菜单（使用单一委托避免 View Transition 重复注册）
+    if (!document.documentElement.dataset.langMenuClickBound) {
+      document.documentElement.dataset.langMenuClickBound = "true";
+      document.addEventListener("click", e => {
+        const btn = document.querySelector("#language-toggle");
+        const menuEl = document.querySelector("#language-menu");
+        const target = e.target as Node;
+        if (btn && menuEl && !btn.contains(target) && !menuEl.contains(target)) {
+          menuEl.classList.add("hidden");
+          btn.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
 
     // 键盘导航支持
     toggle.addEventListener("keydown", e => {

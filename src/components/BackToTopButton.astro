@@ -76,6 +76,10 @@ const currentLocale = getLocale();
       }
     }
 
+    // Guard against duplicate scroll listeners across navigations
+    if (document.documentElement.dataset.bttScrollBound === "true") return;
+    document.documentElement.dataset.bttScrollBound = "true";
+
     let ticking = false;
     document.addEventListener("scroll", () => {
       if (!ticking) {
