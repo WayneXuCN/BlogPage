@@ -130,11 +130,11 @@ const isActive = (path: string) => {
           }
           {
             SITE.showArchives && (
-              <li class="col-span-2">
+              <li class="col-span-1 flex items-center justify-center">
                 <LinkButton
                   href={`/${currentLocale}/archives`}
                   class:list={[
-                    "focus-outline flex justify-center p-3 sm:p-1",
+                    "focus-outline flex p-3 sm:p-1",
                     {
                       "active-nav [&>svg]:stroke-accent": isActive("/archives"),
                     },
@@ -142,8 +142,8 @@ const isActive = (path: string) => {
                   ariaLabel={t("archives", currentLocale)}
                   title={t("archives", currentLocale)}
                 >
-                  <IconArchive class="hidden sm:inline-block" />
-                  <span class="sm:sr-only">{t("archives", currentLocale)}</span>
+                  <IconArchive />
+                  <span class="sr-only">{t("archives", currentLocale)}</span>
                 </LinkButton>
               </li>
             )

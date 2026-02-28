@@ -86,7 +86,7 @@ export const SHARE = {
 // 功能开关与配置
 export const LATEX = {
   enabled: true,
-  katexCdn: "https://cdn.jsdelivr.net/np~m/katex@0.16.11/dist/katex.min.css",
+  katexCdn: "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css",
 } as const;
 
 export const COMMENTS = {
