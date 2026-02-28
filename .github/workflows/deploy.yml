@@ -52,7 +52,7 @@ jobs:
           script: |
             set -e  # 遇到错误立即退出
 
-            cd /opt/1panel/apps/openresty/openresty/www/sites/blog.wenjiexu.site/BlogPage
+            cd /opt/1panel/www/sites/blog.wenjiexu.site/BlogPage
 
             # 设置代理加速
             git remote set-url origin https://gh.xmly.dev/https://github.com/WayneXuCN/BlogPage
@@ -62,13 +62,13 @@ jobs:
             git fetch origin gh-pages --depth=1
 
             # 清空 index 目录
-            rm -rf /opt/1panel/apps/openresty/openresty/www/sites/blog.wenjiexu.site/index/*
+            rm -rf /opt/1panel/www/sites/blog.wenjiexu.site/index/*
 
             # 从 gh-pages 分支检出文件到 index 目录
-            git --work-tree=/opt/1panel/apps/openresty/openresty/www/sites/blog.wenjiexu.site/index checkout origin/gh-pages -- .
+            git --work-tree=/opt/1panel/www/sites/blog.wenjiexu.site/index checkout origin/gh-pages -- .
 
             # 设置 index 文件权限为 PHP-FPM 用户
-            chown -R 1000:1000 /opt/1panel/apps/openresty/openresty/www/sites/blog.wenjiexu.site/index
+            chown -R 1000:1000 /opt/1panel/www/sites/blog.wenjiexu.site/index
 
             echo "✅ 已从 gh-pages 分支拉取最新构建文件"
             echo "✅ index 目录文件权限已设置为 1000:1000"

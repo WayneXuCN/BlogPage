@@ -105,5 +105,6 @@ export default defineConfig({
   },
   experimental: {
     preserveScriptOrder: true,
+    svgo: true,
   },
 });
