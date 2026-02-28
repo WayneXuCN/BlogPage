@@ -7,14 +7,8 @@ const localePaths = SUPPORTED_LOCALES.map(locale => ({
 }));
 
 const defaultRedirectHref = `/${DEFAULT_LOCALE.path}/`.replace(/\/+/g, "/");
-const fallbackLocale = SUPPORTED_LOCALES.find(
-  locale => locale.code !== DEFAULT_LOCALE.code
-);
-const fallbackRedirectHref = fallbackLocale
-  ? `/${fallbackLocale.path}/`.replace(/\/+/g, "/")
-  : defaultRedirectHref;
-
 const redirectScript = `
+  (() => {
   const locales = ${JSON.stringify(localePaths)};
   const defaultHref = ${JSON.stringify(defaultRedirectHref)};
 
@@ -31,11 +25,12 @@ const redirectScript = `
     return browserLangs.some(lang => aliasSet.includes(lang) || aliasSet.includes(lang.split("-")[0]));
   });
 
-  const target = match ? ("/" + (match.path || "") + "/").replace(/\/+/g, "/") : defaultHref;
+  const target = match ? ("/" + (match.path || "") + "/").replace(/\\/+/g, "/") : defaultHref;
 
   if (location.pathname !== target) {
     location.replace(target);
   }
+  })();
 `;
 ---
 
@@ -45,22 +40,16 @@ const redirectScript = `
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Redirecting…</title>
-    <meta http-equiv="refresh" content={`0; url=${defaultRedirectHref}`} />
+    <meta name="robots" content="noindex, nofollow" />
     <script is:inline set:html={redirectScript} />
-  </head>
-  <body>
-    <p>Redirecting to your preferred language…</p>
-    <p>
-      If you are not redirected automatically, please visit
-      <a href={defaultRedirectHref}>{DEFAULT_LOCALE.name}</a>
-      {
-        fallbackLocale && (
-          <>
-            {" "}
-            or <a href={fallbackRedirectHref}>{fallbackLocale.name}</a>.
-          </>
-        )
+    <noscript>
+      <meta http-equiv="refresh" content={`0; url=${defaultRedirectHref}`} />
+    </noscript>
+    <style>
+      body {
+        display: none;
       }
-    </p>
-  </body>
+    </style>
+  </head>
+  <body></body>
 </html>
