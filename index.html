@@ -1,5 +1,6 @@
-<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Redirecting…</title><meta http-equiv="refresh" content="0; url=/zh/"><script>
-  const locales = [{"path":"en","aliases":["en","en-US","en-GB","en-CA","en-AU","en"]},{"path":"zh","aliases":["zh","zh","zh-CN","zh-Hans","zh-CN","zh-hans","zh-cn","zh-tw","zh-hant","zh-TW"]}];
+<!DOCTYPE html><html lang="zh-CN" data-astro-cid-j7pv25f6> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Redirecting…</title><meta name="robots" content="noindex, nofollow"><script>
+  (() => {
+  const locales = [{"path":"en","aliases":["en","en-US","en-GB","en-CA","en-AU","en"]},{"path":"zh","aliases":["zh","zh","zh-CN","zh-Hans","zh-hans","zh-cn","zh-tw","zh-hant","zh-TW"]}];
   const defaultHref = "/zh/";
 
   const normalize = (value) => (value || "").toLowerCase();
@@ -15,13 +16,11 @@
     return browserLangs.some(lang => aliasSet.includes(lang) || aliasSet.includes(lang.split("-")[0]));
   });
 
-  const target = match ? ("/" + (match.path || "") + "/").replace(//+/g, "/") : defaultHref;
+  const target = match ? ("/" + (match.path || "") + "/").replace(/\/+/g, "/") : defaultHref;
 
   if (location.pathname !== target) {
     location.replace(target);
   }
-</script></head> <body> <p>Redirecting to your preferred language…</p> <p>
-If you are not redirected automatically, please visit
-<a href="/zh/">中文</a>  
-or <a href="/en/">English</a>.
- </p> </body></html>
+  })();
+</script><noscript><meta http-equiv="refresh" content="0; url=/zh/"></noscript><style>body{display:none}
+</style></head> <body data-astro-cid-j7pv25f6></body></html>
