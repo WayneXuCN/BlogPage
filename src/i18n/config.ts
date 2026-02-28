@@ -44,7 +44,6 @@ export const SUPPORTED_LOCALES: ReadonlyArray<LocaleConfig> = [
       "zh",
       "zh-CN",
       "zh-Hans",
-      "zh-CN",
       "zh-hans",
       "zh-cn",
       "zh-tw",
@@ -121,8 +120,8 @@ export function stripLocaleFromPath(pathname: string): {
 } {
   const segments = pathname.split("/").filter(Boolean);
   const first = segments[0];
-  const matched = getLocaleByPathSegment(first);
-  if (first && matched) {
+  if (first && localeByPath.has(first)) {
+    const matched = localeByPath.get(first)!;
     const rest = segments.slice(1).join("/");
     return {
       locale: matched.code as LocaleCode,

@@ -48,7 +48,7 @@ if (!matched) {
 const { Content, frontmatter } = matched;
 
 const posts = SITE.pages.posts.enabled
-  ? await getCollection("blog", ({ data }) => data.lang === locale)
+  ? await getCollection("blog", ({ data }) => data.lang === locale && !data.draft)
   : [];
 
 const sortedPosts = SITE.pages.posts.enabled ? getSortedPosts(posts) : [];
