@@ -197,6 +197,10 @@ const isActive = (path: string) => {
 
     if (!menuBtn || !menuItems || !menuIcon || !closeIcon) return;
 
+    // 防止对同一元素重复绑定事件（View Transition 可能多次调用）
+    if ((menuBtn as HTMLElement).dataset.navInit) return;
+    (menuBtn as HTMLElement).dataset.navInit = "true";
+
     menuBtn.addEventListener("click", () => {
       const openMenu = menuBtn.getAttribute("aria-expanded") === "true";
 

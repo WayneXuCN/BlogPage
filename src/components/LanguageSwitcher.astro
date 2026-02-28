@@ -120,6 +120,17 @@ const languageLinks = locales.map(locale => {
 </div>
 
 <script>
+  // 点击外部关闭菜单（模块级别注册一次，每次查询 DOM 以兼容 View Transition）
+  document.addEventListener("click", e => {
+    const btn = document.querySelector("#language-toggle");
+    const menuEl = document.querySelector("#language-menu");
+    const target = e.target as Node;
+    if (btn && menuEl && !btn.contains(target) && !menuEl.contains(target)) {
+      menuEl.classList.add("hidden");
+      btn.setAttribute("aria-expanded", "false");
+    }
+  });
+
   function toggleLanguageMenu() {
     const toggle = document.querySelector(
       "#language-toggle"
@@ -127,6 +138,10 @@ const languageLinks = locales.map(locale => {
     const menu = document.querySelector("#language-menu") as HTMLUListElement;
 
     if (!toggle || !menu) return;
+
+    // 防止对同一元素重复绑定事件（View Transition 可能多次调用）
+    if (toggle.dataset.lsInit) return;
+    toggle.dataset.lsInit = "true";
 
     toggle.addEventListener("click", () => {
       const isOpen = !menu.classList.contains("hidden");
@@ -139,20 +154,6 @@ const languageLinks = locales.map(locale => {
         toggle.setAttribute("aria-expanded", "true");
       }
     });
-
-    // 点击外部关闭菜单（使用单一委托避免 View Transition 重复注册）
-    if (!document.documentElement.dataset.langMenuClickBound) {
-      document.documentElement.dataset.langMenuClickBound = "true";
-      document.addEventListener("click", e => {
-        const btn = document.querySelector("#language-toggle");
-        const menuEl = document.querySelector("#language-menu");
-        const target = e.target as Node;
-        if (btn && menuEl && !btn.contains(target) && !menuEl.contains(target)) {
-          menuEl.classList.add("hidden");
-          btn.setAttribute("aria-expanded", "false");
-        }
-      });
-    }
 
     // 键盘导航支持
     toggle.addEventListener("keydown", e => {
