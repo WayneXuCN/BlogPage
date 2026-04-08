@@ -34,8 +34,30 @@ const fallbackLocaleConfig = getLocaleConfig(DEFAULT_LOCALE.code);
 
 /* ========== Formatted Datetime ========== */
 const tz = postTimezone || SITE.timezone;
-const pub = dayjs(pubDatetime).tz(tz);
-const mod = modDatetime ? dayjs(modDatetime).tz(tz) : null;
+
+// 判断日期是否带有时区信息（ISO 8601 格式带 Z 或 ±HH:MM）
+const hasTimezone = (d: string | Date) => {
+  if (d instanceof Date) return true;
+  return /[Zz]|[+-]\d{2}:\d{2}$/.test(d.trim());
+};
+
+const pubInput = typeof pubDatetime === "string" ? pubDatetime.trim() : pubDatetime;
+const modInput = modDatetime
+  ? typeof modDatetime === "string"
+    ? modDatetime.trim()
+    : modDatetime
+  : null;
+
+// 如果原始日期字符串没有时区信息，直接解析使用，不转换时区
+// 否则转换到目标时区
+const pub = hasTimezone(pubInput)
+  ? dayjs(pubInput).tz(tz)
+  : dayjs(pubInput);
+const mod = modInput
+  ? hasTimezone(modInput)
+    ? dayjs(modInput).tz(tz)
+    : dayjs(modInput)
+  : null;
 const isModified = Boolean(mod && mod.isAfter(pub));
 
 // 动态加载 dayjs 语言包（如可用）
@@ -78,27 +100,41 @@ const effectiveLabelKey = isModified ? "updatedOn" : "publishedOn";
 >
   <IconCalendar
     class:list={[
-      "inline-block flex-none text-muted-foreground",
+      "text-muted-foreground inline-block flex-none",
       { "size-5": size === "sm", "size-6": size === "lg" },
     ]}
   />
 
-  {showLabel ? (
-    <span class="flex min-w-0 flex-col gap-y-0.5 sm:flex-row sm:items-baseline sm:gap-x-1 sm:gap-y-0">
-      <span
-        class:list={[
-          [
-            "text-sm whitespace-nowrap break-keep",
-            { "sm:text-base": size === "lg" },
-          ],
-        ]}
-      >
-        {t(effectiveLabelKey, currentLocale)}:
+  {
+    showLabel ? (
+      <span class="flex min-w-0 flex-col gap-y-0.5 sm:flex-row sm:items-baseline sm:gap-x-1 sm:gap-y-0">
+        <span
+          class:list={[
+            [
+              "text-sm break-keep whitespace-nowrap",
+              { "sm:text-base": size === "lg" },
+            ],
+          ]}
+        >
+          {t(effectiveLabelKey, currentLocale)}:
+        </span>
+        <time
+          class:list={[
+            [
+              "text-sm break-keep whitespace-nowrap",
+              { "sm:text-base": size === "lg" },
+            ],
+          ]}
+          datetime={effectiveDate.toISOString()}
+        >
+          {effectiveDateText}
+        </time>
       </span>
+    ) : (
       <time
         class:list={[
           [
-            "text-sm whitespace-nowrap break-keep",
+            "text-sm break-keep whitespace-nowrap",
             { "sm:text-base": size === "lg" },
           ],
         ]}
@@ -106,18 +142,6 @@ const effectiveLabelKey = isModified ? "updatedOn" : "publishedOn";
       >
         {effectiveDateText}
       </time>
-    </span>
-  ) : (
-    <time
-      class:list={[
-        [
-          "text-sm whitespace-nowrap break-keep",
-          { "sm:text-base": size === "lg" },
-        ],
-      ]}
-      datetime={effectiveDate.toISOString()}
-    >
-      {effectiveDateText}
-    </time>
-  )}
+    )
+  }
 </div>

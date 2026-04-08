@@ -4,7 +4,10 @@ import { DEFAULT_LOCALE } from "@/i18n/config";
 import { getLocalePath } from "@/i18n/utils";
 
 export const prerender = true;
-const target = `${getLocalePath(DEFAULT_LOCALE.code)}/about`.replace(/\/+/, "/");
+const target = `${getLocalePath(DEFAULT_LOCALE.code)}/about`.replace(
+  /\/+/,
+  "/"
+);
 
 export function GET() {
   if (!SITE.pages.about.enabled) {

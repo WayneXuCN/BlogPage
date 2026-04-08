@@ -98,7 +98,9 @@ const contactLink = contactHref
   ? `<a href="${encodeURI(contactHref)}" class="${linkClass}">${contactText}</a>`
   : `<span class="font-semibold text-foreground">${contactText}</span>`;
 
-const sameLicenseText = escapeHtml(t("copyrightCardSameLicenseLinkText", locale));
+const sameLicenseText = escapeHtml(
+  t("copyrightCardSameLicenseLinkText", locale)
+);
 const sameLicenseLink = `<a href="${license.url}" target="_blank" rel="noreferrer" class="${linkClass}">${sameLicenseText}</a>`;
 
 const extraHtml = hasND
@@ -120,7 +122,9 @@ const textHtml = templateToHtml(t("copyrightCardText", locale), {
   data-pagefind-ignore
   class="mb-12 rounded-xl border border-border/60 bg-muted/30 px-5 py-4 shadow-sm backdrop-blur dark:border-border/50"
 >
-  <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+  <div
+    class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"
+  >
     <div class="min-w-0">
       <div class="flex flex-wrap items-center gap-2">
         <a
@@ -142,7 +146,6 @@ const textHtml = templateToHtml(t("copyrightCardText", locale), {
         class="text-muted-foreground mt-3 text-sm leading-relaxed"
         set:html={textHtml}
       />
-
     </div>
 
     <div class="shrink-0 self-end sm:self-start">

@@ -106,7 +106,9 @@ const currentPostIndex = allPosts.findIndex(a => a.id === post.id);
 
 const prevPost = currentPostIndex > 0 ? allPosts[currentPostIndex - 1] : null;
 const nextPost =
-  currentPostIndex < allPosts.length - 1 ? allPosts[currentPostIndex + 1] : null;
+  currentPostIndex < allPosts.length - 1
+    ? allPosts[currentPostIndex + 1]
+    : null;
 ---
 
 <Layout {...layoutProps}>
@@ -128,7 +130,9 @@ const nextPost =
       {title}
     </h1>
     <ul class="my-2 flex flex-wrap items-center gap-y-1">
-      <li class="inline-flex items-center after:mx-2 after:text-muted-foreground after:opacity-70 after:content-['|'] last:after:content-none">
+      <li
+        class="after:text-muted-foreground inline-flex items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"
+      >
         <Datetime
           {pubDatetime}
           {modDatetime}
@@ -138,13 +142,17 @@ const nextPost =
         />
       </li>
 
-      {SITE.editPost.enabled && !hideEditPost && (
-        <li class="hidden items-center after:mx-2 after:text-muted-foreground after:opacity-70 after:content-['|'] last:after:content-none sm:inline-flex">
-          <EditPost {hideEditPost} {post} />
-        </li>
-      )}
+      {
+        SITE.editPost.enabled && !hideEditPost && (
+          <li class="after:text-muted-foreground hidden items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none sm:inline-flex">
+            <EditPost {hideEditPost} {post} />
+          </li>
+        )
+      }
 
-      <li class="inline-flex items-center text-muted-foreground text-sm after:mx-2 after:text-muted-foreground after:opacity-70 after:content-['|'] last:after:content-none">
+      <li
+        class="text-muted-foreground after:text-muted-foreground inline-flex items-center text-sm after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"
+      >
         <span class="whitespace-nowrap">
           {readingTime}
           {t("minutesRead", postLocale)}
@@ -152,17 +160,16 @@ const nextPost =
       </li>
 
       {
-        category &&
-          SITE.pages.categories.enabled && (
-            <li class="inline-flex min-w-0 items-center text-muted-foreground text-sm">
-              <a
-                href={`/${postLocale}/categories/${slugifyStr(category)}/`}
-                class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
-              >
-                {t("categoryLabel", postLocale)}: {displayCategoryName}
-              </a>
-            </li>
-          )
+        category && SITE.pages.categories.enabled && (
+          <li class="text-muted-foreground inline-flex min-w-0 items-center text-sm">
+            <a
+              href={`/${postLocale}/categories/${slugifyStr(category)}/`}
+              class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
+            >
+              {t("categoryLabel", postLocale)}: {displayCategoryName}
+            </a>
+          </li>
+        )
       }
     </ul>
     <article
@@ -180,14 +187,16 @@ const nextPost =
       {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
     </ul>
 
-    {shouldShowCopyright && (
-      <CopyrightCard
-        locale={postLocale}
-        year={pubDatetime.getFullYear()}
-        ccLicense={ccLicense}
-        contactHref={SOCIAL.email?.href}
-      />
-    )}
+    {
+      shouldShowCopyright && (
+        <CopyrightCard
+          locale={postLocale}
+          year={pubDatetime.getFullYear()}
+          ccLicense={ccLicense}
+          contactHref={SOCIAL.email?.href}
+        />
+      )
+    }
 
     <BackToTopButton />
 
@@ -277,7 +286,8 @@ const nextPost =
     const myBar = document.getElementById("myBar");
     if (!myBar) return;
 
-    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const winScroll =
+      document.body.scrollTop || document.documentElement.scrollTop;
     const height =
       document.documentElement.scrollHeight -
       document.documentElement.clientHeight;
@@ -285,7 +295,9 @@ const nextPost =
     myBar.style.width = scrolled + "%";
   }
   if (document.documentElement.dataset.postScrollBound !== "true") {
-    document.addEventListener("scroll", updateScrollProgress, { passive: true });
+    document.addEventListener("scroll", updateScrollProgress, {
+      passive: true,
+    });
     document.documentElement.dataset.postScrollBound = "true";
   }
   updateScrollProgress();

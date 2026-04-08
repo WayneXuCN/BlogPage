@@ -48,7 +48,10 @@ if (!matched) {
 const { Content, frontmatter } = matched;
 
 const posts = SITE.pages.posts.enabled
-  ? await getCollection("blog", ({ data }) => data.lang === locale && !data.draft)
+  ? await getCollection(
+      "blog",
+      ({ data }) => data.lang === locale && !data.draft
+    )
   : [];
 
 const sortedPosts = SITE.pages.posts.enabled ? getSortedPosts(posts) : [];
@@ -100,7 +103,9 @@ document.addEventListener("astro:page-load", () => {
       <p>
         {frontmatter.description}
       </p>
-      <div class="mt-2 text-foreground/90 [&_a]:underline [&_a]:decoration-dashed [&_a]:underline-offset-4 hover:[&_a]:text-accent">
+      <div
+        class="mt-2 text-foreground/90 [&_a]:underline [&_a]:decoration-dashed [&_a]:underline-offset-4 hover:[&_a]:text-accent"
+      >
         <Content />
       </div>
     </section>
